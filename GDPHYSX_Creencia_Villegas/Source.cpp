@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -11,7 +12,7 @@
 #include "skybox.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include "projectile.h"
 
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
 
@@ -27,7 +28,6 @@ float fov = 45.0f;
 bool firstMouse = true;
 float lastX = 1024 / 2.0;
 float lastY = 768 / 2.0;
-
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
@@ -112,6 +112,15 @@ int main() {
 		bunnyOffsets
 	);
 
+	ObjData platform;
+	LoadObjFile(&platform, "earth/Earth.obj");
+	GLfloat platformOffsets[] = { 0.0f, 0.0f, 0.0f };
+	LoadObjToMemory(
+		&platform,
+		1.0f,
+		platformOffsets
+	);
+
 	std::vector<std::string> faces
 	{
 		"right.png",
@@ -170,6 +179,11 @@ int main() {
 	// set bg color to green
 	glClearColor(0.4f, 0.4f, 0.0f, 0.0f);
 
+	trans = glm::mat4(1.0f); // identity
+	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f)); // matrix * scale_matrix
+	trans2 = glm::mat4(1.0f); // identity
+	trans2 = glm::translate(trans2, glm::vec3(30, 0.0f, 0.0f)); // matrix * translate_matrix
+
 	// var for rotations
 	float xFactor = 0.0f;
 	float xSpeed = 1.0f;
@@ -182,16 +196,45 @@ int main() {
 	bool isStart = true;
 	bool isGravity = false;
 	bool isForce = false;
-	float currX, currY, currZ;
+
+	//Declaration for Collision
+	projectile bullet1;
+	projectile bullet2;
+	projectile bullet3;
+	projectile bullet4;
+	projectile bullet5;
+	projectile currBullet;
+
+	bullet1.velo = glm::vec3(35, 0.0f, 0.0f);
+	bullet1.accel = glm::vec3(0.0f, -19.6f, 0.0f);
+	bullet1.mass = 2.0f; // kg
+	bullet1.damp = 0.99f; // value between 0 and 1
+
+	bullet2.velo = glm::vec3(-35, 0.0f, 0.0f);
+	bullet2.accel = glm::vec3(0.0f, 19.6f, 0.0f);
+	bullet2.mass = 2.0f;
+	bullet2.damp = 0.99f;
+
+	bullet3.velo = glm::vec3(5, 0.0f, 0.0f);
+	bullet3.accel = glm::vec3(0.0f, -19.6f, 0.0f);
+	bullet3.mass = 2.0f;
+	bullet3.damp = 0.99f;
+
+	bullet4.velo = glm::vec3(-5, 0.0f, 0.0f);
+	bullet4.accel = glm::vec3(0.0f, -19.6f, 0.0f);
+	bullet4.mass = 2.0f;
+	bullet4.damp = 0.99f;
+
+	bullet5.velo = glm::vec3(100, 0.0f, 0.0f);
+	bullet5.accel = glm::vec3(0.0f, 100.0f, 0.0f);
+	bullet5.mass = 2.0f;
+	bullet5.damp = 0.99f;
 
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_ALWAYS); // set the depth test function
 
 	//face culling
 	glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK); // set which face to cull
-	//glFrontFace(GL_CCW); // set the front face orientation
 
 	while (!glfwWindowShouldClose(window)) {
 
@@ -258,25 +301,8 @@ int main() {
 			cameraPos -= cameraSpeed * cameraUp;
 		}
 
-		/*glm::mat4 view = glm::lookAt(
-			glm::vec3(0.0f, 90.0f, -1.0f),
-			//glm::vec3(0.5f, 0.0f, -1.0f),
-			glm::vec3(trans[3][0], trans[3][1], trans[3][2]),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)*/
-		//{
-		/*glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -5.0f);
-		glm::mat4 view = glm::lookAt(
-			glm::vec3(0.0f, 2.0f, -5.0f),
-			//glm::vec3(0.5f, 0.0f, -1.0f),
-			glm::vec3(trans[3][0], trans[3][1], trans[3][2]),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);*/
 		glUniform3f(cameraPosLoc, cameraPos.x, cameraPos.y, cameraPos.y);
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		//}
 
 #pragma endregion
 
@@ -290,51 +316,34 @@ int main() {
 		DrawSkybox(skybox, skyboxShaderProgram, view, projection);
 		glUseProgram(shaderProgram);
 
-
-
 		//draw bunny
 		glBindVertexArray(backpack.vaoId);
 		glUseProgram(shaderProgram); //changes
 		//////////////////////////////////////////////////
+
 		// transforms
-		if (isStart) {
-			trans = glm::mat4(1.0f); // identity
-			trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-			isStart = false;
-		}
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currBullet = bullet1;
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currBullet = bullet2;
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) currBullet = bullet3;
+		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currBullet = bullet4;
+		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currBullet = bullet5;
 
 		//Q W E
-		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-			trans = glm::rotate(trans, glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
-
-		}
-
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			isForce = true;
-			//trans = glm::mat4(1.0f);
-
-		}
-		if (isForce)
-		{
-			trans = glm::translate(trans, glm::vec3(deltaTime * 15, 0.0f, 0.0f)); // matrix * translate_matrix
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-			isGravity = true;
-			//trans = glm::mat4(1.0f);
-			//trans = glm::translate(trans, glm::vec3(0.0f, 0.0f - increment++*deltaTime, 0.0f)); // matrix * translate_matrix
-		}
-		if (isGravity)
-		{
-			trans = glm::translate(trans, glm::vec3(0.0f, 0.0f - 9.8f * deltaTime, 0.0f)); // matrix * translate_matrix
-		}
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 			trans = glm::mat4(1.0f);
 			trans = glm::translate(trans, glm::vec3(0.0f, 0.0f, 0.0f)); // matrix * translate_matrix
+			trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 			isGravity = false;
 			isForce = false;
 		}
+
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) trans = glm::rotate(trans, glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) isForce = true;
+		if (isForce) trans = glm::translate(trans, currBullet.velo * deltaTime); // matrix * translate_matrix
+
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) isGravity = true;
+		if (isGravity) trans = glm::translate(trans, currBullet.accel * deltaTime); // matrix * translate_matrix
 
 
 		//send to shader
@@ -349,6 +358,21 @@ int main() {
 
 		//drawbackpack
 		glDrawElements(GL_TRIANGLES, backpack.numFaces, GL_UNSIGNED_INT, (void*)0);
+
+
+
+		//send to shader
+		glm::mat4 normalTrans2 = glm::transpose(glm::inverse(trans2));
+		glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTrans2));
+		glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(trans2));
+
+
+		glActiveTexture(GL_TEXTURE0);
+		GLuint platformTexture = platform.textures[platform.materials[0].diffuse_texname];
+		glBindTexture(GL_TEXTURE_2D, platformTexture);
+
+		//drawbackpack
+		glDrawElements(GL_TRIANGLES, platform.numFaces, GL_UNSIGNED_INT, (void*)0);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 
