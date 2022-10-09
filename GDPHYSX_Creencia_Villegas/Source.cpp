@@ -194,8 +194,7 @@ int main() {
 
 	//Declaration for Particle motion
 	bool isStart = true;
-	bool isGravity = false;
-	bool isForce = false;
+	bool isShoot = false;
 
 	//Declaration for Collision
 	projectile bullet1;
@@ -204,9 +203,10 @@ int main() {
 	projectile bullet4;
 	projectile bullet5;
 	projectile currBullet;
+	glm::vec3 currVelo = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	bullet1.velo = glm::vec3(35, 0.0f, 0.0f);
-	bullet1.accel = glm::vec3(0.0f, -19.6f, 0.0f);
+	bullet1.velo = glm::vec3(30, 0.0f, 0.0f);
+	bullet1.accel = glm::vec3(-5.0f, 0.0f, 0.0f);
 	bullet1.mass = 2.0f; // kg
 	bullet1.damp = 0.99f; // value between 0 and 1
 
@@ -229,6 +229,9 @@ int main() {
 	bullet5.accel = glm::vec3(0.0f, 100.0f, 0.0f);
 	bullet5.mass = 2.0f;
 	bullet5.damp = 0.99f;
+
+	currBullet = bullet1;
+	currVelo = currBullet.velo;
 
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
@@ -320,7 +323,7 @@ int main() {
 		glBindVertexArray(backpack.vaoId);
 		glUseProgram(shaderProgram); //changes
 		//////////////////////////////////////////////////
-
+		
 		// transforms
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currBullet = bullet1;
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currBullet = bullet2;
@@ -333,18 +336,17 @@ int main() {
 			trans = glm::mat4(1.0f);
 			trans = glm::translate(trans, glm::vec3(0.0f, 0.0f, 0.0f)); // matrix * translate_matrix
 			trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-			isGravity = false;
-			isForce = false;
+			currVelo = glm::vec3(0.0f, 0.0f, 0.0f);
+			isShoot = false;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) trans = glm::rotate(trans, glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) isForce = true;
-		if (isForce) trans = glm::translate(trans, currBullet.velo * deltaTime); // matrix * translate_matrix
-
-		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) isGravity = true;
-		if (isGravity) trans = glm::translate(trans, currBullet.accel * deltaTime); // matrix * translate_matrix
-
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) isShoot = true;
+		if (isShoot) {
+			currVelo += currBullet.accel * deltaTime;
+			trans = glm::translate(trans, currVelo * deltaTime); // matrix * translate_matrix
+		}
 
 		//send to shader
 		glm::mat4 normalTrans = glm::transpose(glm::inverse(trans));
