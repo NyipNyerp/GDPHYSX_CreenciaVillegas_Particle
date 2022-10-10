@@ -29,6 +29,10 @@ bool firstMouse = true;
 float lastX = 1024 / 2.0;
 float lastY = 768 / 2.0;
 
+float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
+	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
+}
+
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 	if (firstMouse)
@@ -195,7 +199,8 @@ int main() {
 	//Declaration for Particle motion
 	bool isStart = true;
 	bool isShoot = false;
-
+	bool isCollide = false;
+	
 	//Declaration for Collision
 	projectile bullet1;
 	projectile bullet2;
@@ -203,13 +208,22 @@ int main() {
 	projectile bullet4;
 	projectile bullet5;
 	projectile currBullet;
+
+
+	bullet1.pData = bullet1.createBullet(glm::vec3(10, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
+	bullet2.pData = bullet2.createBullet(glm::vec3(30, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
+	bullet3.pData = bullet3.createBullet(glm::vec3(30, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
+	bullet4.pData = bullet4.createBullet(glm::vec3(30, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
+	bullet5.pData = bullet5.createBullet(glm::vec3(30, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
+
 	glm::vec3 currVelo = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	bullet1.velo = glm::vec3(30, 0.0f, 0.0f);
-	bullet1.accel = glm::vec3(-5.0f, 0.0f, 0.0f);
-	bullet1.mass = 2.0f; // kg
-	bullet1.damp = 0.99f; // value between 0 and 1
-
+	/*
+	bullet1.pData.velo = glm::vec3(30, 0.0f, 0.0f);
+	bullet1.pData.accel = glm::vec3(-5.0f, 0.0f, 0.0f);
+	bullet1.pData.mass = 2.0f; // kg
+	bullet1.pData.damp = 0.99f; // value between 0 and 1
+	
 	bullet2.velo = glm::vec3(-35, 0.0f, 0.0f);
 	bullet2.accel = glm::vec3(0.0f, 19.6f, 0.0f);
 	bullet2.mass = 2.0f;
@@ -229,9 +243,10 @@ int main() {
 	bullet5.accel = glm::vec3(0.0f, 100.0f, 0.0f);
 	bullet5.mass = 2.0f;
 	bullet5.damp = 0.99f;
+	*/
 
 	currBullet = bullet1;
-	currVelo = currBullet.velo;
+	currVelo = currBullet.pData.velo;
 
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
@@ -307,6 +322,7 @@ int main() {
 		glUniform3f(cameraPosLoc, cameraPos.x, cameraPos.y, cameraPos.y);
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
+
 #pragma endregion
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -324,6 +340,17 @@ int main() {
 		glUseProgram(shaderProgram); //changes
 		//////////////////////////////////////////////////
 		
+		if (getDistance(trans[3].x, trans[3].y, trans[3].z, trans2[3].x, trans2[3].y, trans2[3].z) <= 2)
+		{
+			std::cout << std::endl << "NAGCOLLIDE NA PUTANGINAMO" << std::endl;
+		}
+		else std::cout << std::endl << "BallsNiJR" << std::endl;
+		
+		// BALL CURRENT POS
+		//std::cout << std::endl << trans[3].x << std::endl;
+		//std::cout << trans[3].y << std::endl;
+		//std::cout << trans[3].z << std::endl;
+
 		// transforms
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currBullet = bullet1;
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currBullet = bullet2;
@@ -332,7 +359,7 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currBullet = bullet5;
 
 		//Q W E
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) { // reset ball position to origin
 			trans = glm::mat4(1.0f);
 			trans = glm::translate(trans, glm::vec3(0.0f, 0.0f, 0.0f)); // matrix * translate_matrix
 			trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -342,12 +369,12 @@ int main() {
 
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) trans = glm::rotate(trans, glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) isShoot = true;
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) isShoot = true; // push ball
 		if (isShoot) {
-			currVelo += currBullet.accel * deltaTime;
+			currVelo += currBullet.pData.accel * deltaTime;
 			trans = glm::translate(trans, currVelo * deltaTime); // matrix * translate_matrix
 		}
-
+		
 		//send to shader
 		glm::mat4 normalTrans = glm::transpose(glm::inverse(trans));
 		glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTrans));

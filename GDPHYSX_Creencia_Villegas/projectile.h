@@ -9,21 +9,27 @@
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+
 class projectile
 {
 public:
-    projectile();
+    //projectile();
+    struct projectileData {
+        glm::vec3 accel;
+        glm::vec3 velo;
+        float mass;
+        float damp;
+        float radius;
+    } pData;
 
-    glm::vec3 accel;
-    glm::vec3 velo;
-    float mass;
-    float damp;
+    //static void initialize();
+    //static projectile* getInstance();
 
-    static void initialize();
-    static projectile* getInstance();
+    projectileData createBullet(glm::vec3, glm::vec3, float, float, float);
 
-private:
-    static projectile* sharedInstance;
+//private:
+    //static projectile* sharedInstance;
 };
 
 #endif // !1
