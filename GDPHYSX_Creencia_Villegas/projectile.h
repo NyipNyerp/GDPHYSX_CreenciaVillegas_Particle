@@ -14,22 +14,16 @@
 class projectile
 {
 public:
-    //projectile();
     struct projectileData {
         glm::vec3 accel;
         glm::vec3 velo;
         float mass;
         float damp;
         float radius;
+        int type;
     } pData;
 
-    //static void initialize();
-    //static projectile* getInstance();
-
-    projectileData createBullet(glm::vec3, glm::vec3, float, float, float);
-
-//private:
-    //static projectile* sharedInstance;
+    projectileData createBullet(glm::vec3, glm::vec3, float, float, float, int);
 };
 
 #endif // !1

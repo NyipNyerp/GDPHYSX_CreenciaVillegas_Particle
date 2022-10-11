@@ -13,6 +13,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "projectile.h"
+#include <vector>
 
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
 
@@ -28,6 +29,37 @@ float fov = 45.0f;
 bool firstMouse = true;
 float lastX = 1024 / 2.0;
 float lastY = 768 / 2.0;
+
+void fireBullet(	std::vector<ObjData>* bulletsArray, std::vector<glm::mat4>* bulletsTrans,
+					std::vector<glm::mat4>* normalTransArray, std::vector<GLuint>* textureArray,
+					std::vector<glm::vec3>* currVelos, GLuint modelTransLoc, GLuint normTransLoc) {
+
+
+	ObjData bullet;
+	LoadObjFile(&bullet, "earth/Earth.obj");
+	GLfloat bulletOffsets[] = { 0.0f, 0.0f, 0.0f };
+	LoadObjToMemory(
+		&bullet,
+		1.0f,
+		bulletOffsets
+	);
+
+	glm::mat4 trans = glm::mat4(1.0f); // identity
+	trans = glm::mat4(1.0f); // identity
+	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	glm::mat4 normalTrans;
+	GLuint bulletTexture;
+
+	bulletsArray->push_back(bullet);
+	bulletsTrans->push_back(trans);
+	normalTransArray->push_back(normalTrans);
+	textureArray->push_back(bulletTexture);
+
+	std::cout << std::endl	<< "bulletsArray" << bulletsArray->size() << std::endl
+							<< "bulletsTrans" << bulletsTrans->size() << std::endl
+							<< "normalTransArray" << normalTransArray->size() << std::endl
+							<< "textureArray" << textureArray->size() << std::endl;
+}
 
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
@@ -105,25 +137,32 @@ int main() {
 #pragma endregion
 
 
+#pragma region Ballistics Array Declaration
+
+	std::vector<ObjData> bulletsArray;
+	std::vector<glm::mat4> bulletsTrans;
+	std::vector<glm::mat4> normalTransArray;
+	std::vector<GLuint> textureArray;
+	std::vector<glm::vec3> currVelos;
+	//Declaration for Collision
+	projectile bullet1;
+	projectile bullet2;
+	projectile bullet3;
+	projectile bullet4;
+	projectile bullet5;
+	projectile currBullet;
+
+
+	bullet1.pData = bullet1.createBullet(glm::vec3(3, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 1);
+	bullet2.pData = bullet2.createBullet(glm::vec3(6, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 2);
+	bullet3.pData = bullet3.createBullet(glm::vec3(9, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 3);
+	bullet4.pData = bullet4.createBullet(glm::vec3(12, 0.0f, 0.0f), glm::vec3(-0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 4);
+	bullet5.pData = bullet5.createBullet(glm::vec3(15, 0.0f, 0.0f), glm::vec3(-0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 5);
+
+#pragma endregion
+
 #pragma region Mesh Loading
 
-	ObjData backpack;
-	LoadObjFile(&backpack, "earth/Earth.obj");
-	GLfloat bunnyOffsets[] = { 0.0f, 0.0f, 0.0f };
-	LoadObjToMemory(
-		&backpack,
-		1.0f,
-		bunnyOffsets
-	);
-
-	ObjData platform;
-	LoadObjFile(&platform, "earth/Earth.obj");
-	GLfloat platformOffsets[] = { 0.0f, 0.0f, 0.0f };
-	LoadObjToMemory(
-		&platform,
-		1.0f,
-		platformOffsets
-	);
 
 	std::vector<std::string> faces
 	{
@@ -148,7 +187,6 @@ int main() {
 	glUniform3f(colorLoc, 1.0f, 1.0f, 1.0f);
 
 
-
 	// initialize MVP
 	GLuint modelTransformLoc = glGetUniformLocation(shaderProgram, "u_model");
 	GLuint viewLoc = glGetUniformLocation(shaderProgram, "u_view");
@@ -159,14 +197,8 @@ int main() {
 	GLuint ambientColorLoc = glGetUniformLocation(shaderProgram, "u_ambient_color");
 	glUniform3f(ambientColorLoc, 0.1f, 0.1f, 0.1f);
 
-	glm::mat4 trans = glm::mat4(1.0f); // identity
-	glm::mat4 trans2 = glm::mat4(1.0f); // identity
-	glm::mat4 trans3 = glm::mat4(1.0f); // identity
+	fireBullet(&bulletsArray, &bulletsTrans, &normalTransArray, &textureArray, &currVelos, modelTransformLoc, normalTransformLoc);
 
-
-	glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-	glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(trans2));
-	glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(trans3));
 
 	// define projection matrix
 	glm::mat4 projection = glm::mat4(1.0f);
@@ -174,7 +206,6 @@ int main() {
 
 	GLuint lightPosLoc = glGetUniformLocation(shaderProgram, "u_light_pos");
 	GLuint lightDirLoc = glGetUniformLocation(shaderProgram, "u_light_dir");
-	glUniform3f(lightPosLoc, -trans2[3][0], -trans2[3][1], -trans2[3][2] + 2);
 	glUniform3f(lightDirLoc, 0.0f, 0.0f, 0.0f);
 
 
@@ -183,10 +214,6 @@ int main() {
 	// set bg color to green
 	glClearColor(0.4f, 0.4f, 0.0f, 0.0f);
 
-	trans = glm::mat4(1.0f); // identity
-	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f)); // matrix * scale_matrix
-	trans2 = glm::mat4(1.0f); // identity
-	trans2 = glm::translate(trans2, glm::vec3(30, 0.0f, 0.0f)); // matrix * translate_matrix
 
 	// var for rotations
 	float xFactor = 0.0f;
@@ -200,54 +227,11 @@ int main() {
 	bool isStart = true;
 	bool isShoot = false;
 	bool isCollide = false;
-	
-	//Declaration for Collision
-	projectile bullet1;
-	projectile bullet2;
-	projectile bullet3;
-	projectile bullet4;
-	projectile bullet5;
-	projectile currBullet;
 
-
-	bullet1.pData = bullet1.createBullet(glm::vec3(10, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
-	bullet2.pData = bullet2.createBullet(glm::vec3(30, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
-	bullet3.pData = bullet3.createBullet(glm::vec3(30, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
-	bullet4.pData = bullet4.createBullet(glm::vec3(30, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
-	bullet5.pData = bullet5.createBullet(glm::vec3(30, 0.0f, 0.0f), glm::vec3(-5.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f);
-
-	glm::vec3 currVelo = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	/*
-	bullet1.pData.velo = glm::vec3(30, 0.0f, 0.0f);
-	bullet1.pData.accel = glm::vec3(-5.0f, 0.0f, 0.0f);
-	bullet1.pData.mass = 2.0f; // kg
-	bullet1.pData.damp = 0.99f; // value between 0 and 1
-	
-	bullet2.velo = glm::vec3(-35, 0.0f, 0.0f);
-	bullet2.accel = glm::vec3(0.0f, 19.6f, 0.0f);
-	bullet2.mass = 2.0f;
-	bullet2.damp = 0.99f;
-
-	bullet3.velo = glm::vec3(5, 0.0f, 0.0f);
-	bullet3.accel = glm::vec3(0.0f, -19.6f, 0.0f);
-	bullet3.mass = 2.0f;
-	bullet3.damp = 0.99f;
-
-	bullet4.velo = glm::vec3(-5, 0.0f, 0.0f);
-	bullet4.accel = glm::vec3(0.0f, -19.6f, 0.0f);
-	bullet4.mass = 2.0f;
-	bullet4.damp = 0.99f;
-
-	bullet5.velo = glm::vec3(100, 0.0f, 0.0f);
-	bullet5.accel = glm::vec3(0.0f, 100.0f, 0.0f);
-	bullet5.mass = 2.0f;
-	bullet5.damp = 0.99f;
-	*/
+	float cooldown = 1;
 
 	currBullet = bullet1;
-	currVelo = currBullet.pData.velo;
-
+	currVelos.push_back(bullet1.pData.velo);
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
 
@@ -257,6 +241,7 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 
 #pragma region Viewport
+
 		float ratio;
 		int width, height;
 
@@ -264,29 +249,18 @@ int main() {
 		ratio = width / (float)height;
 
 		glViewport(0, 0, width, height);
+
 #pragma endregion
 
 #pragma region Projection
-		// Orthopgraphic projection but make units same as pixels. origin is lower left of window
-		// projection = glm::ortho(0.0f, (GLfloat)width, 0.0f, (GLfloat)height, 0.1f, 10.0f); // when using this scale objects really high at pixel unity size
-
-		// Orthographic with stretching
-		//projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 10.0f);
 
 		// Orthographic with corection for stretching, resize window to see difference with previous example
 		projection = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 100.0f);
-		// Set projection matrix in shader
-		//glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-		//if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		//{
-			// Perspective Projection
+		// Perspective Projection
 		projection = glm::perspective(glm::radians(90.0f), ratio, 0.1f, 100.0f),
-			// Set projection matrix in shader
-			glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-		//}
-
-
+		// Set projection matrix in shader
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 #pragma endregion
 
@@ -335,21 +309,22 @@ int main() {
 		DrawSkybox(skybox, skyboxShaderProgram, view, projection);
 		glUseProgram(shaderProgram);
 
-		//draw bunny
-		glBindVertexArray(backpack.vaoId);
+		glBindVertexArray(bulletsArray[0].vaoId);
 		glUseProgram(shaderProgram); //changes
 		//////////////////////////////////////////////////
 		
-		if (getDistance(trans[3].x, trans[3].y, trans[3].z, trans2[3].x, trans2[3].y, trans2[3].z) <= 2)
+		glActiveTexture(GL_TEXTURE0);
+
+		// Collider
+		/*
+		for (int i = 0; i < bulletsArray.size(); i++)
 		{
-			std::cout << std::endl << "NAGCOLLIDE NA PUTANGINAMO" << std::endl;
+			if (getDistance(bulletsTrans[i][3].x, bulletsTrans[i][3].y, bulletsTrans[i][3].z, colliderTrans[3].x, colliderTrans[3].y, colliderTrans[3].z) <= 2)
+				std::cout << std::endl << "NAGCOLLIDE NA" << std::endl;
+			else 
+				std::cout << std::endl << "Not colliding" << std::endl;
 		}
-		else std::cout << std::endl << "BallsNiJR" << std::endl;
-		
-		// BALL CURRENT POS
-		//std::cout << std::endl << trans[3].x << std::endl;
-		//std::cout << trans[3].y << std::endl;
-		//std::cout << trans[3].z << std::endl;
+		*/
 
 		// transforms
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currBullet = bullet1;
@@ -358,50 +333,39 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currBullet = bullet4;
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currBullet = bullet5;
 
-		//Q W E
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) { // reset ball position to origin
-			trans = glm::mat4(1.0f);
-			trans = glm::translate(trans, glm::vec3(0.0f, 0.0f, 0.0f)); // matrix * translate_matrix
-			trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-			currVelo = glm::vec3(0.0f, 0.0f, 0.0f);
-			isShoot = false;
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) bulletsTrans[0] = glm::rotate(bulletsTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
+
+		cooldown += cooldown * deltaTime;
+		if (cooldown >= 4)
+		{
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+				fireBullet(&bulletsArray, &bulletsTrans, &normalTransArray, &textureArray, &currVelos, modelTransformLoc, normalTransformLoc);
+				if (currBullet.pData.type == 1) currVelos.push_back(bullet1.pData.velo);
+				else if (currBullet.pData.type == 2) currVelos.push_back(bullet2.pData.velo);
+				else if (currBullet.pData.type == 3) currVelos.push_back(bullet3.pData.velo);
+				else if (currBullet.pData.type == 4) currVelos.push_back(bullet4.pData.velo);
+				else if (currBullet.pData.type == 5) currVelos.push_back(bullet5.pData.velo);
+				cooldown = 1;
+			}
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) trans = glm::rotate(trans, glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) isShoot = true; // push ball
-		if (isShoot) {
-			currVelo += currBullet.pData.accel * deltaTime;
-			trans = glm::translate(trans, currVelo * deltaTime); // matrix * translate_matrix
-		}
 		
-		//send to shader
-		glm::mat4 normalTrans = glm::transpose(glm::inverse(trans));
-		glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTrans));
-		glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
+		for (int i = 0; i < bulletsArray.size(); i++) {
+			currVelos[i] += currBullet.pData.accel * deltaTime;
+			bulletsTrans[i] = glm::translate(bulletsTrans[i], currVelos[i] * deltaTime); // matrix * translate_matrix
+			std::cout << std::endl << "currVELOS" << i << " = " << currVelos[i].x << ", " << currVelos[i].y << ", " << currVelos[i].z << std::endl;
+			std::cout << "BULLETTRANS" << i << " = " << bulletsTrans[i][3].x << ", " << bulletsTrans[i][3].y << ", " << bulletsTrans[i][3].z << std::endl;
 
-		glActiveTexture(GL_TEXTURE0);
-		GLuint backpackTexture = backpack.textures[backpack.materials[0].diffuse_texname];
-		glBindTexture(GL_TEXTURE_2D, backpackTexture);
+			normalTransArray[i] = glm::transpose(glm::inverse(bulletsTrans[i]));
+			glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
+			glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(bulletsTrans[i]));
 
-		//drawbackpack
-		glDrawElements(GL_TRIANGLES, backpack.numFaces, GL_UNSIGNED_INT, (void*)0);
+			textureArray[i] = bulletsArray[i].textures[bulletsArray[i].materials[0].diffuse_texname];
+			glBindTexture(GL_TEXTURE_2D, textureArray[i]);
 
-
-
-		//send to shader
-		glm::mat4 normalTrans2 = glm::transpose(glm::inverse(trans2));
-		glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTrans2));
-		glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(trans2));
-
-
-		glActiveTexture(GL_TEXTURE0);
-		GLuint platformTexture = platform.textures[platform.materials[0].diffuse_texname];
-		glBindTexture(GL_TEXTURE_2D, platformTexture);
-
-		//drawbackpack
-		glDrawElements(GL_TRIANGLES, platform.numFaces, GL_UNSIGNED_INT, (void*)0);
+			glDrawElements(GL_TRIANGLES, bulletsArray[i].numFaces, GL_UNSIGNED_INT, (void*)0);
+		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 

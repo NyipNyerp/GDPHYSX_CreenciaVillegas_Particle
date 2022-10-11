@@ -1,24 +1,6 @@
 #include "projectile.h"
-/*
-projectile::projectile()
-{
 
-}
-
-void projectile::initialize()
-{
-	sharedInstance = new projectile();
-}
-
-projectile* projectile::sharedInstance = NULL;
-
-projectile* projectile::getInstance()
-{
-	return sharedInstance;
-}
-*/
-
-projectile::projectileData projectile::createBullet(glm::vec3 accel, glm::vec3 velo, float mass, float damp, float radius)
+projectile::projectileData projectile::createBullet(glm::vec3 accel, glm::vec3 velo, float mass, float damp, float radius, int type)
 {
 	projectileData newData;
 	newData.accel = accel;
@@ -26,6 +8,7 @@ projectile::projectileData projectile::createBullet(glm::vec3 accel, glm::vec3 v
 	newData.mass = mass;
 	newData.damp = damp;
 	newData.radius = radius;
+	newData.type = type;
 
 	return newData;
 }
