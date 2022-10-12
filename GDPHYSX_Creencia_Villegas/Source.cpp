@@ -1,19 +1,5 @@
 #pragma once
-#include <stdio.h>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "tiny_obj_loader.h"
-#include "glm/glm.hpp"
-#include "obj_mesh.h";
-#include "shader.h"
-#include "skybox.h"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include "projectile.h"
-#include <vector>
 
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
 
@@ -30,10 +16,65 @@ bool firstMouse = true;
 float lastX = 1024 / 2.0;
 float lastY = 768 / 2.0;
 
-void fireBullet(	std::vector<ObjData>* bulletsArray, std::vector<glm::mat4>* bulletsTrans,
-					std::vector<glm::mat4>* normalTransArray, std::vector<GLuint>* textureArray,
-					std::vector<glm::vec3>* currVelos, GLuint modelTransLoc, GLuint normTransLoc) {
 
+projectile::projectileData projectile::createBullet(int type)
+{
+	projectileData newData;
+	switch (type) {
+	case 0:
+		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.mass = 5.0f;
+		newData.damp = 1.0f;
+		newData.radius = 1.0f;
+		break;
+	case 1:
+		newData.accel = glm::vec3(1.0f, 0.0f, 0.0f);
+		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.mass = 1.0f;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		break;
+	case 2:
+		newData.accel = glm::vec3(10, 0.0f, 0.0f);
+		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.mass = 10.0f;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		break;
+	case 3:
+		newData.accel = glm::vec3(20, 0.0f, 0.0f);
+		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.mass = 20.0f;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		break;
+	case 4:
+		newData.accel = glm::vec3(30, 0.0f, 0.0f);
+		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.mass = 30.0f;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		break;
+	case 5:
+		newData.accel = glm::vec3(100, 0.0f, 0.0f);
+		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.mass = 100.0f;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		break;
+	}
+
+	return newData;
+}
+
+projectile::projectileData projectile::fireBullet(
+	std::vector<ObjData>* bulletsArray, std::vector<glm::mat4>* bulletsTrans,
+	std::vector<glm::mat4>* normalTransArray, std::vector<GLuint>* textureArray,
+	GLuint modelTransLoc, GLuint normTransLoc, int bType)
+{
+	projectile newBullet;
+	newBullet.pData = newBullet.createBullet(bType);
 
 	ObjData bullet;
 	LoadObjFile(&bullet, "earth/Earth.obj");
@@ -46,7 +87,8 @@ void fireBullet(	std::vector<ObjData>* bulletsArray, std::vector<glm::mat4>* bul
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
 	trans = glm::mat4(1.0f); // identity
-	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
+	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 	glm::mat4 normalTrans;
 	GLuint bulletTexture;
 
@@ -55,13 +97,18 @@ void fireBullet(	std::vector<ObjData>* bulletsArray, std::vector<glm::mat4>* bul
 	normalTransArray->push_back(normalTrans);
 	textureArray->push_back(bulletTexture);
 
-	std::cout << std::endl	<< "bulletsArray" << bulletsArray->size() << std::endl
-							<< "bulletsTrans" << bulletsTrans->size() << std::endl
-							<< "normalTransArray" << normalTransArray->size() << std::endl
-							<< "textureArray" << textureArray->size() << std::endl;
+	std::cout << std::endl
+		<< "bulletsArray = " << bulletsArray->size() << std::endl
+		<< "bulletsTrans = " << bulletsTrans->size() << std::endl
+		<< "normalTransArray = " << normalTransArray->size() << std::endl
+		<< "textureArray = " << textureArray->size() << std::endl << std::endl << std::endl;
+
+	return newBullet.pData;
 }
 
+
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
+	//std::cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << std::endl << xPos2 << ", " << yPos2 << ", " << zPos2 << std::endl << std::endl;
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
 }
 
@@ -105,6 +152,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	cameraFront = glm::normalize(front);
 }
 
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 int main() {
 	stbi_set_flip_vertically_on_load(true);
 #pragma region Initialization
@@ -143,26 +193,24 @@ int main() {
 	std::vector<glm::mat4> bulletsTrans;
 	std::vector<glm::mat4> normalTransArray;
 	std::vector<GLuint> textureArray;
-	std::vector<glm::vec3> currVelos;
+	std::vector<projectile::projectileData> bulletDatas;
+	projectile tempBullet;
+	int currType = 1;
+	float boxRadius = 5.5;
 	//Declaration for Collision
-	projectile bullet1;
-	projectile bullet2;
-	projectile bullet3;
-	projectile bullet4;
-	projectile bullet5;
-	projectile currBullet;
-
-
-	bullet1.pData = bullet1.createBullet(glm::vec3(3, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 1);
-	bullet2.pData = bullet2.createBullet(glm::vec3(6, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 2);
-	bullet3.pData = bullet3.createBullet(glm::vec3(9, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 3);
-	bullet4.pData = bullet4.createBullet(glm::vec3(12, 0.0f, 0.0f), glm::vec3(-0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 4);
-	bullet5.pData = bullet5.createBullet(glm::vec3(15, 0.0f, 0.0f), glm::vec3(-0.0f, 0.0f, 0.0f), 2.0f, 0.99f, 1.0f, 5);
 
 #pragma endregion
 
 #pragma region Mesh Loading
 
+	ObjData box;
+	LoadObjFile(&box, "box/12279_Container_v1_l1.obj");
+	GLfloat boxOffsets[] = { 0.0f, 0.0f, 0.0f };
+	LoadObjToMemory(
+		&box,
+		0.2f,
+		boxOffsets
+	);
 
 	std::vector<std::string> faces
 	{
@@ -174,6 +222,7 @@ int main() {
 		"back.png"
 	};
 	SkyBoxData skybox = LoadSkybox("Assets/skybox", faces);
+
 #pragma endregion
 
 #pragma region Shader Loading
@@ -197,7 +246,11 @@ int main() {
 	GLuint ambientColorLoc = glGetUniformLocation(shaderProgram, "u_ambient_color");
 	glUniform3f(ambientColorLoc, 0.1f, 0.1f, 0.1f);
 
-	fireBullet(&bulletsArray, &bulletsTrans, &normalTransArray, &textureArray, &currVelos, modelTransformLoc, normalTransformLoc);
+	bulletDatas.push_back(tempBullet.fireBullet(&bulletsArray, &bulletsTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 0));
+	
+	glm::mat4 boxTrans = glm::mat4(1.0f); // identity
+	boxTrans = glm::translate(boxTrans, glm::vec3(10.0f, 0.0f, -4.0f));
+	glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(boxTrans));
 
 
 	// define projection matrix
@@ -227,11 +280,9 @@ int main() {
 	bool isStart = true;
 	bool isShoot = false;
 	bool isCollide = false;
-
 	float cooldown = 1;
-
-	currBullet = bullet1;
-	currVelos.push_back(bullet1.pData.velo);
+	float pushAmount = 0;
+	float force = 0;
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
 
@@ -309,29 +360,60 @@ int main() {
 		DrawSkybox(skybox, skyboxShaderProgram, view, projection);
 		glUseProgram(shaderProgram);
 
-		glBindVertexArray(bulletsArray[0].vaoId);
-		glUseProgram(shaderProgram); //changes
-		//////////////////////////////////////////////////
 		
+		#pragma region Box Object
+
+		glBindVertexArray(box.vaoId);
+		glUseProgram(shaderProgram);
+
+		glm::mat4 boxNormalTrans = glm::transpose(glm::inverse(boxTrans));
+		glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(boxNormalTrans));
+		glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(boxTrans));
+
+		glActiveTexture(GL_TEXTURE0);
+		GLuint boxTexture = box.textures[box.materials[0].diffuse_texname];
+		glBindTexture(GL_TEXTURE_2D, boxTexture);
+		glDrawElements(GL_TRIANGLES, box.numFaces, GL_UNSIGNED_INT, (void*)0);
+
+		#pragma endregion
+
+		#pragma region Bullets
+
+		glBindVertexArray(bulletsArray[0].vaoId);
+		glUseProgram(shaderProgram);
 		glActiveTexture(GL_TEXTURE0);
 
 		// Collider
-		/*
 		for (int i = 0; i < bulletsArray.size(); i++)
 		{
-			if (getDistance(bulletsTrans[i][3].x, bulletsTrans[i][3].y, bulletsTrans[i][3].z, colliderTrans[3].x, colliderTrans[3].y, colliderTrans[3].z) <= 2)
+			if (getDistance(bulletsTrans[i][3].x, bulletsTrans[i][3].y, bulletsTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= bulletDatas[i].radius + boxRadius) {
 				std::cout << std::endl << "NAGCOLLIDE NA" << std::endl;
-			else 
-				std::cout << std::endl << "Not colliding" << std::endl;
-		}
-		*/
 
+				///////////////////////////////// CHANGE TO E=MC^2 FORMULA
+				pushAmount = bulletDatas[i].mass;
+				force = bulletDatas[i].mass;
+				/////////////////////////////////
+				bulletsArray.erase(bulletsArray.begin() + i);
+				bulletsTrans.erase(bulletsTrans.begin() + i);
+				normalTransArray.erase(normalTransArray.begin() + i);
+				textureArray.erase(textureArray.begin() + i);
+				bulletDatas.erase(bulletDatas.begin() + i);
+			}
+		}
+
+		///////////////////////////////// CHANGE TO E=MC^2 FORMULA
+		boxTrans = glm::translate(boxTrans, glm::vec3(pushAmount, 0.0f, 0.0f) * deltaTime);
+		if (pushAmount >= 0) pushAmount -= force * deltaTime;
+		else pushAmount = 0;
+		/////////////////////////////////
+		 
+		 
 		// transforms
-		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currBullet = bullet1;
-		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currBullet = bullet2;
-		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) currBullet = bullet3;
-		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currBullet = bullet4;
-		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currBullet = bullet5;
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currType = 2;
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) currType = 3;
+		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currType = 4;
+		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currType = 5;
 
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) bulletsTrans[0] = glm::rotate(bulletsTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
@@ -339,23 +421,16 @@ int main() {
 		if (cooldown >= 4)
 		{
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				fireBullet(&bulletsArray, &bulletsTrans, &normalTransArray, &textureArray, &currVelos, modelTransformLoc, normalTransformLoc);
-				if (currBullet.pData.type == 1) currVelos.push_back(bullet1.pData.velo);
-				else if (currBullet.pData.type == 2) currVelos.push_back(bullet2.pData.velo);
-				else if (currBullet.pData.type == 3) currVelos.push_back(bullet3.pData.velo);
-				else if (currBullet.pData.type == 4) currVelos.push_back(bullet4.pData.velo);
-				else if (currBullet.pData.type == 5) currVelos.push_back(bullet5.pData.velo);
+				bulletDatas.push_back(tempBullet.fireBullet(&bulletsArray, &bulletsTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, currType));
 				cooldown = 1;
 			}
 		}
 
-		
-
 		for (int i = 0; i < bulletsArray.size(); i++) {
-			currVelos[i] += currBullet.pData.accel * deltaTime;
-			bulletsTrans[i] = glm::translate(bulletsTrans[i], currVelos[i] * deltaTime); // matrix * translate_matrix
-			std::cout << std::endl << "currVELOS" << i << " = " << currVelos[i].x << ", " << currVelos[i].y << ", " << currVelos[i].z << std::endl;
-			std::cout << "BULLETTRANS" << i << " = " << bulletsTrans[i][3].x << ", " << bulletsTrans[i][3].y << ", " << bulletsTrans[i][3].z << std::endl;
+			bulletDatas[i].velo += bulletDatas[i].accel * deltaTime;
+			bulletsTrans[i] = glm::translate(bulletsTrans[i], bulletDatas[i].velo * deltaTime); // matrix * translate_matrix
+			//std::cout << std::endl << "currVELOS" << i << " = " << bulletDatas[i].velo.x << ", " << bulletDatas[i].velo.y << ", " << bulletDatas[i].velo.z << std::endl;
+			//std::cout << "BULLETTRANS" << i << " = " << bulletsTrans[i][3].x << ", " << bulletsTrans[i][3].y << ", " << bulletsTrans[i][3].z << std::endl;
 
 			normalTransArray[i] = glm::transpose(glm::inverse(bulletsTrans[i]));
 			glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
@@ -363,11 +438,9 @@ int main() {
 
 			textureArray[i] = bulletsArray[i].textures[bulletsArray[i].materials[0].diffuse_texname];
 			glBindTexture(GL_TEXTURE_2D, textureArray[i]);
-
 			glDrawElements(GL_TRIANGLES, bulletsArray[i].numFaces, GL_UNSIGNED_INT, (void*)0);
 		}
-
-		////////////////////////////////////////////////////////////////////////////////////////////////////
+		#pragma endregion
 
 
 		//unbindtexture after rendering

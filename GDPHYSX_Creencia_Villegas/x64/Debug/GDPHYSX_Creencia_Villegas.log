@@ -1,18 +1,18 @@
 ﻿  Source.cpp
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\main.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\obj_mesh.h(165,36): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
           with
           [
               _Ty=unsigned int
           ]
 C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\obj_mesh.h(169,36): warning C4267: '=': conversion from 'size_t' to 'GLulong', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(65,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(72,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(73,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(77,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(78,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(80,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(81,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(221,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(376,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(112,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(119,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(120,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(124,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(125,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(127,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(128,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(274,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(443,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   GDPHYSX_Creencia_Villegas.vcxproj -> C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\x64\Debug\GDPHYSX_Creencia_Villegas.exe
