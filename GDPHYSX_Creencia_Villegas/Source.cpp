@@ -1,20 +1,6 @@
 #pragma once
 #include "projectile.h"
 
-//YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
-
-//camera
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-float yaw = -90.0f;
-float pitch = 0.0f;
-float fov = 45.0f;
-
-//mouse state
-bool firstMouse = true;
-float lastX = 1024 / 2.0;
-float lastY = 768 / 2.0;
 
 projectile::projectileData projectile::createBullet(int type)
 {
@@ -128,6 +114,23 @@ float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
 }
 
+#pragma region CAMERA VARIABLES
+//YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
+//camera
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+float yaw = -90.0f;
+float pitch = 0.0f;
+float fov = 45.0f;
+
+//mouse state
+bool firstMouse = true;
+float lastX = 1024 / 2.0;
+float lastY = 768 / 2.0;
+
+#pragma endregion
+
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 	if (firstMouse)
@@ -167,7 +170,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	cameraFront = glm::normalize(front);
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
