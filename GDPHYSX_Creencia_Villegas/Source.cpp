@@ -16,52 +16,57 @@ bool firstMouse = true;
 float lastX = 1024 / 2.0;
 float lastY = 768 / 2.0;
 
-
 projectile::projectileData projectile::createBullet(int type)
 {
 	projectileData newData;
 	switch (type) {
 	case 0:
-		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
 		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
 		newData.mass = 5.0f;
 		newData.damp = 1.0f;
 		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
 		break;
 	case 1:
-		newData.accel = glm::vec3(1.0f, 0.0f, 0.0f);
-		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.mass = 1.0f;
+		newData.velo = glm::vec3(35.0f, 0.0f, 0.0f);
+		newData.accel = glm::vec3(0.0f, -1.0f, 0.0f);
+		newData.mass = 2.0f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
 		break;
 	case 2:
-		newData.accel = glm::vec3(10, 0.0f, 0.0f);
-		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.mass = 10.0f;
+		newData.velo = glm::vec3(40.0f, 30.0f, 0.0f);
+		newData.accel = glm::vec3(0.0f, -20.0f, 0.0f);
+		newData.mass = 200.0f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
 		break;
 	case 3:
-		newData.accel = glm::vec3(20, 0.0f, 0.0f);
-		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.mass = 20.0f;
-		newData.damp = 0.99f;
+		newData.velo = glm::vec3(10.0f, 0.0f, 0.0f);
+		newData.accel = glm::vec3(0.0f, 0.6f, 0.0f);
+		newData.mass = 1.0f;
+		newData.damp = 0.9f;
 		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
 		break;
 	case 4:
-		newData.accel = glm::vec3(30, 0.0f, 0.0f);
-		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.mass = 30.0f;
+		newData.velo = glm::vec3(100.0f, 0.0f, 0.0f);
+		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.mass = 0.1f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
 		break;
 	case 5:
-		newData.accel = glm::vec3(100, 0.0f, 0.0f);
-		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.velo = glm::vec3(300.0f, 0.0f, 0.0f);
+		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
 		newData.mass = 100.0f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
 		break;
 	}
 
@@ -69,20 +74,20 @@ projectile::projectileData projectile::createBullet(int type)
 }
 
 projectile::projectileData projectile::fireBullet(
-	std::vector<ObjData>* bulletsArray, std::vector<glm::mat4>* bulletsTrans,
+	std::vector<ObjData>* particleArray, std::vector<glm::mat4>* particleTrans,
 	std::vector<glm::mat4>* normalTransArray, std::vector<GLuint>* textureArray,
 	GLuint modelTransLoc, GLuint normTransLoc, int bType)
 {
-	projectile newBullet;
-	newBullet.pData = newBullet.createBullet(bType);
+	projectile newparticle;
+	newparticle.pData = newparticle.createBullet(bType);
 
-	ObjData bullet;
-	LoadObjFile(&bullet, "earth/Earth.obj");
-	GLfloat bulletOffsets[] = { 0.0f, 0.0f, 0.0f };
+	ObjData particle;
+	LoadObjFile(&particle, "earth/Earth.obj");
+	GLfloat particleOffsets[] = { 0.0f, 0.0f, 0.0f };
 	LoadObjToMemory(
-		&bullet,
+		&particle,
 		1.0f,
-		bulletOffsets
+		particleOffsets
 	);
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
@@ -90,22 +95,33 @@ projectile::projectileData projectile::fireBullet(
 	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
 	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 	glm::mat4 normalTrans;
-	GLuint bulletTexture;
+	GLuint particleTexture;
 
-	bulletsArray->push_back(bullet);
-	bulletsTrans->push_back(trans);
+	particleArray->push_back(particle);
+	particleTrans->push_back(trans);
 	normalTransArray->push_back(normalTrans);
-	textureArray->push_back(bulletTexture);
+	textureArray->push_back(particleTexture);
 
 	std::cout << std::endl
-		<< "bulletsArray = " << bulletsArray->size() << std::endl
-		<< "bulletsTrans = " << bulletsTrans->size() << std::endl
+		<< "particleArray = " << particleArray->size() << std::endl
+		<< "particleTrans = " << particleTrans->size() << std::endl
 		<< "normalTransArray = " << normalTransArray->size() << std::endl
 		<< "textureArray = " << textureArray->size() << std::endl << std::endl << std::endl;
 
-	return newBullet.pData;
+	return newparticle.pData;
 }
 
+void projectile::deleteBullet(
+	std::vector<ObjData>* particleArray, std::vector<glm::mat4>* particleTrans,
+	std::vector<glm::mat4>* normalTransArray, std::vector<GLuint>* textureArray,
+	std::vector<projectileData>* particleDatas, int index)
+{
+	particleArray->erase(particleArray->begin() + index);
+	particleTrans->erase(particleTrans->begin() + index);
+	normalTransArray->erase(normalTransArray->begin() + index);
+	textureArray->erase(textureArray->begin() + index);
+	particleDatas->erase(particleDatas->begin() + index);
+}
 
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
 	//std::cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << std::endl << xPos2 << ", " << yPos2 << ", " << zPos2 << std::endl << std::endl;
@@ -187,17 +203,21 @@ int main() {
 #pragma endregion
 
 
-#pragma region Ballistics Array Declaration
+#pragma region Particle Physics Declarations
 
-	std::vector<ObjData> bulletsArray;
-	std::vector<glm::mat4> bulletsTrans;
+	std::vector<ObjData> particleArray;
+	std::vector<glm::mat4> particleTrans;
 	std::vector<glm::mat4> normalTransArray;
 	std::vector<GLuint> textureArray;
-	std::vector<projectile::projectileData> bulletDatas;
-	projectile tempBullet;
+	std::vector<projectile::projectileData> particleDatas;
+	projectile tempparticle;
 	int currType = 1;
+	bool isCollide = false;
 	float boxRadius = 5.5;
-	//Declaration for Collision
+	float boxMass = 25;
+	float cooldown = 1;
+	float force = 0;
+	float stopper = 0;
 
 #pragma endregion
 
@@ -246,10 +266,10 @@ int main() {
 	GLuint ambientColorLoc = glGetUniformLocation(shaderProgram, "u_ambient_color");
 	glUniform3f(ambientColorLoc, 0.1f, 0.1f, 0.1f);
 
-	bulletDatas.push_back(tempBullet.fireBullet(&bulletsArray, &bulletsTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 0));
+	particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 0));
 	
 	glm::mat4 boxTrans = glm::mat4(1.0f); // identity
-	boxTrans = glm::translate(boxTrans, glm::vec3(10.0f, 0.0f, -4.0f));
+	boxTrans = glm::translate(boxTrans, glm::vec3(30.0f, 0.0f, -4.0f));
 	glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(boxTrans));
 
 
@@ -260,7 +280,6 @@ int main() {
 	GLuint lightPosLoc = glGetUniformLocation(shaderProgram, "u_light_pos");
 	GLuint lightDirLoc = glGetUniformLocation(shaderProgram, "u_light_dir");
 	glUniform3f(lightDirLoc, 0.0f, 0.0f, 0.0f);
-
 
 #pragma endregion
 
@@ -276,13 +295,7 @@ int main() {
 	float deltaTime = 0.0f;
 	float rotFactor = 0.0f;
 
-	//Declaration for Particle motion
-	bool isStart = true;
-	bool isShoot = false;
-	bool isCollide = false;
-	float cooldown = 1;
-	float pushAmount = 0;
-	float force = 0;
+	
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
 
@@ -377,34 +390,35 @@ int main() {
 
 		#pragma endregion
 
-		#pragma region Bullets
+		#pragma region particle
 
-		glBindVertexArray(bulletsArray[0].vaoId);
+		glBindVertexArray(particleArray[0].vaoId);
 		glUseProgram(shaderProgram);
 		glActiveTexture(GL_TEXTURE0);
 
 		// Collider
-		for (int i = 0; i < bulletsArray.size(); i++)
+		for (int i = 1; i < particleArray.size(); i++)
 		{
-			if (getDistance(bulletsTrans[i][3].x, bulletsTrans[i][3].y, bulletsTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= bulletDatas[i].radius + boxRadius) {
+			particleDatas[i].ageLimit -= 1 * deltaTime;
+			if (getDistance(particleTrans[i][3].x, particleTrans[i][3].y, particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= particleDatas[i].radius + boxRadius) {
 				std::cout << std::endl << "NAGCOLLIDE NA" << std::endl;
 
 				///////////////////////////////// CHANGE TO E=MC^2 FORMULA
-				pushAmount = bulletDatas[i].mass;
-				force = bulletDatas[i].mass;
+				force = (particleDatas[i].mass * particleDatas[i].velo.x) / boxMass;
+				stopper = force;
 				/////////////////////////////////
-				bulletsArray.erase(bulletsArray.begin() + i);
-				bulletsTrans.erase(bulletsTrans.begin() + i);
-				normalTransArray.erase(normalTransArray.begin() + i);
-				textureArray.erase(textureArray.begin() + i);
-				bulletDatas.erase(bulletDatas.begin() + i);
+				tempparticle.deleteBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, &particleDatas, i);
+			}
+			else if (particleDatas[i].ageLimit <= 0)
+			{
+				tempparticle.deleteBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, &particleDatas, i);
 			}
 		}
 
 		///////////////////////////////// CHANGE TO E=MC^2 FORMULA
-		boxTrans = glm::translate(boxTrans, glm::vec3(pushAmount, 0.0f, 0.0f) * deltaTime);
-		if (pushAmount >= 0) pushAmount -= force * deltaTime;
-		else pushAmount = 0;
+		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
+		if (force >= 0) force -= stopper * deltaTime;
+		else force = 0;
 		/////////////////////////////////
 		 
 		 
@@ -415,30 +429,30 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currType = 4;
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currType = 5;
 
-		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) bulletsTrans[0] = glm::rotate(bulletsTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) particleTrans[0] = glm::rotate(particleTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
 		cooldown += cooldown * deltaTime;
-		if (cooldown >= 4)
+		if (cooldown >= 1.5)
 		{
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				bulletDatas.push_back(tempBullet.fireBullet(&bulletsArray, &bulletsTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, currType));
+				particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, currType));
 				cooldown = 1;
 			}
 		}
 
-		for (int i = 0; i < bulletsArray.size(); i++) {
-			bulletDatas[i].velo += bulletDatas[i].accel * deltaTime;
-			bulletsTrans[i] = glm::translate(bulletsTrans[i], bulletDatas[i].velo * deltaTime); // matrix * translate_matrix
-			//std::cout << std::endl << "currVELOS" << i << " = " << bulletDatas[i].velo.x << ", " << bulletDatas[i].velo.y << ", " << bulletDatas[i].velo.z << std::endl;
-			//std::cout << "BULLETTRANS" << i << " = " << bulletsTrans[i][3].x << ", " << bulletsTrans[i][3].y << ", " << bulletsTrans[i][3].z << std::endl;
+		for (int i = 1; i < particleArray.size(); i++) {
+			particleDatas[i].velo += particleDatas[i].accel * deltaTime;
+			particleTrans[i] = glm::translate(particleTrans[i], particleDatas[i].velo * deltaTime); // matrix * translate_matrix
+			//std::cout << std::endl << "currVELOS" << i << " = " << particleDatas[i].velo.x << ", " << particleDatas[i].velo.y << ", " << particleDatas[i].velo.z << std::endl;
+			//std::cout << "particleTRANS" << i << " = " << particleTrans[i][3].x << ", " << particleTrans[i][3].y << ", " << particleTrans[i][3].z << std::endl;
 
-			normalTransArray[i] = glm::transpose(glm::inverse(bulletsTrans[i]));
+			normalTransArray[i] = glm::transpose(glm::inverse(particleTrans[i]));
 			glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
-			glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(bulletsTrans[i]));
+			glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(particleTrans[i]));
 
-			textureArray[i] = bulletsArray[i].textures[bulletsArray[i].materials[0].diffuse_texname];
+			textureArray[i] = particleArray[i].textures[particleArray[i].materials[0].diffuse_texname];
 			glBindTexture(GL_TEXTURE_2D, textureArray[i]);
-			glDrawElements(GL_TRIANGLES, bulletsArray[i].numFaces, GL_UNSIGNED_INT, (void*)0);
+			glDrawElements(GL_TRIANGLES, particleArray[i].numFaces, GL_UNSIGNED_INT, (void*)0);
 		}
 		#pragma endregion
 

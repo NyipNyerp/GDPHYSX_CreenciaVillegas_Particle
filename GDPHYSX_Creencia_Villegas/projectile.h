@@ -16,16 +16,18 @@ class projectile
 {
 public:
     struct projectileData {
-        glm::vec3 accel;
         glm::vec3 velo;
+        glm::vec3 accel;
         float mass;
         float damp;
         float radius;
         int type;
+        float ageLimit = 5;
     } pData;
 
     projectileData createBullet(int);
     projectileData fireBullet(std::vector<ObjData>*, std::vector<glm::mat4>*, std::vector<glm::mat4>*, std::vector<GLuint>*, GLuint, GLuint, int);
+    void deleteBullet(std::vector<ObjData>*, std::vector<glm::mat4>*, std::vector<glm::mat4>*, std::vector<GLuint>*, std::vector<projectileData>*, int);
 };
 
 #endif // !1
