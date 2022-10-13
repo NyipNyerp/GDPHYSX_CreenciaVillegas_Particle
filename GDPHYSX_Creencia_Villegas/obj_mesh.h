@@ -59,7 +59,7 @@ void LoadTextureData(ObjData* objData) {
 					exit(1);
 				}
 
-				std::cout << "Loaded texture: " << textureFileName << std::endl;
+				//std::cout << "Loaded texture: " << textureFileName << std::endl;
 
 				glGenTextures(1, &textureId);
 				glBindTexture(GL_TEXTURE_2D, textureId);
@@ -116,10 +116,10 @@ void LoadObjFile(ObjData* objData, std::string filename) {
 		std::cerr << err << std::endl;
 	}
 
-	std::cout << "Loaded " << filename << std::endl;
-	std::cout << "with # of shapes " << objData->shapes.size() << std::endl;
-	std::cout << "with # of vertices " << objData->attrib.vertices.size() << std::endl;
-	std::cout << "-------------------" << std::endl;
+	//std::cout << "Loaded " << filename << std::endl;
+	//std::cout << "with # of shapes " << objData->shapes.size() << std::endl;
+	//std::cout << "with # of vertices " << objData->attrib.vertices.size() << std::endl;
+	//std::cout << "-------------------" << std::endl;
 }
 
 
@@ -172,7 +172,7 @@ void LoadObjToMemory(ObjData* objData, GLfloat scaleFactor, GLfloat tOffset[]) {
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
-	std::cout << "Vertex Array ID: " << VAO << std::endl;
+	//std::cout << "Vertex Array ID: " << VAO << std::endl;
 
 
 
@@ -180,7 +180,7 @@ void LoadObjToMemory(ObjData* objData, GLfloat scaleFactor, GLfloat tOffset[]) {
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	std::cout << "Vertex Buffer ID: " << VBO << std::endl;
+	//std::cout << "Vertex Buffer ID: " << VBO << std::endl;
 	glBufferData(GL_ARRAY_BUFFER, vertexList.size() * sizeof(VertexData), &vertexList[0], GL_STATIC_DRAW);
 
 	//set attributes for vertice buffer
