@@ -18,6 +18,9 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectPooling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="main.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectPooling.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

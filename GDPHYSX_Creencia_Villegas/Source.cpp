@@ -1,9 +1,13 @@
 #pragma once
 #include "projectile.h"
-
+#include "ObjectPooling.h"
 
 projectile::projectileData projectile::createBullet(int type)
 {
+
+	float randX = rand() % 30 + -30;
+	float randY = rand() % 15 + -5;
+	float randZ = rand() % 10 + -10;
 	projectileData newData;
 	switch (type) {
 	case 0:
@@ -13,6 +17,8 @@ projectile::projectileData projectile::createBullet(int type)
 		newData.damp = 1.0f;
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
+		newData.count = 1;
+		newData.type = 0;
 		break;
 	case 1:
 		newData.velo = glm::vec3(35.0f, 0.0f, 0.0f);
@@ -21,6 +27,8 @@ projectile::projectileData projectile::createBullet(int type)
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
+		newData.count = 1;
+		newData.type = 1;
 		break;
 	case 2:
 		newData.velo = glm::vec3(40.0f, 30.0f, 0.0f);
@@ -29,6 +37,8 @@ projectile::projectileData projectile::createBullet(int type)
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
+		newData.count = 1;
+		newData.type = 2;
 		break;
 	case 3:
 		newData.velo = glm::vec3(10.0f, 0.0f, 0.0f);
@@ -37,6 +47,8 @@ projectile::projectileData projectile::createBullet(int type)
 		newData.damp = 0.9f;
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
+		newData.count = 1;
+		newData.type = 3;
 		break;
 	case 4:
 		newData.velo = glm::vec3(100.0f, 0.0f, 0.0f);
@@ -45,14 +57,38 @@ projectile::projectileData projectile::createBullet(int type)
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
+		newData.count = 1;
+		newData.type = 4;
 		break;
 	case 5:
-		newData.velo = glm::vec3(300.0f, 0.0f, 0.0f);
+		newData.velo = glm::vec3(randX, 50.0f, 0.0f);
 		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.mass = 100.0f;
+		newData.mass = 1.0;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
+		newData.count = 3;
+		newData.type = 5;
+		break;
+	case 6:
+		newData.velo = glm::vec3(randX, randY, randZ);
+		newData.accel = glm::vec3(0.0f, -2.0, 0.0f);
+		newData.mass = 1.0;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.count = 5;
+		newData.type = 6;
+		break;
+	case 7:
+		newData.velo = glm::vec3(randX, randY, randZ);
+		newData.accel = glm::vec3(0.0f, -5.0f, 0.0f);
+		newData.mass = 1.0;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.count = 0;
+		newData.type = 6;
 		break;
 	}
 
@@ -62,10 +98,11 @@ projectile::projectileData projectile::createBullet(int type)
 projectile::projectileData projectile::fireBullet(
 	std::vector<ObjData>* particleArray, std::vector<glm::mat4>* particleTrans,
 	std::vector<glm::mat4>* normalTransArray, std::vector<GLuint>* textureArray,
-	GLuint modelTransLoc, GLuint normTransLoc, int bType)
+	GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos)
 {
 	projectile newparticle;
 	newparticle.pData = newparticle.createBullet(bType);
+
 
 	ObjData particle;
 	LoadObjFile(&particle, "earth/Earth.obj");
@@ -78,6 +115,8 @@ projectile::projectileData projectile::fireBullet(
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
 	trans = glm::mat4(1.0f); // identity
+	if (bType == 6) trans = glm::translate(trans, currParticlePos);
+	else if (bType == 7) trans = glm::translate(trans, currParticlePos);
 	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
 	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 	glm::mat4 normalTrans;
@@ -88,11 +127,14 @@ projectile::projectileData projectile::fireBullet(
 	normalTransArray->push_back(normalTrans);
 	textureArray->push_back(particleTexture);
 
+
+	/*
 	std::cout << std::endl
 		<< "particleArray = " << particleArray->size() << std::endl
 		<< "particleTrans = " << particleTrans->size() << std::endl
 		<< "normalTransArray = " << normalTransArray->size() << std::endl
 		<< "textureArray = " << textureArray->size() << std::endl << std::endl << std::endl;
+	*/
 
 	return newparticle.pData;
 }
@@ -117,7 +159,7 @@ float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos
 #pragma region CAMERA VARIABLES
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
 //camera
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraPos = glm::vec3(10.0f, 30.0f, 30.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float yaw = -90.0f;
@@ -174,6 +216,23 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 int main() {
+
+	
+	ObjectPool <int>projectilePool1(3);
+
+	int* myProjectile1 = projectilePool1.alloc();
+	int* myProjectile2 = projectilePool1.alloc();
+	int* myProjectile3 = projectilePool1.alloc();
+	int* myProjectile4 = projectilePool1.alloc(); 
+
+	projectilePool1.dealloc(myProjectile1);
+	projectilePool1.dealloc(myProjectile2);
+	projectilePool1.dealloc(myProjectile3);
+
+
+
+
+
 	stbi_set_flip_vertically_on_load(true);
 #pragma region Initialization
 	//initialize glfw
@@ -243,19 +302,19 @@ int main() {
 		"front.png",
 		"back.png"
 	};
-	SkyBoxData skybox = LoadSkybox("Assets/skybox", faces);
+	//SkyBoxData skybox = LoadSkybox("Assets/skybox", faces);
 
 #pragma endregion
 
 #pragma region Shader Loading
-	GLuint skyboxShaderProgram = LoadShaders("Shaders/skybox_vertex.shader", "Shaders/skybox_fragment.shader");
+	//GLuint skyboxShaderProgram = LoadShaders("Shaders/skybox_vertex.shader", "Shaders/skybox_fragment.shader");
 	//GLuint shaderProgram = LoadShaders("Shaders/phong_vertex.shader", "Shaders/phong_fragment.shader");
 	//glUseProgram(shaderProgram2);
 	GLuint shaderProgram = LoadShaders("Shaders/vertex.shader", "Shaders/fragment.shader");
 	glUseProgram(shaderProgram);
 
 	GLuint colorLoc = glGetUniformLocation(shaderProgram, "u_color");
-	glUniform3f(colorLoc, 1.0f, 1.0f, 1.0f);
+	glUniform3f(colorLoc, 0.0f, 0.0f, 1.0f);
 
 
 	// initialize MVP
@@ -268,8 +327,8 @@ int main() {
 	GLuint ambientColorLoc = glGetUniformLocation(shaderProgram, "u_ambient_color");
 	glUniform3f(ambientColorLoc, 0.1f, 0.1f, 0.1f);
 
-	particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 0));
-	
+	particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 0, glm::vec3(0.0f, 0.0f, 0.0f)));
+
 	glm::mat4 boxTrans = glm::mat4(1.0f); // identity
 	boxTrans = glm::translate(boxTrans, glm::vec3(30.0f, 0.0f, -4.0f));
 	glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(boxTrans));
@@ -286,7 +345,7 @@ int main() {
 #pragma endregion
 
 	// set bg color to green
-	glClearColor(0.4f, 0.4f, 0.0f, 0.0f);
+	glClearColor(0.5f, 0.5f, 0.0f, 0.0f);
 
 
 	// var for rotations
@@ -297,7 +356,7 @@ int main() {
 	float deltaTime = 0.0f;
 	float rotFactor = 0.0f;
 
-	
+
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
 
@@ -324,9 +383,9 @@ int main() {
 		projection = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 100.0f);
 
 		// Perspective Projection
-		projection = glm::perspective(glm::radians(90.0f), ratio, 0.1f, 100.0f),
-		// Set projection matrix in shader
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		projection = glm::perspective(glm::radians(90.0f), ratio, 0.1f, 300.0f),
+			// Set projection matrix in shader
+			glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 #pragma endregion
 
@@ -372,11 +431,11 @@ int main() {
 
 #pragma region Draw
 
-		DrawSkybox(skybox, skyboxShaderProgram, view, projection);
-		glUseProgram(shaderProgram);
+		//DrawSkybox(skybox, skyboxShaderProgram, view, projection);
+		//glUseProgram(shaderProgram);
 
-		
-		#pragma region Box Object
+
+#pragma region Box Object
 
 		glBindVertexArray(box.vaoId);
 		glUseProgram(shaderProgram);
@@ -386,13 +445,13 @@ int main() {
 		glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(boxTrans));
 
 		glActiveTexture(GL_TEXTURE0);
-		GLuint boxTexture = box.textures[box.materials[0].diffuse_texname];
-		glBindTexture(GL_TEXTURE_2D, boxTexture);
+		//GLuint boxTexture = box.textures[box.materials[0].diffuse_texname];
+		//glBindTexture(GL_TEXTURE_2D, boxTexture);
 		glDrawElements(GL_TRIANGLES, box.numFaces, GL_UNSIGNED_INT, (void*)0);
 
-		#pragma endregion
+#pragma endregion
 
-		#pragma region particle
+#pragma region particle
 
 		glBindVertexArray(particleArray[0].vaoId);
 		glUseProgram(shaderProgram);
@@ -409,10 +468,30 @@ int main() {
 				force = (particleDatas[i].mass * particleDatas[i].velo.x) / boxMass;
 				stopper = force;
 				/////////////////////////////////
+
 				tempparticle.deleteBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, &particleDatas, i);
+
 			}
 			else if (particleDatas[i].ageLimit <= 0)
 			{
+				std::cout << "type = " << particleDatas[i].type << std::endl;
+				std::cout << "count = " << particleDatas[i].count << std::endl << std::endl;
+
+				if (particleDatas[i].type == 5)
+				{
+					for (int j = 0; j < particleDatas[i].count; j++)
+					{
+						particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3]));
+					}
+				}
+				else if (particleDatas[i].type == 6)
+				{
+					for (int k = 0; k < particleDatas[i].count; k++)
+					{
+						particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
+					}
+				}
+
 				tempparticle.deleteBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, &particleDatas, i);
 			}
 		}
@@ -422,8 +501,8 @@ int main() {
 		if (force >= 0) force -= stopper * deltaTime;
 		else force = 0;
 		/////////////////////////////////
-		 
-		 
+
+
 		// transforms
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currType = 2;
@@ -437,7 +516,7 @@ int main() {
 		if (cooldown >= 1.5)
 		{
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, currType));
+				particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f)));
 				cooldown = 1;
 			}
 		}
@@ -452,11 +531,11 @@ int main() {
 			glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
 			glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(particleTrans[i]));
 
-			textureArray[i] = particleArray[i].textures[particleArray[i].materials[0].diffuse_texname];
+			//textureArray[i] = particleArray[i].textures[particleArray[i].materials[0].diffuse_texname];
 			glBindTexture(GL_TEXTURE_2D, textureArray[i]);
 			glDrawElements(GL_TRIANGLES, particleArray[i].numFaces, GL_UNSIGNED_INT, (void*)0);
 		}
-		#pragma endregion
+#pragma endregion
 
 
 		//unbindtexture after rendering

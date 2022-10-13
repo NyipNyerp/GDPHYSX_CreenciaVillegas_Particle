@@ -1,18 +1,87 @@
-﻿  Source.cpp
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\main.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\obj_mesh.h(165,36): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+﻿  ObjectPooling.cpp
+  Source.cpp
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\main.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\obj_mesh.h(165,36): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
           with
           [
               _Ty=unsigned int
           ]
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\obj_mesh.h(169,36): warning C4267: '=': conversion from 'size_t' to 'GLulong', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(114,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(138,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(139,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(143,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(144,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(146,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(147,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(295,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(465,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  GDPHYSX_Creencia_Villegas.vcxproj -> C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\x64\Debug\GDPHYSX_Creencia_Villegas.exe
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\obj_mesh.h(169,36): warning C4267: '=': conversion from 'size_t' to 'GLulong', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(8,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(9,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(10,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(156,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(180,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(181,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(185,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(186,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(188,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(189,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(360,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(550,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(52): warning C4661: 'ObjectPool<int>::ObjectPool(size_t)': no suitable definition provided for explicit template instantiation request
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(31): message : see declaration of 'ObjectPool<int>::ObjectPool'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(52): warning C4661: 'ObjectPool<int>::~ObjectPool(void)': no suitable definition provided for explicit template instantiation request
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(33): message : see declaration of 'ObjectPool<int>::~ObjectPool'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(52): warning C4661: 'T *ObjectPool<T>::alloc(void)': no suitable definition provided for explicit template instantiation request
+          with
+          [
+              T=int
+          ]
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(36): message : see declaration of 'ObjectPool<int>::alloc'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(52): warning C4661: 'void ObjectPool<int>::dealloc(T *)': no suitable definition provided for explicit template instantiation request
+          with
+          [
+              T=int
+          ]
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(39): message : see declaration of 'ObjectPool<int>::dealloc'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(53): warning C4661: 'ObjectPool<float>::ObjectPool(size_t)': no suitable definition provided for explicit template instantiation request
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(31): message : see declaration of 'ObjectPool<float>::ObjectPool'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(53): warning C4661: 'ObjectPool<float>::~ObjectPool(void)': no suitable definition provided for explicit template instantiation request
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(33): message : see declaration of 'ObjectPool<float>::~ObjectPool'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(53): warning C4661: 'T *ObjectPool<T>::alloc(void)': no suitable definition provided for explicit template instantiation request
+          with
+          [
+              T=float
+          ]
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(36): message : see declaration of 'ObjectPool<float>::alloc'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(53): warning C4661: 'void ObjectPool<float>::dealloc(T *)': no suitable definition provided for explicit template instantiation request
+          with
+          [
+              T=float
+          ]
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(39): message : see declaration of 'ObjectPool<float>::dealloc'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(54): warning C4661: 'ObjectPool<double>::ObjectPool(size_t)': no suitable definition provided for explicit template instantiation request
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(31): message : see declaration of 'ObjectPool<double>::ObjectPool'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(54): warning C4661: 'ObjectPool<double>::~ObjectPool(void)': no suitable definition provided for explicit template instantiation request
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(33): message : see declaration of 'ObjectPool<double>::~ObjectPool'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(54): warning C4661: 'T *ObjectPool<T>::alloc(void)': no suitable definition provided for explicit template instantiation request
+          with
+          [
+              T=double
+          ]
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(36): message : see declaration of 'ObjectPool<double>::alloc'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(54): warning C4661: 'void ObjectPool<double>::dealloc(T *)': no suitable definition provided for explicit template instantiation request
+          with
+          [
+              T=double
+          ]
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(39): message : see declaration of 'ObjectPool<double>::dealloc'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(55): warning C4661: 'ObjectPool<std::string>::ObjectPool(size_t)': no suitable definition provided for explicit template instantiation request
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(31): message : see declaration of 'ObjectPool<std::string>::ObjectPool'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(55): warning C4661: 'ObjectPool<std::string>::~ObjectPool(void)': no suitable definition provided for explicit template instantiation request
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(33): message : see declaration of 'ObjectPool<std::string>::~ObjectPool'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(55): warning C4661: 'T *ObjectPool<T>::alloc(void)': no suitable definition provided for explicit template instantiation request
+          with
+          [
+              T=std::string
+          ]
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(36): message : see declaration of 'ObjectPool<std::string>::alloc'
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(55): warning C4661: 'void ObjectPool<std::string>::dealloc(T *)': no suitable definition provided for explicit template instantiation request
+          with
+          [
+              T=std::string
+          ]
+D:\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ObjectPooling.h(39): message : see declaration of 'ObjectPool<std::string>::dealloc'
+  Generating Code...
+  GDPHYSX_Creencia_Villegas.vcxproj -> D:\GDPHYSX_CreenciaVillegas_Particle\x64\Debug\GDPHYSX_Creencia_Villegas.exe
