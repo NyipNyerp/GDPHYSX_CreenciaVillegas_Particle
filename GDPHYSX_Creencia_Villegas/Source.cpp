@@ -1,13 +1,14 @@
 #pragma once
 #include "projectile.h"
 
-
+// Determines particle data for new bullets
 projectile::projectileData projectile::createBullet(int type)
 {
+	float randX = rand() % 60 + -30;
+	float randY = rand() % 30 + -5;
+	float randZ = rand() % 30 + -15;
+	float randAge = rand() % 3 + 1;
 
-	float randX = rand() % 30 + -30;
-	float randY = rand() % 15 + -5;
-	float randZ = rand() % 30 + -30;
 	projectileData newData;
 	switch (type) {
 	case 0:
@@ -19,6 +20,7 @@ projectile::projectileData projectile::createBullet(int type)
 		newData.accel.y *= newData.damp;
 		newData.type = 0;
 		newData.count = 1;
+		newData.ageLimit = 10000;
 		break;
 	case 1:
 		newData.velo = glm::vec3(35.0f, 0.0f, 0.0f);
@@ -72,53 +74,44 @@ projectile::projectileData projectile::createBullet(int type)
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
 		newData.type = 5;
-		newData.count = 3;
+		newData.count = 5;
 		newData.ageLimit = 3;
+		newData.material = 3;
 		break;
 	case 6:
 		newData.velo = glm::vec3(randX, randY, randZ);
-		newData.accel = glm::vec3(0.0f, -2.0, 0.0f);
+		newData.accel = glm::vec3(0.0f, -5.0, 0.0f);
 		newData.mass = 1.0;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
 		newData.type = 6;
-		newData.count = 5;
-		newData.ageLimit = 3;
+		newData.count = 10;
+		newData.ageLimit = randAge;
+		newData.material = 2;
 		break;
 	case 7:
 		newData.velo = glm::vec3(randX, randY, randZ);
-		newData.accel = glm::vec3(0.0f, -5.0f, 0.0f);
+		newData.accel = glm::vec3(0.0f, -10.0f, 0.0f);
 		newData.mass = 1.0;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
 		newData.accel.y *= newData.damp;
 		newData.type = 6;
 		newData.count = 0;
-		newData.ageLimit = 3;
+		newData.ageLimit = randAge;
+		newData.material = 1;
 		break;
 	}
 
 	return newData;
 }
 
-projectile::projectileData projectile::fireBullet(
-	std::vector<ObjData>* particleArray, std::vector<glm::mat4>* particleTrans,
-	std::vector<glm::mat4>* normalTransArray, std::vector<GLuint>* textureArray,
-	GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos)
+// Creates new particles
+projectile::projectileData projectile::fireBullet(std::vector<glm::mat4>* particleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos)
 {
 	projectile newparticle;
 	newparticle.pData = newparticle.createBullet(bType);
-
-
-	ObjData particle;
-	LoadObjFile(&particle, "earth/Earth.obj");
-	GLfloat particleOffsets[] = { 0.0f, 0.0f, 0.0f };
-	LoadObjToMemory(
-		&particle,
-		1.0f,
-		particleOffsets
-	);
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
 	trans = glm::mat4(1.0f); // identity
@@ -127,37 +120,28 @@ projectile::projectileData projectile::fireBullet(
 	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
 	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 	glm::mat4 normalTrans;
-	GLuint particleTexture;
 
-	particleArray->push_back(particle);
 	particleTrans->push_back(trans);
 	normalTransArray->push_back(normalTrans);
-	textureArray->push_back(particleTexture);
-
 
 	/*
 	std::cout << std::endl
-		<< "particleArray = " << particleArray->size() << std::endl
 		<< "particleTrans = " << particleTrans->size() << std::endl
 		<< "normalTransArray = " << normalTransArray->size() << std::endl
-		<< "textureArray = " << textureArray->size() << std::endl << std::endl << std::endl;
 	*/
 
 	return newparticle.pData;
 }
 
-void projectile::deleteBullet(
-	std::vector<ObjData>* particleArray, std::vector<glm::mat4>* particleTrans,
-	std::vector<glm::mat4>* normalTransArray, std::vector<GLuint>* textureArray,
-	std::vector<projectileData>* particleDatas, int index)
+// Deletes existing particles
+void projectile::deleteBullet(std::vector<glm::mat4>* particleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<projectileData>* particleDatas, int index)
 {
-	particleArray->erase(particleArray->begin() + index);
 	particleTrans->erase(particleTrans->begin() + index);
 	normalTransArray->erase(normalTransArray->begin() + index);
-	textureArray->erase(textureArray->begin() + index);
 	particleDatas->erase(particleDatas->begin() + index);
 }
 
+// Gets the distance between 2 objects for collision checking
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
 	//std::cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << std::endl << xPos2 << ", " << yPos2 << ", " << zPos2 << std::endl << std::endl;
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
@@ -180,6 +164,7 @@ float lastY = 768 / 2.0;
 
 #pragma endregion
 
+// Mouse camera controls
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 	if (firstMouse)
@@ -256,10 +241,8 @@ int main() {
 
 #pragma region Particle Physics Declarations
 
-	std::vector<ObjData> particleArray;
 	std::vector<glm::mat4> particleTrans;
 	std::vector<glm::mat4> normalTransArray;
-	std::vector<GLuint> textureArray;
 	std::vector<projectile::projectileData> particleDatas;
 	projectile tempparticle;
 	int currType = 1;
@@ -273,6 +256,15 @@ int main() {
 #pragma endregion
 
 #pragma region Mesh Loading
+
+	ObjData particle;
+	LoadObjFile(&particle, "earth/Earth.obj");
+	GLfloat particleOffsets[] = { 0.0f, 0.0f, 0.0f };
+	LoadObjToMemory(
+		&particle,
+		1.0f,
+		particleOffsets
+	);
 
 	ObjData box;
 	LoadObjFile(&box, "box/12279_Container_v1_l1.obj");
@@ -292,12 +284,12 @@ int main() {
 		"front.png",
 		"back.png"
 	};
-	//SkyBoxData skybox = LoadSkybox("Assets/skybox", faces);
+	SkyBoxData skybox = LoadSkybox("Assets/skybox", faces);
 
 #pragma endregion
 
 #pragma region Shader Loading
-	//GLuint skyboxShaderProgram = LoadShaders("Shaders/skybox_vertex.shader", "Shaders/skybox_fragment.shader");
+	GLuint skyboxShaderProgram = LoadShaders("Shaders/skybox_vertex.shader", "Shaders/skybox_fragment.shader");
 	//GLuint shaderProgram = LoadShaders("Shaders/phong_vertex.shader", "Shaders/phong_fragment.shader");
 	//glUseProgram(shaderProgram2);
 	GLuint shaderProgram = LoadShaders("Shaders/vertex.shader", "Shaders/fragment.shader");
@@ -317,8 +309,9 @@ int main() {
 	GLuint ambientColorLoc = glGetUniformLocation(shaderProgram, "u_ambient_color");
 	glUniform3f(ambientColorLoc, 0.1f, 0.1f, 0.1f);
 
-	particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 0, glm::vec3(0.0f, 0.0f, 0.0f)));
-	
+	// Create dummy particle to avoid crashing when accessing vector arrays in Draw region
+	particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 0, glm::vec3(0.0f, 0.0f, 0.0f)));
+
 	glm::mat4 boxTrans = glm::mat4(1.0f); // identity
 	boxTrans = glm::translate(boxTrans, glm::vec3(30.0f, 0.0f, -4.0f));
 	glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(boxTrans));
@@ -337,7 +330,6 @@ int main() {
 	// set bg color to green
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-
 	// var for rotations
 	float xFactor = 0.0f;
 	float xSpeed = 1.0f;
@@ -346,7 +338,6 @@ int main() {
 	float deltaTime = 0.0f;
 	float rotFactor = 0.0f;
 
-	
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
 
@@ -374,8 +365,8 @@ int main() {
 
 		// Perspective Projection
 		projection = glm::perspective(glm::radians(90.0f), ratio, 0.1f, 300.0f),
-		// Set projection matrix in shader
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+			// Set projection matrix in shader
+			glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 #pragma endregion
 
@@ -386,7 +377,7 @@ int main() {
 
 		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
-
+		// Keyboard camera controls
 		//source: https://www.youtube.com/watch?v=AWM4CUfffos
 		float cameraSpeed = deltaTime * 10;
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
@@ -421,11 +412,10 @@ int main() {
 
 #pragma region Draw
 
-		//DrawSkybox(skybox, skyboxShaderProgram, view, projection);
-		//glUseProgram(shaderProgram);
+		DrawSkybox(skybox, skyboxShaderProgram, view, projection);
+		glUseProgram(shaderProgram);
 
-		
-		#pragma region Box Object
+#pragma region Box Object
 
 		glBindVertexArray(box.vaoId);
 		glUseProgram(shaderProgram);
@@ -435,62 +425,50 @@ int main() {
 		glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(boxTrans));
 
 		glActiveTexture(GL_TEXTURE0);
-		//GLuint boxTexture = box.textures[box.materials[0].diffuse_texname];
-		//glBindTexture(GL_TEXTURE_2D, boxTexture);
+		GLuint boxTexture = box.textures[box.materials[0].diffuse_texname];
+		glBindTexture(GL_TEXTURE_2D, boxTexture);
 		glDrawElements(GL_TRIANGLES, box.numFaces, GL_UNSIGNED_INT, (void*)0);
 
-		#pragma endregion
+#pragma endregion
 
-		#pragma region particle
+#pragma region Particle Objects
 
-		glBindVertexArray(particleArray[0].vaoId);
+		glBindVertexArray(particle.vaoId);
 		glUseProgram(shaderProgram);
-		glActiveTexture(GL_TEXTURE0);
 
-		// Collider
-		for (int i = 1; i < particleArray.size(); i++)
+		// Collision checking and resolution
+		for (int i = 1; i < particleDatas.size(); i++)
 		{
 			particleDatas[i].ageLimit -= 1 * deltaTime;
 			if (getDistance(particleTrans[i][3].x, particleTrans[i][3].y, particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= particleDatas[i].radius + boxRadius) {
-				std::cout << std::endl << "NAGCOLLIDE NA" << std::endl;
-
-				///////////////////////////////// CHANGE TO E=MC^2 FORMULA
 				force = (particleDatas[i].mass * particleDatas[i].velo.x) / boxMass;
 				stopper = force;
-				/////////////////////////////////
 				if (particleDatas[i].type != 4)
-					tempparticle.deleteBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, &particleDatas, i);
-				
+					tempparticle.deleteBullet(&particleTrans, &normalTransArray, &particleDatas, i);
 			}
 			else if (particleDatas[i].ageLimit <= 0)
 			{
 				if (particleDatas[i].type == 5)
 				{
 					for (int j = 0; j < particleDatas[i].count; j++)
-					{
-						particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3]));
-					}
+						particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3]));
+					for (int l = 0; l < particleDatas[i].count * 3; l++)
+						particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
 				}
 				else if (particleDatas[i].type == 6)
 				{
 					for (int k = 0; k < particleDatas[i].count; k++)
-					{
-						particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
-					}
+						particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
 				}
-
-				tempparticle.deleteBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, &particleDatas, i);
+				tempparticle.deleteBullet(&particleTrans, &normalTransArray, &particleDatas, i);
 			}
 		}
-
-		///////////////////////////////// CHANGE TO E=MC^2 FORMULA
 		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
 		if (force >= 0) force -= stopper * deltaTime;
 		else force = 0;
-		/////////////////////////////////
-		 
-		 
-		// transforms
+
+
+		// Change bullet type
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currType = 2;
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) currType = 3;
@@ -499,33 +477,36 @@ int main() {
 
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) particleTrans[0] = glm::rotate(particleTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
+
+		int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+		// Firing cooldown
 		cooldown += cooldown * deltaTime;
 		if (cooldown >= 1.5)
 		{
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				particleDatas.push_back(tempparticle.fireBullet(&particleArray, &particleTrans, &normalTransArray, &textureArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f)));
+			if (state == GLFW_PRESS) {
+				particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f)));
 				cooldown = 1;
 			}
 		}
 
-		for (int i = 1; i < particleArray.size(); i++) {
+		// Drawing particles
+		for (int i = 1; i < particleDatas.size(); i++) {
 			particleDatas[i].velo += particleDatas[i].accel * deltaTime;
-			particleTrans[i] = glm::translate(particleTrans[i], particleDatas[i].velo * deltaTime); // matrix * translate_matrix
-			//std::cout << std::endl << "currVELOS" << i << " = " << particleDatas[i].velo.x << ", " << particleDatas[i].velo.y << ", " << particleDatas[i].velo.z << std::endl;
-			//std::cout << "particleTRANS" << i << " = " << particleTrans[i][3].x << ", " << particleTrans[i][3].y << ", " << particleTrans[i][3].z << std::endl;
+			particleTrans[i] = glm::translate(particleTrans[i], particleDatas[i].velo * deltaTime);
 
 			normalTransArray[i] = glm::transpose(glm::inverse(particleTrans[i]));
 			glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
 			glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(particleTrans[i]));
 
-			//textureArray[i] = particleArray[i].textures[particleArray[i].materials[0].diffuse_texname];
-			//glBindTexture(GL_TEXTURE_2D, textureArray[i]);
-			glDrawElements(GL_TRIANGLES, particleArray[i].numFaces, GL_UNSIGNED_INT, (void*)0);
+			glActiveTexture(GL_TEXTURE0);
+			GLuint particleTexture = particle.textures[particle.materials[particleDatas[i].material].diffuse_texname];
+			glBindTexture(GL_TEXTURE_2D, particleTexture);
+			glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
 		}
-		#pragma endregion
+#pragma endregion
 
 		//unbindtexture after rendering
-		//glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		currentTime = glfwGetTime();
 		deltaTime = currentTime - prevTime;
