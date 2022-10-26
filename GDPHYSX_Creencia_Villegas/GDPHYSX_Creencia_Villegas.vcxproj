@@ -140,15 +140,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnchoredSpring.cpp" />
+    <ClCompile Include="BungeeSpring.cpp" />
+    <ClCompile Include="CableSpring.cpp" />
+    <ClCompile Include="DragForceGenerator.cpp" />
+    <ClCompile Include="ForceGenerator.cpp" />
+    <ClCompile Include="ForceRegistry.cpp" />
+    <ClCompile Include="GravityForceGenerator.cpp" />
+    <ClCompile Include="particle.cpp" />
+    <ClCompile Include="ParticleSpring.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnchoredSpring.h" />
+    <ClInclude Include="BungeeSpring.h" />
+    <ClInclude Include="CableSpring.h" />
+    <ClInclude Include="DragForceGenerator.h" />
+    <ClInclude Include="ForceGenerator.h" />
+    <ClInclude Include="ForceRegistry.h" />
+    <ClInclude Include="GravityForceGenerator.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="obj_mesh.h" />
-    <ClInclude Include="projectile.h" />
+    <ClInclude Include="particle.h" />
+    <ClInclude Include="ParticleSpring.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="stb_image.h" />

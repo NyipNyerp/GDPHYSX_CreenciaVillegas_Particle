@@ -1,151 +1,16 @@
 #pragma once
-#include "projectile.h"
+#include "Particle.h"
+#include "main.h"
 
-// Determines particle data for new bullets
-projectile::projectileData projectile::createBullet(int type)
-{
-	float randX = rand() % 60 + -30;
-	float randY = rand() % 30 + -5;
-	float randZ = rand() % 30 + -15;
-	float randAge = rand() % 3 + 1;
 
-	projectileData newData;
-	switch (type) {
-	case 0:
-		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.mass = 5.0f;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 0;
-		newData.count = 1;
-		newData.ageLimit = 10000;
-		break;
-	case 1:
-		newData.velo = glm::vec3(35.0f, 0.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, -1.0f, 0.0f);
-		newData.mass = 2.0f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 1;
-		newData.count = 1;
-		newData.ageLimit = 5;
-		break;
-	case 2:
-		newData.velo = glm::vec3(40.0f, 30.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, -20.0f, 0.0f);
-		newData.mass = 200.0f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 2;
-		newData.count = 1;
-		newData.ageLimit = 5;
-		break;
-	case 3:
-		newData.velo = glm::vec3(10.0f, 0.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, 0.6f, 0.0f);
-		newData.mass = 1.0f;
-		newData.damp = 0.9f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 3;
-		newData.count = 1;
-		newData.ageLimit = 5;
-		break;
-	case 4:
-		newData.velo = glm::vec3(100.0f, 0.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.mass = 0.1f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 4;
-		newData.count = 1;
-		newData.ageLimit = 5;
-		break;
-	case 5:
-		newData.velo = glm::vec3(randX, 50.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 5;
-		newData.count = 5;
-		newData.ageLimit = 3;
-		newData.material = 3;
-		break;
-	case 6:
-		newData.velo = glm::vec3(randX, randY, randZ);
-		newData.accel = glm::vec3(0.0f, -5.0, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 6;
-		newData.count = 10;
-		newData.ageLimit = randAge;
-		newData.material = 2;
-		break;
-	case 7:
-		newData.velo = glm::vec3(randX, randY, randZ);
-		newData.accel = glm::vec3(0.0f, -10.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 6;
-		newData.count = 0;
-		newData.ageLimit = randAge;
-		newData.material = 1;
-		break;
-	}
-
-	return newData;
-}
-
-// Creates new particles
-projectile::projectileData projectile::fireBullet(std::vector<glm::mat4>* particleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos)
-{
-	projectile newparticle;
-	newparticle.pData = newparticle.createBullet(bType);
-
-	glm::mat4 trans = glm::mat4(1.0f); // identity
-	trans = glm::mat4(1.0f); // identity
-	if (bType == 6) trans = glm::translate(trans, currParticlePos);
-	else if (bType == 7) trans = glm::translate(trans, currParticlePos);
-	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
-	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-	glm::mat4 normalTrans;
-
-	particleTrans->push_back(trans);
-	normalTransArray->push_back(normalTrans);
-
-	/*
-	std::cout << std::endl
-		<< "particleTrans = " << particleTrans->size() << std::endl
-		<< "normalTransArray = " << normalTransArray->size() << std::endl
-	*/
-
-	return newparticle.pData;
-}
-
-// Deletes existing particles
-void projectile::deleteBullet(std::vector<glm::mat4>* particleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<projectileData>* particleDatas, int index)
-{
-	particleTrans->erase(particleTrans->begin() + index);
-	normalTransArray->erase(normalTransArray->begin() + index);
-	particleDatas->erase(particleDatas->begin() + index);
-}
 
 // Gets the distance between 2 objects for collision checking
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
 	//std::cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << std::endl << xPos2 << ", " << yPos2 << ", " << zPos2 << std::endl << std::endl;
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
 }
+
+
 
 #pragma region CAMERA VARIABLES
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
@@ -243,8 +108,8 @@ int main() {
 
 	std::vector<glm::mat4> particleTrans;
 	std::vector<glm::mat4> normalTransArray;
-	std::vector<projectile::projectileData> particleDatas;
-	projectile tempparticle;
+	std::vector<particle::particleData> particleDatas;
+	particle tempParticle;
 	int currType = 1;
 	bool isCollide = false;
 	float boxRadius = 5.5;
@@ -309,8 +174,8 @@ int main() {
 	GLuint ambientColorLoc = glGetUniformLocation(shaderProgram, "u_ambient_color");
 	glUniform3f(ambientColorLoc, 0.1f, 0.1f, 0.1f);
 
-	// Create dummy particle to avoid crashing when accessing vector arrays in Draw region
-	particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 0, glm::vec3(0.0f, 0.0f, 0.0f)));
+	// Create dummy Particle to avoid crashing when accessing vector arrays in Draw region
+	particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 0, glm::vec3(0.0f, 0.0f, 0.0f)));
 
 	glm::mat4 boxTrans = glm::mat4(1.0f); // identity
 	boxTrans = glm::translate(boxTrans, glm::vec3(30.0f, 0.0f, -4.0f));
@@ -439,34 +304,33 @@ int main() {
 		// Collision checking and resolution
 		for (int i = 1; i < particleDatas.size(); i++)
 		{
-			particleDatas[i].ageLimit -= 1 * deltaTime;
+			particleDatas[i].lifeSpan -= 1 * deltaTime;
 			if (getDistance(particleTrans[i][3].x, particleTrans[i][3].y, particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= particleDatas[i].radius + boxRadius) {
 				force = (particleDatas[i].mass * particleDatas[i].velo.x) / boxMass;
 				stopper = force;
 				if (particleDatas[i].type != 4)
-					tempparticle.deleteBullet(&particleTrans, &normalTransArray, &particleDatas, i);
+					tempParticle.deleteBullet(&particleTrans, &normalTransArray, &particleDatas, i);
 			}
-			else if (particleDatas[i].ageLimit <= 0)
+			else if (particleDatas[i].lifeSpan <= 0)
 			{
 				if (particleDatas[i].type == 5)
 				{
 					for (int j = 0; j < particleDatas[i].count; j++)
-						particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3]));
+						particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3]));
 					for (int l = 0; l < particleDatas[i].count * 3; l++)
-						particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
+						particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
 				}
 				else if (particleDatas[i].type == 6)
 				{
 					for (int k = 0; k < particleDatas[i].count; k++)
-						particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
+						particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
 				}
-				tempparticle.deleteBullet(&particleTrans, &normalTransArray, &particleDatas, i);
+				tempParticle.deleteBullet(&particleTrans, &normalTransArray, &particleDatas, i);
 			}
 		}
 		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
 		if (force >= 0) force -= stopper * deltaTime;
 		else force = 0;
-
 
 		// Change bullet type
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
@@ -474,6 +338,9 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) currType = 3;
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currType = 4;
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currType = 5;
+		//if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) currType = 6;
+		//if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) currType = 7;
+		//if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) currType = 8;
 
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) particleTrans[0] = glm::rotate(particleTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
@@ -484,12 +351,12 @@ int main() {
 		if (cooldown >= 1.5)
 		{
 			if (state == GLFW_PRESS) {
-				particleDatas.push_back(tempparticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f)));
+				particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f)));
 				cooldown = 1;
 			}
 		}
 
-		// Drawing particles
+		// Updating and Drawing Particles
 		for (int i = 1; i < particleDatas.size(); i++) {
 			particleDatas[i].velo += particleDatas[i].accel * deltaTime;
 			particleTrans[i] = glm::translate(particleTrans[i], particleDatas[i].velo * deltaTime);
