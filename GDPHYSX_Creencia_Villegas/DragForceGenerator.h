@@ -11,7 +11,7 @@ private:
 public:
 	DragForceGenerator() {}
 	DragForceGenerator(float _k1, float _k2) : k1(_k1), k2(_k1) {}
-	void UpdateForce(particle* particle, float time)override;
+	void UpdateForce(MyParticle* particle, float time)override;
 
 };
 

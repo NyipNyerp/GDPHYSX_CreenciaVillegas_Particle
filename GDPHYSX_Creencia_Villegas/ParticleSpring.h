@@ -1,18 +1,18 @@
 #ifndef PARTICLESPRING
 #define PARTICLESPRING
-#include "particle.h"
+#include "MyParticle.h"
 #include "ForceGenerator.h"
 
 class ParticleSpring : public ForceGenerator
 {
 private:
-	particle* otherParticle;
+	MyParticle* otherParticle;
 	float springConstant;
 	float restLength;
 public:
-	ParticleSpring(particle* _otherParticle, float _springConst, float _restLen) :
+	ParticleSpring(MyParticle* _otherParticle, float _springConst, float _restLen) :
 		otherParticle(_otherParticle), springConstant(_springConst), restLength(_restLen) {}
-	void UpdateForce(particle* particle, float time)override;
+	void UpdateForce(MyParticle* particle, float time)override;
 };
 
 #endif // !PARTICLESPRING

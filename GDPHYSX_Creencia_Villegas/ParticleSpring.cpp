@@ -1,12 +1,11 @@
 #include "ParticleSpring.h"
 
-void ParticleSpring::UpdateForce(particle* particle, float time)
+void ParticleSpring::UpdateForce(MyParticle* particle, float time)
 {
-	glm::vec3 pos = particle->pData.pos;
+	MyVector pos = particle->pos;
 
-	glm::vec3 force = pos - otherParticle->pData.pos;
+	MyVector force = pos - otherParticle->pos;
 
-	/*
 	float mag = force.getMagnitude();
 
 	float springForce = -springConstant * abs(mag - restLength);
@@ -15,5 +14,4 @@ void ParticleSpring::UpdateForce(particle* particle, float time)
 	force = force * springForce;
 
 	particle->AddForce(force);
-	*/
 }

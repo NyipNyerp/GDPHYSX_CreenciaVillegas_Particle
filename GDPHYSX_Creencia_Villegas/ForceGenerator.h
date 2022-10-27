@@ -1,13 +1,14 @@
 #ifndef FORCEGENERATOR
 #define FORCEGENERATOR
-#include "particle.h"
+#include "MyParticle.h"
 
 class ForceGenerator
 {
-	virtual void UpdateForce(particle* p, float time)
+public:
+	virtual void UpdateForce(MyParticle* p, float time)
 	{
 		//base definition
-		p->AddForce(glm::vec3(0.0f, 0.0f, 0.0f));
+		p->AddForce(MyVector());
 	}
 };
 

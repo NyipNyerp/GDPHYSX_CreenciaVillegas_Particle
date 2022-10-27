@@ -1,6 +1,6 @@
 #include "ForceRegistry.h"
 
-void ForceRegistry::Add(particle* particle, ForceGenerator* generator)
+void ForceRegistry::Add(MyParticle* particle, ForceGenerator* generator)
 {
 	ParticleForceRegistry toAdd;
 
@@ -15,11 +15,11 @@ void ForceRegistry::UpdateForces(float time)
 	for (std::list<ParticleForceRegistry>::iterator i = Registry.begin();
 		i != Registry.end(); i++)
 	{
-		//i->generator->UpdateForce(i->particle, time);
+		i->generator->UpdateForce(i->particle, time);
 	}
 }
 
-void ForceRegistry::Remove(particle* particle, ForceGenerator* generator)
+void ForceRegistry::Remove(MyParticle* particle, ForceGenerator* generator)
 {
 	Registry.remove_if([particle, generator](ParticleForceRegistry reg) {
 		return reg.particle == particle && reg.generator == generator;

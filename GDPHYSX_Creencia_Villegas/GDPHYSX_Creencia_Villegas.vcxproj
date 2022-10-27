@@ -147,8 +147,8 @@
     <ClCompile Include="ForceGenerator.cpp" />
     <ClCompile Include="ForceRegistry.cpp" />
     <ClCompile Include="GravityForceGenerator.cpp" />
+    <ClCompile Include="MyParticle.cpp" />
     <ClCompile Include="MyVector.cpp" />
-    <ClCompile Include="particle.cpp" />
     <ClCompile Include="ParticleSpring.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
@@ -164,9 +164,9 @@
     <ClInclude Include="ForceRegistry.h" />
     <ClInclude Include="GravityForceGenerator.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="MyParticle.h" />
     <ClInclude Include="MyVector.h" />
     <ClInclude Include="obj_mesh.h" />
-    <ClInclude Include="particle.h" />
     <ClInclude Include="ParticleSpring.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="skybox.h" />

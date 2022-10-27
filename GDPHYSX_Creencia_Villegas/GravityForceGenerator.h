@@ -5,13 +5,13 @@
 class GravityForceGenerator : public ForceGenerator
 {
 private:
-	glm::vec3 Gravity = glm::vec3(0.0f, -9.8f, 0.0f);
+	MyVector Gravity = MyVector(0, -9.8);
 
 public:
 	GravityForceGenerator() {}
-	GravityForceGenerator(const glm::vec3 gravity) : Gravity(gravity) {}
+	GravityForceGenerator(const MyVector gravity) : Gravity(gravity) {}
 
-	void UpdateForce(particle* particle, float time)override;
+	void UpdateForce(MyParticle* particle, float time)override;
 };
 
 #endif //GRAVITYFORCEGENERATOR
