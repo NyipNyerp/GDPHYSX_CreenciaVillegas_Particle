@@ -4,10 +4,11 @@
 
 class ForceGenerator
 {
+public:
 	virtual void UpdateForce(particle* p, float time)
 	{
 		//base definition
-		p->AddForce(glm::vec3(0.0f, 0.0f, 0.0f));
+		p->AddForce(MyVector());
 	}
 };
 

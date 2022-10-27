@@ -3,17 +3,16 @@
 
 void BungeeSpring::UpdateForce(particle* particle, float time)
 {
-	glm::vec3 pos = particle->pData.pos;
+	MyVector pos = particle->pos;
 
-	glm::vec3 force = pos - anchorPoint;
+	MyVector force = pos - anchorPoint;
 
-	/*
 	float mag = force.getMagnitude();
 
 	if (mag <= bungeeLength)
 	{
 		std::cout << mag << std::endl;
-		particle->AddForce(glm::vec3(0, 0));
+		particle->AddForce(MyVector(0, 0));
 	}
 	else
 	{
@@ -25,5 +24,4 @@ void BungeeSpring::UpdateForce(particle* particle, float time)
 
 		particle->AddForce(force);
 	}
-	*/
 }

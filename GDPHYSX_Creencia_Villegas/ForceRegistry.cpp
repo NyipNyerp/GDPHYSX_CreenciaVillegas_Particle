@@ -15,7 +15,7 @@ void ForceRegistry::UpdateForces(float time)
 	for (std::list<ParticleForceRegistry>::iterator i = Registry.begin();
 		i != Registry.end(); i++)
 	{
-		//i->generator->UpdateForce(i->particle, time);
+		i->generator->UpdateForce(i->particle, time);
 	}
 }
 

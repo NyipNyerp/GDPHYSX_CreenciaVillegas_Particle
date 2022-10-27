@@ -2,11 +2,10 @@
 
 void AnchoredSpring::UpdateForce(particle* particle, float time)
 {
-	glm::vec3 pos = particle->pData.pos;
+	MyVector pos = particle->pos;
 
-	glm::vec3 force = pos - anchorPoint;
+	MyVector force = pos - anchorPoint;
 
-	/*
 	float mag = force.getMagnitude();
 
 	float springForce = -springConstant * abs(mag - restLength);
@@ -15,5 +14,4 @@ void AnchoredSpring::UpdateForce(particle* particle, float time)
 	force *= springForce;
 
 	particle->AddForce(force);
-	*/
 }

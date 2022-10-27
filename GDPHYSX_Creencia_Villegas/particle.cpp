@@ -1,18 +1,18 @@
 #include "particle.h"
 
 // Determines Particle data for new bullets
-particle::particleData particle::createBullet(int type)
+particle particle::createBullet(int type)
 {
 	float randX = rand() % 60 + -30;
 	float randY = rand() % 30 + -5;
 	float randZ = rand() % 30 + -15;
 	float randAge = rand() % 3 + 1;
 
-	particleData newData;
+	particle newData;
 	switch (type) {
 	case 0:
-		newData.velo = glm::vec3(0.0f, 0.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.velo = MyVector();
+		newData.accel = MyVector();
 		newData.mass = 5.0f;
 		newData.damp = 1.0f;
 		newData.radius = 1.0f;
@@ -22,8 +22,8 @@ particle::particleData particle::createBullet(int type)
 		newData.lifeSpan = 10000;
 		break;
 	case 1:
-		newData.velo = glm::vec3(35.0f, 0.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, -1.0f, 0.0f);
+		newData.velo = MyVector(35.0f, 0.0f, 0.0f);
+		newData.accel = MyVector(0.0f, -1.0f, 0.0f);
 		newData.mass = 2.0f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
@@ -33,8 +33,8 @@ particle::particleData particle::createBullet(int type)
 		newData.lifeSpan = 5;
 		break;
 	case 2:
-		newData.velo = glm::vec3(40.0f, 30.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, -20.0f, 0.0f);
+		newData.velo = MyVector(40.0f, 30.0f, 0.0f);
+		newData.accel = MyVector(0.0f, -20.0f, 0.0f);
 		newData.mass = 200.0f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
@@ -44,8 +44,8 @@ particle::particleData particle::createBullet(int type)
 		newData.lifeSpan = 5;
 		break;
 	case 3:
-		newData.velo = glm::vec3(10.0f, 0.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, 0.6f, 0.0f);
+		newData.velo = MyVector(10.0f, 0.0f, 0.0f);
+		newData.accel = MyVector(0.0f, 0.6f, 0.0f);
 		newData.mass = 1.0f;
 		newData.damp = 0.9f;
 		newData.radius = 1.0f;
@@ -55,8 +55,8 @@ particle::particleData particle::createBullet(int type)
 		newData.lifeSpan = 5;
 		break;
 	case 4:
-		newData.velo = glm::vec3(100.0f, 0.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.velo = MyVector(100.0f, 0.0f, 0.0f);
+		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
 		newData.mass = 0.1f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
@@ -66,8 +66,8 @@ particle::particleData particle::createBullet(int type)
 		newData.lifeSpan = 5;
 		break;
 	case 5:
-		newData.velo = glm::vec3(randX, 50.0f, 0.0f);
-		newData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
+		newData.velo = MyVector(randX, 50.0f, 0.0f);
+		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
 		newData.mass = 1.0;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
@@ -78,8 +78,8 @@ particle::particleData particle::createBullet(int type)
 		newData.material = 3;
 		break;
 	case 6:
-		newData.velo = glm::vec3(randX, randY, randZ);
-		newData.accel = glm::vec3(0.0f, -5.0, 0.0f);
+		newData.velo = MyVector(randX, randY, randZ);
+		newData.accel = MyVector(0.0f, -5.0f, 0.0f);
 		newData.mass = 1.0;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
@@ -90,8 +90,8 @@ particle::particleData particle::createBullet(int type)
 		newData.material = 2;
 		break;
 	case 7:
-		newData.velo = glm::vec3(randX, randY, randZ);
-		newData.accel = glm::vec3(0.0f, -10.0f, 0.0f);
+		newData.velo = MyVector(randX, randY, randZ);
+		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
 		newData.mass = 1.0;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
@@ -107,10 +107,10 @@ particle::particleData particle::createBullet(int type)
 }
 
 // Creates new Particles
-particle::particleData particle::fireBullet(std::vector<glm::mat4>* particleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos)
+particle particle::fireBullet(std::vector<glm::mat4>* particleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos)
 {
 	particle newParticle;
-	newParticle.pData = newParticle.createBullet(bType);
+	newParticle = newParticle.createBullet(bType);
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
 	if (bType == 6) trans = glm::translate(trans, currParticlePos);
@@ -128,11 +128,11 @@ particle::particleData particle::fireBullet(std::vector<glm::mat4>* particleTran
 		<< "normalTransArray = " << normalTransArray->size() << std::endl
 	*/
 
-	return newParticle.pData;
+	return newParticle;
 }
 
 // Deletes existing Particles
-void particle::deleteBullet(std::vector<glm::mat4>* particleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<particleData>* particleDatas, int index)
+void particle::deleteBullet(std::vector<glm::mat4>* particleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<particle>* particleDatas, int index)
 {
 	particleTrans->erase(particleTrans->begin() + index);
 	normalTransArray->erase(normalTransArray->begin() + index);
@@ -142,49 +142,57 @@ void particle::deleteBullet(std::vector<glm::mat4>* particleTrans, std::vector<g
 void particle::updatePosition(float time)
 {
 	//P2
-	pData.pos = pData.pos + (pData.velo * time) + ((pData.accel * powf(time, 2)) * (1.0f / 2.0f));
+	this->pos = this->pos + (this->velo * time) + ((this->accel * powf(time, 2)) * (1.0f / 2.0f));
 }
 
 void particle::updateVelocity(float time)
 {
-	pData.accel = pData.accel + pData.forceAccum * (1 / pData.mass);
-	pData.velo = pData.velo + pData.accel * time;
-	pData.velo = pData.velo * powf(pData.damp, time);
+	this->accel = this->accel + this->forceAccum * (1 / this->mass);
+	this->velo = this->velo + this->accel * time;
+	this->velo = this->velo * powf(this->damp, time);
 }
 
 void particle::Update(float time)
 {
-	if (pData.mass == 0) return;
+	if (this->mass == 0) return;
 
 	updatePosition(time);
 	updateVelocity(time);
 	checkLifeSpan(time);
 	ResetForce();
 	//exclusive for cable anchors
-	//if (stationary)
-	//	stationarySetting();
+	if (stationary)
+		stationarySetting();
 }
 
 void particle::Destroy()
 {
-	pData.isDestroyed = true;
+	this->isDestroyed = true;
 }
 
 void particle::checkLifeSpan(float time)
 {
-	pData.lifeSpan -= time;
-	if (pData.lifeSpan <= 0.0f) {
+	this->lifeSpan -= time;
+	if (this->lifeSpan <= 0.0f) {
 		Destroy();
 	}
 }
 
-void particle::AddForce(glm::vec3 force)
+void particle::AddForce(MyVector force)
 {
-	pData.forceAccum = pData.forceAccum + force;
+	this->forceAccum = this->forceAccum + force;
 }
 
 void particle::ResetForce()
 {
-	pData.forceAccum = glm::vec3(0.0f, 0.0f, 0.0f);
-	pData.accel = glm::vec3(0.0f, 0.0f, 0.0f);
+	this->forceAccum = MyVector(0.0f, 0.0f, 0.0f);
+	this->accel = MyVector(0.0f, 0.0f, 0.0f);
+}
+
+void particle::stationarySetting()
+{
+	this->pos.x = startPos.x;
+	this->pos.y = startPos.y;
+	this->velo.x = 0;
+	this->velo.y = 0;
 }

@@ -1,17 +1,16 @@
 #include "DragForceGenerator.h"
+#include "MyVector.h"
 
 void DragForceGenerator::UpdateForce(particle* particle, float time)
 {
-	glm::vec3 Force = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 currV = particle->pData.velo;
+	MyVector Force = MyVector(0, 0);
+	MyVector currV = particle->velo;
 
-	/*
 	float mag = currV.getMagnitude();
 	float DragF = (k1 * mag) + (k2 * mag * mag);
 
 	currV.Normalize();
-	glm::vec3 dir = currV;
+	MyVector dir = currV;
 
 	particle->AddForce(dir * (-DragF));
-	*/
 }

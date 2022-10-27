@@ -23,4 +23,4 @@ protected:
 	std::list<ParticleForceRegistry> Registry;
 };
 
-#endif
+#endif //FORCEREGISTRY

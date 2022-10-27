@@ -1,16 +1,12 @@
 #pragma once
-#include "Particle.h"
+#include "particle.h"
 #include "main.h"
-
-
 
 // Gets the distance between 2 objects for collision checking
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
 	//std::cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << std::endl << xPos2 << ", " << yPos2 << ", " << zPos2 << std::endl << std::endl;
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
 }
-
-
 
 #pragma region CAMERA VARIABLES
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
@@ -108,7 +104,7 @@ int main() {
 
 	std::vector<glm::mat4> particleTrans;
 	std::vector<glm::mat4> normalTransArray;
-	std::vector<particle::particleData> particleDatas;
+	std::vector<particle> particleDatas;
 	particle tempParticle;
 	int currType = 1;
 	bool isCollide = false;
@@ -358,8 +354,10 @@ int main() {
 
 		// Updating and Drawing Particles
 		for (int i = 1; i < particleDatas.size(); i++) {
+			glm::vec3 temp = glm::vec3(particleDatas[i].velo.x, particleDatas[i].velo.y, particleDatas[i].velo.z);
+
 			particleDatas[i].velo += particleDatas[i].accel * deltaTime;
-			particleTrans[i] = glm::translate(particleTrans[i], particleDatas[i].velo * deltaTime);
+			particleTrans[i] = glm::translate(particleTrans[i], temp * deltaTime);
 
 			normalTransArray[i] = glm::transpose(glm::inverse(particleTrans[i]));
 			glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
