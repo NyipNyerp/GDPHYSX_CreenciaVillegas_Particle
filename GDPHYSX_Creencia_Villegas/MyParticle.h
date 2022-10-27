@@ -40,11 +40,6 @@ public: // CONSTRUCTOR
     MyVector startPos;
     void stationarySetting();
 
-    //public:
-    MyParticle createBullet(int);
-    MyParticle fireBullet(std::vector<glm::mat4>*, std::vector<glm::mat4>*, GLuint, GLuint, int, glm::vec3);
-    void deleteBullet(std::vector<glm::mat4>*, std::vector<glm::mat4>*, std::vector<MyParticle>*, int);
-
     //public: // METHODS
     void updatePosition(float time);
     void updateVelocity(float time);

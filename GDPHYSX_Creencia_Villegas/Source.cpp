@@ -1,6 +1,161 @@
 #pragma once
 #include "MyParticle.h"
+#include "ForceGenerator.h"
+#include "ForceRegistry.h"
+#include "GravityForceGenerator.h"
+
+#include "ParticleSpring.h"
+#include "AnchoredSpring.h"
+#include "BungeeSpring.h"
+#include "CableSpring.h"
+
 #include "main.h"
+
+// Determines Particle data for new Particles
+MyParticle particleType(int type)
+{
+	float randX = rand() % 60 + -30;
+	float randY = rand() % 30 + -5;
+	float randZ = rand() % 30 + -15;
+	float randAge = rand() % 3 + 1;
+
+	MyParticle newData;
+	switch (type) {
+	case 0:
+		newData.velo = MyVector();
+		newData.accel = MyVector();
+		newData.mass = 5.0f;
+		newData.damp = 1.0f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 0;
+		newData.count = 1;
+		newData.lifeSpan = 10000;
+		break;
+	case 1:
+		newData.velo = MyVector(35.0f, 0.0f, 0.0f);
+		newData.accel = MyVector(0.0f, -1.0f, 0.0f);
+		newData.mass = 2.0f;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 1;
+		newData.count = 1;
+		newData.lifeSpan = 5;
+		break;
+	case 2:
+		newData.velo = MyVector(40.0f, 30.0f, 0.0f);
+		newData.accel = MyVector(0.0f, -20.0f, 0.0f);
+		newData.mass = 200.0f;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 2;
+		newData.count = 1;
+		newData.lifeSpan = 5;
+		break;
+	case 3:
+		newData.velo = MyVector(10.0f, 0.0f, 0.0f);
+		newData.accel = MyVector(0.0f, 0.6f, 0.0f);
+		newData.mass = 1.0f;
+		newData.damp = 0.9f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 3;
+		newData.count = 1;
+		newData.lifeSpan = 5;
+		break;
+	case 4:
+		newData.velo = MyVector(100.0f, 0.0f, 0.0f);
+		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
+		newData.mass = 0.1f;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 4;
+		newData.count = 1;
+		newData.lifeSpan = 5;
+		break;
+	case 5:
+		newData.velo = MyVector(randX, 50.0f, 0.0f);
+		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
+		newData.mass = 1.0;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 5;
+		newData.count = 5;
+		newData.lifeSpan = 3;
+		newData.material = 3;
+		break;
+	case 6:
+		newData.velo = MyVector(randX, randY, randZ);
+		newData.accel = MyVector(0.0f, -5.0f, 0.0f);
+		newData.mass = 1.0;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 6;
+		newData.count = 10;
+		newData.lifeSpan = randAge;
+		newData.material = 2;
+		break;
+	case 7:
+		newData.velo = MyVector(randX, randY, randZ);
+		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
+		newData.mass = 1.0;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 6;
+		newData.count = 0;
+		newData.lifeSpan = randAge;
+		newData.material = 1;
+		break;
+	}
+
+	return newData;
+}
+
+// Creates new Particles
+MyParticle createParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos)
+{
+	MyParticle newParticle = particleType(bType);;
+
+	glm::mat4 trans = glm::mat4(1.0f); // identity
+	if (bType == 6) trans = glm::translate(trans, currParticlePos);
+	else if (bType == 7) trans = glm::translate(trans, currParticlePos);
+	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
+	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	glm::mat4 normalTrans;
+
+	MyParticleTrans->push_back(trans);
+	normalTransArray->push_back(normalTrans);
+
+	/*
+	std::cout << std::endl
+		<< "MyParticleTrans = " << MyParticleTrans->size() << std::endl
+		<< "normalTransArray = " << normalTransArray->size() << std::endl
+	*/
+
+	return newParticle;
+}
+
+// Deletes an existing Particles
+void deleteParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<MyParticle>* MyParticleDatas, int index)
+{
+	MyParticleTrans->erase(MyParticleTrans->begin() + index);
+	normalTransArray->erase(normalTransArray->begin() + index);
+	MyParticleDatas->erase(MyParticleDatas->begin() + index);
+}
+
+// Delete all Particles
+void clearParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<MyParticle>* MyParticleDatas)
+{
+	MyParticleTrans->clear();
+	normalTransArray->clear();
+	MyParticleDatas->clear();
+}
 
 // Gets the distance between 2 objects for collision checking
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
@@ -104,8 +259,9 @@ int main() {
 
 	std::vector<glm::mat4> particleTrans;
 	std::vector<glm::mat4> normalTransArray;
-	std::vector<MyParticle> particleDatas;
-	MyParticle tempParticle;
+	std::vector<MyParticle> particleList;
+
+
 	int currType = 1;
 	bool isCollide = false;
 	float boxRadius = 5.5;
@@ -170,8 +326,6 @@ int main() {
 	GLuint ambientColorLoc = glGetUniformLocation(shaderProgram, "u_ambient_color");
 	glUniform3f(ambientColorLoc, 0.1f, 0.1f, 0.1f);
 
-	// Create dummy Particle to avoid crashing when accessing vector arrays in Draw region
-	particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 0, glm::vec3(0.0f, 0.0f, 0.0f)));
 
 	glm::mat4 boxTrans = glm::mat4(1.0f); // identity
 	boxTrans = glm::translate(boxTrans, glm::vec3(30.0f, 0.0f, -4.0f));
@@ -297,36 +451,6 @@ int main() {
 		glBindVertexArray(particle.vaoId);
 		glUseProgram(shaderProgram);
 
-		// Collision checking and resolution
-		for (int i = 1; i < particleDatas.size(); i++)
-		{
-			particleDatas[i].lifeSpan -= 1 * deltaTime;
-			if (getDistance(particleTrans[i][3].x, particleTrans[i][3].y, particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= particleDatas[i].radius + boxRadius) {
-				force = (particleDatas[i].mass * particleDatas[i].velo.x) / boxMass;
-				stopper = force;
-				if (particleDatas[i].type != 4)
-					tempParticle.deleteBullet(&particleTrans, &normalTransArray, &particleDatas, i);
-			}
-			else if (particleDatas[i].lifeSpan <= 0)
-			{
-				if (particleDatas[i].type == 5)
-				{
-					for (int j = 0; j < particleDatas[i].count; j++)
-						particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3]));
-					for (int l = 0; l < particleDatas[i].count * 3; l++)
-						particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
-				}
-				else if (particleDatas[i].type == 6)
-				{
-					for (int k = 0; k < particleDatas[i].count; k++)
-						particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
-				}
-				tempParticle.deleteBullet(&particleTrans, &normalTransArray, &particleDatas, i);
-			}
-		}
-		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
-		if (force >= 0) force -= stopper * deltaTime;
-		else force = 0;
 
 		// Change bullet type
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
@@ -340,34 +464,73 @@ int main() {
 
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) particleTrans[0] = glm::rotate(particleTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
-
+		// Fire particle key
 		int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+
 		// Firing cooldown
 		cooldown += cooldown * deltaTime;
 		if (cooldown >= 1.5)
 		{
 			if (state == GLFW_PRESS) {
-				particleDatas.push_back(tempParticle.fireBullet(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f)));
+				particleList.push_back(createParticle(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f)));
 				cooldown = 1;
 			}
 		}
 
-		// Updating and Drawing Particles
-		for (int i = 1; i < particleDatas.size(); i++) {
-			glm::vec3 temp = glm::vec3(particleDatas[i].velo.x, particleDatas[i].velo.y, particleDatas[i].velo.z);
+		if (!particleList.empty())
+		{
+			// Collision checking and resolution
+			for (int i = 0; i < particleList.size(); i++)
+			{
+				particleList[i].lifeSpan -= 1 * deltaTime;
+				if (getDistance(particleTrans[i][3].x, particleTrans[i][3].y, particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= particleList[i].radius + boxRadius) {
+					force = (particleList[i].mass * particleList[i].velo.x) / boxMass;
+					stopper = force;
+					if (particleList[i].type != 4)
+						deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
+				}
+				else if (particleList[i].lifeSpan <= 0)
+				{
+					if (particleList[i].type == 5)
+					{
+						for (int j = 0; j < particleList[i].count; j++)
+							particleList.push_back(createParticle(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3]));
+						for (int l = 0; l < particleList[i].count * 3; l++)
+							particleList.push_back(createParticle(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
+					}
+					else if (particleList[i].type == 6)
+					{
+						for (int k = 0; k < particleList[i].count; k++)
+							particleList.push_back(createParticle(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
+					}
+					deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
+				}
+			}
 
-			particleDatas[i].velo += particleDatas[i].accel * deltaTime;
-			particleTrans[i] = glm::translate(particleTrans[i], temp * deltaTime);
+			// Move box
+			boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
+			if (force >= 0) force -= stopper * deltaTime;
+			else force = 0;
 
-			normalTransArray[i] = glm::transpose(glm::inverse(particleTrans[i]));
-			glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
-			glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(particleTrans[i]));
 
-			glActiveTexture(GL_TEXTURE0);
-			GLuint particleTexture = particle.textures[particle.materials[particleDatas[i].material].diffuse_texname];
-			glBindTexture(GL_TEXTURE_2D, particleTexture);
-			glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
+			// Updating and Drawing Particles
+			for (int i = 0; i < particleList.size(); i++) {
+				glm::vec3 temp = glm::vec3(particleList[i].velo.x, particleList[i].velo.y, particleList[i].velo.z);
+
+				particleList[i].velo += particleList[i].accel * deltaTime;
+				particleTrans[i] = glm::translate(particleTrans[i], temp * deltaTime);
+
+				normalTransArray[i] = glm::transpose(glm::inverse(particleTrans[i]));
+				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
+				glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(particleTrans[i]));
+
+				glActiveTexture(GL_TEXTURE0);
+				GLuint particleTexture = particle.textures[particle.materials[particleList[i].material].diffuse_texname];
+				glBindTexture(GL_TEXTURE_2D, particleTexture);
+				glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
+			}
 		}
+		
 #pragma endregion
 
 		//unbindtexture after rendering
