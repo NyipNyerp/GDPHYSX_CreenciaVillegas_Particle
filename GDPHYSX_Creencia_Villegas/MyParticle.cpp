@@ -19,11 +19,11 @@ void MyParticle::Update(float time)
 
 	updatePosition(time);
 	updateVelocity(time);
-	checkLifeSpan(time);
-	ResetForce();
+	//checkLifeSpan(time);
+	//ResetForce();
 	//exclusive for cable anchors
-	if (stationary)
-		stationarySetting();
+	//if (stationary)
+	//	stationarySetting();
 }
 
 void MyParticle::Destroy()

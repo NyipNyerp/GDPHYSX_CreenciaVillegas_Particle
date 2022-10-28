@@ -76,7 +76,7 @@ MyParticle particleType(int type)
 		newData.count = 1;
 		newData.lifeSpan = 5;
 		break;
-	case 5:
+	case 5: // FIREWORKS TYPE A
 		newData.velo = MyVector(randX, 50.0f, 0.0f);
 		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
 		newData.mass = 1.0;
@@ -88,7 +88,7 @@ MyParticle particleType(int type)
 		newData.lifeSpan = 3;
 		newData.material = 3;
 		break;
-	case 6:
+	case 6: // FIREWORKS TYPE B
 		newData.velo = MyVector(randX, randY, randZ);
 		newData.accel = MyVector(0.0f, -5.0f, 0.0f);
 		newData.mass = 1.0;
@@ -100,7 +100,7 @@ MyParticle particleType(int type)
 		newData.lifeSpan = randAge;
 		newData.material = 2;
 		break;
-	case 7:
+	case 7: // FIREWORKS TYPE C
 		newData.velo = MyVector(randX, randY, randZ);
 		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
 		newData.mass = 1.0;
@@ -112,33 +112,72 @@ MyParticle particleType(int type)
 		newData.lifeSpan = randAge;
 		newData.material = 1;
 		break;
+	case 8: // PARTICLE SPRING
+		newData.velo = MyVector(50, -10, 0);
+		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
+		newData.mass = 10.0;
+		newData.damp = 1.0f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 8;
+		newData.count = 0;
+		newData.lifeSpan = 10;
+		newData.material = 1;
+		break;
+	case 9: // ANCHORED SPRING
+		newData.velo = MyVector(50, 0, 0);
+		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
+		newData.mass = 10.0;
+		newData.damp = 1.0f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 9;
+		newData.count = 0;
+		newData.lifeSpan = 10;
+		newData.material = 1;
+		break;
+	case 10: // CABLE SPRING
+		newData.velo = MyVector(50, -10, 0);
+		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
+		newData.mass = 10.0;
+		newData.damp = 1.0f;
+		newData.radius = 1.0f;
+		newData.accel.y *= newData.damp;
+		newData.type = 10;
+		newData.count = 0;
+		newData.lifeSpan = 10;
+		newData.material = 1;
+		break;
 	}
 
 	return newData;
 }
 
 // Creates new Particles
-MyParticle createParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos)
+void createParticle(std::vector<MyParticle>* particleList, std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos, ForceRegistry* Registry, GravityForceGenerator Gravity)
 {
 	MyParticle newParticle = particleType(bType);;
+	particleList->push_back(newParticle);
+
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
 	if (bType == 6) trans = glm::translate(trans, currParticlePos);
 	else if (bType == 7) trans = glm::translate(trans, currParticlePos);
 	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
 	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-	glm::mat4 normalTrans;
-
 	MyParticleTrans->push_back(trans);
+
+	glm::mat4 normalTrans;
 	normalTransArray->push_back(normalTrans);
 
+
+	// Assign GravityForceGenerator to newly created particles in the ForceRegistry
+	Registry->Add(&newParticle, &Gravity);
 	/*
 	std::cout << std::endl
 		<< "MyParticleTrans = " << MyParticleTrans->size() << std::endl
 		<< "normalTransArray = " << normalTransArray->size() << std::endl
 	*/
-
-	return newParticle;
 }
 
 // Deletes an existing Particles
@@ -163,7 +202,7 @@ float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
 }
 
-#pragma region CAMERA VARIABLES
+#pragma region CAMERA 
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
 //camera
 glm::vec3 cameraPos = glm::vec3(10.0f, 10.0f, 30.0f);
@@ -178,7 +217,6 @@ bool firstMouse = true;
 float lastX = 1024 / 2.0;
 float lastY = 768 / 2.0;
 
-#pragma endregion
 
 // Mouse camera controls
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -221,6 +259,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	cameraFront = glm::normalize(front);
 }
 
+#pragma endregion
+
+
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 int main() {
@@ -261,6 +302,10 @@ int main() {
 	std::vector<glm::mat4> normalTransArray;
 	std::vector<MyParticle> particleList;
 
+	ForceRegistry registry;
+	GravityForceGenerator gravity = GravityForceGenerator(MyVector(0.0f, 0.0f, 0.0f));
+
+	AnchoredSpring aSpring = AnchoredSpring(MyVector(20,0,0), 5, 0.5);
 
 	int currType = 1;
 	bool isCollide = false;
@@ -307,8 +352,6 @@ int main() {
 
 #pragma region Shader Loading
 	GLuint skyboxShaderProgram = LoadShaders("Shaders/skybox_vertex.shader", "Shaders/skybox_fragment.shader");
-	//GLuint shaderProgram = LoadShaders("Shaders/phong_vertex.shader", "Shaders/phong_fragment.shader");
-	//glUseProgram(shaderProgram2);
 	GLuint shaderProgram = LoadShaders("Shaders/vertex.shader", "Shaders/fragment.shader");
 	glUseProgram(shaderProgram);
 
@@ -452,6 +495,15 @@ int main() {
 		glUseProgram(shaderProgram);
 
 
+		registry.UpdateForces(deltaTime);
+
+		for (std::vector<MyParticle>::iterator i = particleList.begin();
+			i != particleList.end(); i++)
+		{
+			//(*i)->acceleration = gravity;
+			(i)->Update(deltaTime);
+		}
+
 		// Change bullet type
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currType = 2;
@@ -472,7 +524,7 @@ int main() {
 		if (cooldown >= 1.5)
 		{
 			if (state == GLFW_PRESS) {
-				particleList.push_back(createParticle(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f)));
+				createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f), &registry, gravity);
 				cooldown = 1;
 			}
 		}
@@ -494,14 +546,14 @@ int main() {
 					if (particleList[i].type == 5)
 					{
 						for (int j = 0; j < particleList[i].count; j++)
-							particleList.push_back(createParticle(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3]));
+							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3], &registry, gravity);
 						for (int l = 0; l < particleList[i].count * 3; l++)
-							particleList.push_back(createParticle(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
+							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity);
 					}
 					else if (particleList[i].type == 6)
 					{
 						for (int k = 0; k < particleList[i].count; k++)
-							particleList.push_back(createParticle(&particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3]));
+							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity);
 					}
 					deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
 				}
