@@ -6,30 +6,26 @@ using namespace std;
 
 class MyVector
 {
-public:  //vector's components
+public:
 	float x;
 	float y;
 	float z;
 
 public:
-	MyVector(float x = 0, float y = 0, float z = 0); //only called once, when an object is created
-	float getMagnitude();
-	MyVector getDirection(float magnitude);
+	float magnitude();
+	MyVector direction();
+	MyVector operator*(const float f); //A*Bx
+	MyVector operator+(MyVector b); //A+B
+	MyVector operator-(MyVector b); //A-B
+	MyVector operator*(MyVector b); //Component Product of A and B
+	MyVector crossProduct(MyVector a, MyVector b);
+	float dotProduct(MyVector a, MyVector b);
+	float operator*=(const MyVector v); //dot prod alt
+	float magnitudeSquared();
 
-	//HW03
-	MyVector operator+(MyVector vec); //this is for vector addition
-	MyVector operator-(MyVector vec); //this is for vector subtraction
-	MyVector operator*(const float scalar); //this is for scalar multiple
-	void operator+=(MyVector vec); //this is for vector addition
-	void operator-=(MyVector vec); //this is for vector subtraction
-	void operator*=(const float scalar); //this is for scalar multiple
-	float operator*(const MyVector v);
-	MyVector ComponentProduct(const MyVector v); //this is for ComponentProduct
-	float getScalarProduct(MyVector vec1, MyVector vec2); //this is for ScalarProduct
-	MyVector getVectorProduct(MyVector vec1, MyVector vec2); //this is for VectorProduct
-	void Normalize(); //this is for VectorProduct
-	float SquareMagnitude();
-	void Invert();
+	void normalize();
+
+	MyVector(float x, float y, float z);
 
 };
 

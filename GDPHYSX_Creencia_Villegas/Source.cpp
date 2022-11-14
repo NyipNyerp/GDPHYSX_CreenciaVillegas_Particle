@@ -9,6 +9,7 @@
 #include "BungeeSpring.h"
 #include "CableSpring.h"
 
+
 #include "main.h"
 
 // Determines Particle data for new Particles
@@ -125,7 +126,7 @@ MyParticle particleType(int type)
 		newData.material = 1;
 		break;
 	case 9: // ANCHORED SPRING
-		newData.velo = MyVector(50, 0, 0);
+		newData.velo = MyVector(0, 0, 0);
 		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
 		newData.mass = 10.0;
 		newData.damp = 1.0f;
@@ -154,7 +155,8 @@ MyParticle particleType(int type)
 }
 
 // Creates new Particles
-void createParticle(std::vector<MyParticle>* particleList, std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos, ForceRegistry* Registry, GravityForceGenerator Gravity)
+void createParticle(std::vector<MyParticle>* particleList, std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos, ForceRegistry* Registry, 
+	GravityForceGenerator Gravity, AnchoredSpring* aSpring)
 {
 	MyParticle newParticle = particleType(bType);;
 	particleList->push_back(newParticle);
@@ -169,6 +171,11 @@ void createParticle(std::vector<MyParticle>* particleList, std::vector<glm::mat4
 
 	glm::mat4 normalTrans;
 	normalTransArray->push_back(normalTrans);
+
+	if (bType == 9)
+	{
+		Registry->Add(&newParticle, aSpring);
+	}
 
 
 	// Assign GravityForceGenerator to newly created particles in the ForceRegistry
@@ -303,9 +310,11 @@ int main() {
 	std::vector<MyParticle> particleList;
 
 	ForceRegistry registry;
-	GravityForceGenerator gravity = GravityForceGenerator(MyVector(0.0f, 0.0f, 0.0f));
+	GravityForceGenerator gravity = GravityForceGenerator(MyVector(0.0f, 9.8f, 0.0f));
 
 	AnchoredSpring aSpring = AnchoredSpring(MyVector(20,0,0), 5, 0.5);
+	//ParticleSpring cSpring = ParticleSpring(&)
+
 
 	int currType = 1;
 	bool isCollide = false;
@@ -494,13 +503,13 @@ int main() {
 		glBindVertexArray(particle.vaoId);
 		glUseProgram(shaderProgram);
 
-
+		
 		registry.UpdateForces(deltaTime);
-
+		
 		for (std::vector<MyParticle>::iterator i = particleList.begin();
 			i != particleList.end(); i++)
 		{
-			//(*i)->acceleration = gravity;
+			
 			(i)->Update(deltaTime);
 		}
 
@@ -513,6 +522,7 @@ int main() {
 		//if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) currType = 6;
 		//if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) currType = 7;
 		//if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) currType = 8;
+		if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) currType = 9;
 
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) particleTrans[0] = glm::rotate(particleTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
@@ -524,7 +534,8 @@ int main() {
 		if (cooldown >= 1.5)
 		{
 			if (state == GLFW_PRESS) {
-				createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f), &registry, gravity);
+
+				createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f), &registry, gravity,&aSpring);
 				cooldown = 1;
 			}
 		}
@@ -546,14 +557,14 @@ int main() {
 					if (particleList[i].type == 5)
 					{
 						for (int j = 0; j < particleList[i].count; j++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3], &registry, gravity);
+							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3], &registry, gravity, &aSpring);
 						for (int l = 0; l < particleList[i].count * 3; l++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity);
+							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity, &aSpring);
 					}
 					else if (particleList[i].type == 6)
 					{
 						for (int k = 0; k < particleList[i].count; k++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity);
+							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity, &aSpring);
 					}
 					deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
 				}

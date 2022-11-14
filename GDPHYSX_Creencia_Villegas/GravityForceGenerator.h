@@ -5,13 +5,13 @@
 class GravityForceGenerator : public ForceGenerator
 {
 private:
-	MyVector Gravity = MyVector(0, -9.8);
+	MyVector gravity = MyVector(0, -9.8,0);
 
 public:
 	GravityForceGenerator() {}
-	GravityForceGenerator(const MyVector gravity) : Gravity(gravity) {}
+	GravityForceGenerator(MyVector g) : gravity(g) {}
 
-	void UpdateForce(MyParticle* particle, float time)override;
+	void updateForce(MyParticle* p, float time)override;
 };
 
 #endif //GRAVITYFORCEGENERATOR

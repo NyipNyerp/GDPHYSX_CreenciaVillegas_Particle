@@ -1,59 +1,78 @@
 #include "MyParticle.h"
+#include <iostream>
+using namespace std;
 
-void MyParticle::updatePosition(float time)
+void MyParticle::update(float time)
 {
-	//P2
-	this->pos = this->pos + (this->velo * time) + ((this->accel * powf(time, 2)) * (1.0f / 2.0f));
+	if (mass == 0)
+	{
+		return;
+	}
+	updatePos(time);
+	updateVelocity(time);
+	resetForce();
+}
+
+void MyParticle::updatePos(float time)
+{
+	position = position + (velocity * time) + ((acceleration * powf(time, 2)) * (1 / 2));
 }
 
 void MyParticle::updateVelocity(float time)
 {
-	this->accel = this->accel + this->forceAccum * (1 / this->mass);
-	this->velo = this->velo + this->accel * time;
-	this->velo = this->velo * powf(this->damp, time);
+	//setting acceleration
+	acceleration = acceleration + accumulatedForce * (1 / mass);
+
+	velocity = velocity + acceleration * time;
+	//velocity with damping
+	velocity = velocity * powf(damp, time);
+
+	//calculate total velocity over the sim
+	totalVelocity = totalVelocity + velocity;
 }
 
-void MyParticle::Update(float time)
+/*
+void MyParticle::updateDestroyed()
 {
-	if (this->mass == 0) return;
-
-	updatePosition(time);
-	updateVelocity(time);
-	//checkLifeSpan(time);
-	//ResetForce();
-	//exclusive for cable anchors
-	//if (stationary)
-	//	stationarySetting();
-}
-
-void MyParticle::Destroy()
-{
-	this->isDestroyed = true;
-}
-
-void MyParticle::checkLifeSpan(float time)
-{
-	this->lifeSpan -= time;
-	if (this->lifeSpan <= 0.0f) {
-		Destroy();
+	//Change Particle Destructor here after the question mark
+	if (timer.getElapsedTime().asSeconds() >= (rand() % 2 == 0 ? 0.5 : 1))
+	{
+		setIsDestroyed();
 	}
 }
+*/
 
-void MyParticle::AddForce(MyVector force)
+float MyParticle::measureTime()
 {
-	this->forceAccum = this->forceAccum + force;
+	//sf::Clock clock;
+	//sf::Time elapsed = clock.getElapsedTime();
+	//return elapsed.asSeconds() * 1000;
 }
 
-void MyParticle::ResetForce()
+bool MyParticle::getIsDestroyed()
 {
-	this->forceAccum = MyVector(0.0f, 0.0f, 0.0f);
-	this->accel = MyVector(0.0f, 0.0f, 0.0f);
+	return isDestroyed;
 }
 
-void MyParticle::stationarySetting()
+void MyParticle::setIsDestroyed()
 {
-	this->pos.x = startPos.x;
-	this->pos.y = startPos.y;
-	this->velo.x = 0;
-	this->velo.y = 0;
+	isDestroyed = true;
 }
+
+void MyParticle::addForce(MyVector f)
+{
+	accumulatedForce = accumulatedForce + f;
+}
+
+void MyParticle::resetForce()
+{
+	accumulatedForce = MyVector(0, 0,0);
+	acceleration = MyVector(0, 0,0);
+}
+
+MyParticle::MyParticle()
+{
+}
+
+
+

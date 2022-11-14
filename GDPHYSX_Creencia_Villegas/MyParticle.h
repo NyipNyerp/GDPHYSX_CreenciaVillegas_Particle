@@ -22,33 +22,48 @@ public: // CONSTRUCTOR
     MyVector pos;
     MyVector velo;
     MyVector accel;
-    MyVector forceAccum = MyVector();
-    float mass = 5.0f;
-    float damp = 0.99f;
-    float radius = 1.0f;
+    MyVector forceAccum = MyVector(0,0,0);
+    //float mass = 5.0f;
+    //float damp = 0.99f;
+    //float radius = 1.0f;
     float lifeSpan = 5.0f;
     int type = 1;
     int count = 1;
     int material = 0;
 
-    bool isDestroyed = false;
-    bool IsDestroyed() {
-        return isDestroyed;
-    }
-    float restitution = 1;
-    bool stationary;
-    MyVector startPos;
-    void stationarySetting();
+public:
+	string name;
+	float mass;
+	float radius;
+	float restitution = 1;
+	MyVector position = MyVector(0, 0,0);
+	MyVector velocity = MyVector(0, 0,0);
+	MyVector acceleration = MyVector(0, 0,0);
+	MyVector totalVelocity = MyVector(0, 0,0);
+	MyVector initialPos = MyVector(0, 0,0);
 
-    //public: // METHODS
-    void updatePosition(float time);
-    void updateVelocity(float time);
+	bool isFinished = false;
+	//EDIT DAMPING VALUE HERE
+	float damp = 1.0f;
 
-    void Update(float time);
-    void Destroy();
-    void checkLifeSpan(float time);
-    void AddForce(MyVector force);
-    void ResetForce();
+public:
+	void update(float time);
+	float measureTime();
+	bool getIsDestroyed();
+	void setIsDestroyed();
+	void addForce(MyVector f);
+	void resetForce();
+	MyParticle() = default;
+
+
+private:
+	void updatePos(float time);
+	void updateVelocity(float time);
+	//void updateDestroyed();
+
+private:
+	bool isDestroyed = false;
+	MyVector accumulatedForce = MyVector(0, 0,0);
 };
 
 #endif // !1

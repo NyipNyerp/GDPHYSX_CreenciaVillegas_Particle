@@ -1,33 +1,33 @@
 #include "ForceRegistry.h"
 
-void ForceRegistry::Add(MyParticle* particle, ForceGenerator* generator)
+void ForceRegistry::add(MyParticle* particle, ForceGenerator* generator)
 {
-	ParticleForceRegistry toAdd;
-
+	ParticleGeneratorPair toAdd;
 	toAdd.particle = particle;
 	toAdd.generator = generator;
 
-	Registry.push_back(toAdd);
+	registry.push_back(toAdd);
 }
 
-void ForceRegistry::UpdateForces(float time)
+void ForceRegistry::remove(MyParticle* particle, ForceGenerator* generator)
 {
-	for (std::list<ParticleForceRegistry>::iterator i = Registry.begin();
-		i != Registry.end(); i++)
-	{
-		i->generator->UpdateForce(i->particle, time);
-	}
-}
-
-void ForceRegistry::Remove(MyParticle* particle, ForceGenerator* generator)
-{
-	Registry.remove_if([particle, generator](ParticleForceRegistry reg) {
-		return reg.particle == particle && reg.generator == generator;
+	registry.remove_if(
+		[particle, generator](ParticleGeneratorPair pair) {
+			return pair.particle == particle && pair.generator == generator;
 		}
 	);
 }
 
-void ForceRegistry::Clear()
+void ForceRegistry::clear()
 {
-	Registry.clear();
+	registry.clear();
+}
+
+void ForceRegistry::updateForce(float time)
+{
+
+	for (list<ParticleGeneratorPair>::iterator i = registry.begin(); i != registry.end(); i++)
+	{
+		i->generator->updateForce(i->particle, time);
+	}
 }
