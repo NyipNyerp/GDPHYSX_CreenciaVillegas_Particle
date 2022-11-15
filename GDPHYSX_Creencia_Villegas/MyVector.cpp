@@ -1,5 +1,16 @@
 #include "MyVector.h"
 
+MyVector::MyVector(float xIn, float yIn, float zIn)
+{
+	x = xIn;
+	y = yIn;
+	z = zIn;
+}
+
+MyVector::~MyVector()
+{
+}
+
 float MyVector::magnitude()
 {
 	return sqrt((x * x) + (y * y) + (z*z));
@@ -100,13 +111,3 @@ void MyVector::normalize()
 
 
 }
-
-MyVector::MyVector(float xIn, float yIn, float zIn)
-{
-	x = xIn;
-	y = yIn;
-	z = zIn;
-}
-
-
-

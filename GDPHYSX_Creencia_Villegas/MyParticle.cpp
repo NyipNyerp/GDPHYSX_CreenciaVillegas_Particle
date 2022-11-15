@@ -2,6 +2,15 @@
 #include <iostream>
 using namespace std;
 
+MyParticle::MyParticle(MyVector newPos, MyVector newVelo, MyVector newAccel, MyVector newTotalVelo, MyVector newInitPos)
+	: position(newPos), velocity(newVelo), acceleration(newAccel), totalVelocity(newTotalVelo), initialPos(newInitPos)
+{
+}
+
+MyParticle::~MyParticle()
+{
+}
+
 void MyParticle::update(float time)
 {
 	if (mass == 0)
@@ -31,24 +40,6 @@ void MyParticle::updateVelocity(float time)
 	totalVelocity = totalVelocity + velocity;
 }
 
-/*
-void MyParticle::updateDestroyed()
-{
-	//Change Particle Destructor here after the question mark
-	if (timer.getElapsedTime().asSeconds() >= (rand() % 2 == 0 ? 0.5 : 1))
-	{
-		setIsDestroyed();
-	}
-}
-*/
-
-float MyParticle::measureTime()
-{
-	//sf::Clock clock;
-	//sf::Time elapsed = clock.getElapsedTime();
-	//return elapsed.asSeconds() * 1000;
-}
-
 bool MyParticle::getIsDestroyed()
 {
 	return isDestroyed;
@@ -66,12 +57,8 @@ void MyParticle::addForce(MyVector f)
 
 void MyParticle::resetForce()
 {
-	accumulatedForce = MyVector(0, 0,0);
-	acceleration = MyVector(0, 0,0);
-}
-
-MyParticle::MyParticle()
-{
+	accumulatedForce = MyVector(0, 0, 0);
+	acceleration = MyVector(0, 0, 0);
 }
 
 

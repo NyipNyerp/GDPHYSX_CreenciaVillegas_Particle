@@ -1,5 +1,4 @@
-#ifndef GRAVITYFORCEGENERATOR
-#define GRAVITYFORCEGENERATOR
+#pragma once
 #include "ForceGenerator.h"
 
 class GravityForceGenerator : public ForceGenerator
@@ -13,5 +12,3 @@ public:
 
 	void updateForce(MyParticle* p, float time)override;
 };
-
-#endif //GRAVITYFORCEGENERATOR

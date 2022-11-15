@@ -1,11 +1,13 @@
-#ifndef MYVECTOR
-#define MYVECTOR
+#pragma once
 #include <iostream>
 #include <math.h>
 using namespace std;
 
 class MyVector
 {
+public:
+	MyVector(float x, float y, float z);
+	~MyVector();
 public:
 	float x;
 	float y;
@@ -24,11 +26,4 @@ public:
 	float magnitudeSquared();
 
 	void normalize();
-
-	MyVector(float x, float y, float z);
-
 };
-
-
-#endif //MYVECTOR
-

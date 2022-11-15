@@ -1,18 +1,23 @@
 #pragma once
+#include "MyVector.h"
 #include "MyParticle.h"
+#include "PhysicsWorld.h"
 #include "ForceGenerator.h"
 #include "ForceRegistry.h"
+#include "DragForceGenerator.h"
 #include "GravityForceGenerator.h"
-
-#include "ParticleSpring.h"
 #include "AnchoredSpring.h"
 #include "BungeeSpring.h"
-#include "CableSpring.h"
-
+#include "Cable.h"
+#include "ParticleLink.h"
+#include "ParticleContact.h"
+//#include "Utils.h"
+//#include "Rod.h"
 
 #include "main.h"
 
-// Determines Particle data for new Particles
+using namespace std;
+
 MyParticle particleType(int type)
 {
 	float randX = rand() % 60 + -30;
@@ -20,133 +25,108 @@ MyParticle particleType(int type)
 	float randZ = rand() % 30 + -15;
 	float randAge = rand() % 3 + 1;
 
-	MyParticle newData;
+	MyParticle newData = MyParticle(MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0));
+
 	switch (type) {
-	case 0:
-		newData.velo = MyVector();
-		newData.accel = MyVector();
-		newData.mass = 5.0f;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 0;
-		newData.count = 1;
-		newData.lifeSpan = 10000;
-		break;
-	case 1:
-		newData.velo = MyVector(35.0f, 0.0f, 0.0f);
-		newData.accel = MyVector(0.0f, -1.0f, 0.0f);
+	case 1: // BULLET
 		newData.mass = 2.0f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
 		newData.type = 1;
 		newData.count = 1;
 		newData.lifeSpan = 5;
 		break;
-	case 2:
-		newData.velo = MyVector(40.0f, 30.0f, 0.0f);
-		newData.accel = MyVector(0.0f, -20.0f, 0.0f);
+	case 2: // ARTILLERY
 		newData.mass = 200.0f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
 		newData.type = 2;
 		newData.count = 1;
 		newData.lifeSpan = 5;
 		break;
-	case 3:
-		newData.velo = MyVector(10.0f, 0.0f, 0.0f);
-		newData.accel = MyVector(0.0f, 0.6f, 0.0f);
+	case 3: // FIREBALL
 		newData.mass = 1.0f;
 		newData.damp = 0.9f;
 		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
 		newData.type = 3;
 		newData.count = 1;
 		newData.lifeSpan = 5;
 		break;
-	case 4:
-		newData.velo = MyVector(100.0f, 0.0f, 0.0f);
-		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
+	case 4: // LASER
 		newData.mass = 0.1f;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
 		newData.type = 4;
 		newData.count = 1;
 		newData.lifeSpan = 5;
 		break;
 	case 5: // FIREWORKS TYPE A
-		newData.velo = MyVector(randX, 50.0f, 0.0f);
-		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
+		newData.velocity = MyVector(randX, 50.0f, 0.0f);
+		newData.acceleration = MyVector(0.0f, 0.0f, 0.0f);
 		newData.mass = 1.0;
 		newData.damp = 0.99f;
 		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
 		newData.type = 5;
 		newData.count = 5;
 		newData.lifeSpan = 3;
 		newData.material = 3;
 		break;
-	case 6: // FIREWORKS TYPE B
-		newData.velo = MyVector(randX, randY, randZ);
-		newData.accel = MyVector(0.0f, -5.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 6;
-		newData.count = 10;
-		newData.lifeSpan = randAge;
-		newData.material = 2;
-		break;
-	case 7: // FIREWORKS TYPE C
-		newData.velo = MyVector(randX, randY, randZ);
-		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 6;
-		newData.count = 0;
-		newData.lifeSpan = randAge;
-		newData.material = 1;
-		break;
-	case 8: // PARTICLE SPRING
-		newData.velo = MyVector(50, -10, 0);
-		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
+	case 6: // PARTICLE SPRING
 		newData.mass = 10.0;
 		newData.damp = 1.0f;
 		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
 		newData.type = 8;
 		newData.count = 0;
 		newData.lifeSpan = 10;
 		newData.material = 1;
 		break;
-	case 9: // ANCHORED SPRING
-		newData.velo = MyVector(0, 0, 0);
-		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
+	case 7: // ANCHORED SPRING
 		newData.mass = 10.0;
 		newData.damp = 1.0f;
 		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
 		newData.type = 9;
 		newData.count = 0;
 		newData.lifeSpan = 10;
 		newData.material = 1;
 		break;
-	case 10: // CABLE SPRING
-		newData.velo = MyVector(50, -10, 0);
-		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
+	case 8: // ANCHORED SPRING
 		newData.mass = 10.0;
 		newData.damp = 1.0f;
 		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
+		newData.type = 9;
+		newData.count = 0;
+		newData.lifeSpan = 10;
+		newData.material = 1;
+		break;
+	case 9: // CABLE SPRING
+		newData.mass = 10.0;
+		newData.damp = 1.0f;
+		newData.radius = 1.0f;
 		newData.type = 10;
 		newData.count = 0;
 		newData.lifeSpan = 10;
+		newData.material = 1;
+		break;
+	case 10: // FIREWORKS TYPE B
+		newData.velocity = MyVector(randX, randY, randZ);
+		newData.acceleration = MyVector(0.0f, -5.0f, 0.0f);
+		newData.mass = 1.0;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.type = 6;
+		newData.count = 10;
+		newData.lifeSpan = randAge;
+		newData.material = 2;
+		break;
+	case 11: // FIREWORKS TYPE C
+		newData.velocity = MyVector(randX, randY, randZ);
+		newData.acceleration = MyVector(0.0f, -10.0f, 0.0f);
+		newData.mass = 1.0;
+		newData.damp = 0.99f;
+		newData.radius = 1.0f;
+		newData.type = 6;
+		newData.count = 0;
+		newData.lifeSpan = randAge;
 		newData.material = 1;
 		break;
 	}
@@ -155,40 +135,28 @@ MyParticle particleType(int type)
 }
 
 // Creates new Particles
-void createParticle(std::vector<MyParticle>* particleList, std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos, ForceRegistry* Registry, 
-	GravityForceGenerator Gravity, AnchoredSpring* aSpring)
+void createParticle(vector<MyParticle>* particleList, vector<glm::mat4>* MyParticleTrans, vector<glm::mat4>* normalTransArray, int bType, glm::vec3 initialPosition)
 {
 	MyParticle newParticle = particleType(bType);;
 	particleList->push_back(newParticle);
 
-
 	glm::mat4 trans = glm::mat4(1.0f); // identity
-	if (bType == 6) trans = glm::translate(trans, currParticlePos);
-	else if (bType == 7) trans = glm::translate(trans, currParticlePos);
-	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
-	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	trans = glm::translate(trans, initialPosition);
+	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 	MyParticleTrans->push_back(trans);
 
 	glm::mat4 normalTrans;
 	normalTransArray->push_back(normalTrans);
 
-	if (bType == 9)
-	{
-		Registry->Add(&newParticle, aSpring);
-	}
-
-
-	// Assign GravityForceGenerator to newly created particles in the ForceRegistry
-	Registry->Add(&newParticle, &Gravity);
 	/*
-	std::cout << std::endl
-		<< "MyParticleTrans = " << MyParticleTrans->size() << std::endl
-		<< "normalTransArray = " << normalTransArray->size() << std::endl
+	cout << endl
+		<< "MyParticleTrans = " << MyParticleTrans->size() << endl
+		<< "normalTransArray = " << normalTransArray->size() << endl
 	*/
 }
 
 // Deletes an existing Particles
-void deleteParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<MyParticle>* MyParticleDatas, int index)
+void deleteParticle(vector<glm::mat4>* MyParticleTrans, vector<glm::mat4>* normalTransArray, vector<MyParticle>* MyParticleDatas, int index)
 {
 	MyParticleTrans->erase(MyParticleTrans->begin() + index);
 	normalTransArray->erase(normalTransArray->begin() + index);
@@ -196,16 +164,17 @@ void deleteParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::ma
 }
 
 // Delete all Particles
-void clearParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<MyParticle>* MyParticleDatas)
+void clearParticle(vector<glm::mat4>* MyParticleTrans, vector<glm::mat4>* normalTransArray, vector<MyParticle>* MyParticleDatas)
 {
 	MyParticleTrans->clear();
 	normalTransArray->clear();
 	MyParticleDatas->clear();
 }
 
+
 // Gets the distance between 2 objects for collision checking
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
-	//std::cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << std::endl << xPos2 << ", " << yPos2 << ", " << zPos2 << std::endl << std::endl;
+	//cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << endl << xPos2 << ", " << yPos2 << ", " << zPos2 << endl << endl;
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
 }
 
@@ -305,15 +274,47 @@ int main() {
 
 #pragma region Particle Physics Declarations
 
-	std::vector<glm::mat4> particleTrans;
-	std::vector<glm::mat4> normalTransArray;
-	std::vector<MyParticle> particleList;
+	vector<glm::mat4> particleTrans;
+	vector<glm::mat4> normalTransArray;
+	vector<MyParticle> particleList;
 
-	ForceRegistry registry;
-	GravityForceGenerator gravity = GravityForceGenerator(MyVector(0.0f, 9.8f, 0.0f));
+	PhysicsWorld pWorld = PhysicsWorld();
 
-	AnchoredSpring aSpring = AnchoredSpring(MyVector(20,0,0), 5, 0.5);
-	//ParticleSpring cSpring = ParticleSpring(&)
+
+	//MODIFY CABLE LENGTH HERE
+	float cableLength = 150;
+
+	//Bullet 1 particle
+	//MyParticle bullet = MyParticle(MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0));
+	createParticle(&particleList, &particleTrans, &normalTransArray, 1, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	for (int i = 0; i < particleList.size(); i++) 
+	{
+		particleList[i].name = "Bullet " + i;
+		cout << particleList[i].name << endl;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////
+
+	//ADD CABLES
+	Cable* c1 = new Cable();
+	c1->particles[0] = &particleList[0];
+	c1->length = cableLength;
+	c1->anchorPoint = MyVector(particleList[0].position.x, cableLength, 0);
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	MyVector anchor1 = MyVector(c1->anchorPoint.x, particleList[0].position.y - cableLength, 0);
+
+	//////////////////////////////////////////////////////////////////////////////
+
+	//ADDING PARTICLES TO PHYSICS WORLD
+	pWorld.addParticle(&particleList[0]);
+
+
+	//ADDING CABLES TO PHYSICS WORLD
+	pWorld.links.push_back(c1);
+
 
 
 	int currType = 1;
@@ -346,7 +347,7 @@ int main() {
 		boxOffsets
 	);
 
-	std::vector<std::string> faces
+	vector<string> faces
 	{
 		"right.png",
 		"left.png",
@@ -503,16 +504,15 @@ int main() {
 		glBindVertexArray(particle.vaoId);
 		glUseProgram(shaderProgram);
 
-		
-		registry.UpdateForces(deltaTime);
-		
-		for (std::vector<MyParticle>::iterator i = particleList.begin();
-			i != particleList.end(); i++)
-		{
-			
-			(i)->Update(deltaTime);
-		}
+		pWorld.update(deltaTime);
 
+#pragma region Old System
+
+		// If left button pressed, createParticle()
+
+		
+
+		/*
 		// Change bullet type
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currType = 2;
@@ -523,8 +523,6 @@ int main() {
 		//if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) currType = 7;
 		//if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) currType = 8;
 		if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) currType = 9;
-
-		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) particleTrans[0] = glm::rotate(particleTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
 		// Fire particle key
 		int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
@@ -547,7 +545,7 @@ int main() {
 			{
 				particleList[i].lifeSpan -= 1 * deltaTime;
 				if (getDistance(particleTrans[i][3].x, particleTrans[i][3].y, particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= particleList[i].radius + boxRadius) {
-					force = (particleList[i].mass * particleList[i].velo.x) / boxMass;
+					force = (particleList[i].mass * particleList[i].velocity.x) / boxMass;
 					stopper = force;
 					if (particleList[i].type != 4)
 						deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
@@ -578,9 +576,9 @@ int main() {
 
 			// Updating and Drawing Particles
 			for (int i = 0; i < particleList.size(); i++) {
-				glm::vec3 temp = glm::vec3(particleList[i].velo.x, particleList[i].velo.y, particleList[i].velo.z);
+				glm::vec3 temp = glm::vec3(particleList[i].velocity.x, particleList[i].velocity.y, particleList[i].velocity.z);
 
-				particleList[i].velo += particleList[i].accel * deltaTime;
+				particleList[i].velocity += particleList[i].acceleration * deltaTime;
 				particleTrans[i] = glm::translate(particleTrans[i], temp * deltaTime);
 
 				normalTransArray[i] = glm::transpose(glm::inverse(particleTrans[i]));
@@ -593,6 +591,9 @@ int main() {
 				glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
 			}
 		}
+		*/
+
+#pragma endregion
 		
 #pragma endregion
 

@@ -1,27 +1,25 @@
 ﻿  Source.cpp
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ForceRegistry.h(3,11): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ForceRegistry.h(4,11): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ForceRegistry.h(5,11): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\ForceRegistry.h(6,11): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\GravityForceGenerator.h(8,19): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\main.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\obj_mesh.h(165,36): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\GravityForceGenerator.h(7,19): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\DragForceGenerator.h(6,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\DragForceGenerator.h(7,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\main.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\obj_mesh.h(165,36): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
           with
           [
               _Ty=unsigned int
           ]
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\obj_mesh.h(169,36): warning C4267: '=': conversion from 'size_t' to 'GLulong', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(17,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(18,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(19,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(20,16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(208,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(232,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(233,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(237,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(238,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(240,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(241,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(402,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\GDPHYSX_Creencia_Villegas\Source.cpp(601,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  GDPHYSX_Creencia_Villegas.vcxproj -> C:\Users\alain\OneDrive\Documents\GitHub\GDPHYSX_CreenciaVillegas_Particle\x64\Debug\GDPHYSX_Creencia_Villegas.exe
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\obj_mesh.h(169,36): warning C4267: '=': conversion from 'size_t' to 'GLulong', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(23,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(24,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(25,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(26,16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(178,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(202,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(203,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(207,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(208,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(210,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(211,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(404,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\GDPHYSX_Creencia_Villegas\Source.cpp(605,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  GDPHYSX_Creencia_Villegas.vcxproj -> C:\Users\Derick\source\repos\GDPHYSX_Creencia_Villegas\x64\Debug\GDPHYSX_Creencia_Villegas.exe
