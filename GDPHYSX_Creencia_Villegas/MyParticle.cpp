@@ -1,59 +1,140 @@
 #include "MyParticle.h"
 
-void MyParticle::updatePosition(float time)
+MyParticle::MyParticle(int newType) : type(newType)
 {
-	//P2
-	this->pos = this->pos + (this->velo * time) + ((this->accel * powf(time, 2)) * (1.0f / 2.0f));
+	particleType();
+}
+
+void MyParticle::particleType()
+{
+	float randX = rand() % 60 + -30;
+	float randY = rand() % 30 + -5;
+	float randZ = rand() % 30 + -15;
+	float randAge = rand() % 3 + 1;
+
+	switch (type) {
+	case 1: // BULLET
+		velocity = MyVector(35.0f, 0.0f, 0.0f);
+		acceleration = MyVector(0.0f, -1.0f, 0.0f);
+		mass = 2.0f;
+		damping = 0.99f;
+		radius = 1.0f;
+		count = 1;
+		lifeSpan = 5;
+		break;
+	case 2: // ARTILLERY
+		velocity = MyVector(40.0f, 30.0f, 0.0f);
+		acceleration = MyVector(0.0f, -20.0f, 0.0f);
+		mass = 200.0f;
+		damping = 0.99f;
+		radius = 1.0f;
+		count = 1;
+		lifeSpan = 50;
+		break;
+	case 3: // FIREBALL
+		velocity = MyVector(10.0f, 0.0f, 0.0f);
+		acceleration = MyVector(0.0f, 0.6f, 0.0f);
+		mass = 1.0f;
+		damping = 0.9f;
+		radius = 1.0f;
+		count = 1;
+		lifeSpan = 5;
+		break;
+	case 4: // LASER
+		velocity = MyVector(100.0f, 0.0f, 0.0f);
+		acceleration = MyVector(0.0f, 0.0f, 0.0f);
+		mass = 0.1f;
+		damping = 0.99f;
+		radius = 1.0f;
+		count = 1;
+		lifeSpan = 5;
+		break;
+	case 5: // FIREWORKS TYPE A
+		velocity = MyVector(randX, 50.0f, 0.0f);
+		acceleration = MyVector(0.0f, 0.0f, 0.0f);
+		mass = 1.0;
+		damping = 0.99f;
+		radius = 1.0f;
+		count = 5;
+		lifeSpan = 3;
+		material = 3;
+		break;
+	case 6: // FIREWORKS TYPE B
+		velocity = MyVector(randX, randY, randZ);
+		acceleration = MyVector(0.0f, -5.0f, 0.0f);
+		mass = 1.0;
+		damping = 0.99f;
+		radius = 1.0f;
+		count = 10;
+		lifeSpan = randAge;
+		material = 2;
+		break;
+	case 7: // FIREWORKS TYPE C
+		velocity = MyVector(randX, randY, randZ);
+		acceleration = MyVector(0.0f, -10.0f, 0.0f);
+		mass = 1.0;
+		damping = 0.99f;
+		radius = 1.0f;
+		count = 0;
+		lifeSpan = randAge;
+		material = 1;
+		break;
+	}
+}
+
+void MyParticle::update(float time)
+{
+	if (mass == 0)
+	{
+		return;
+	}
+	checkLifeSpan(time);
+	updatePos(time);
+	updateVelocity(time);
+	cout << "position = " << position.x << ", " << position.y << ", " << position.z << endl;
+	cout << "velocity = " << velocity.x << ", " << velocity.y << ", " << velocity.z << endl << endl;
+	//cout << "velocity = " << velocity.x * time << ", " << velocity.y * time << ", " << velocity.z * time << endl << endl;
+	//cout << "acceleration = " << acceleration.x << ", " << acceleration.y << ", " << acceleration.z << endl;
+	//cout << "accumulatedForce = " << accumulatedForce.x << ", " << accumulatedForce.y << ", " << accumulatedForce.z << endl;
+	//cout << "totalVelocity = " << totalVelocity.x << ", " << totalVelocity.y << ", " << totalVelocity.z << endl;
+	resetForce();
+}
+
+void MyParticle::updatePos(float time)
+{
+	position = position + (velocity * time);
+	//position = position + (velocity * time) + ((acceleration * powf(time, 2)) * (1 / 2));
 }
 
 void MyParticle::updateVelocity(float time)
-{
-	this->accel = this->accel + this->forceAccum * (1 / this->mass);
-	this->velo = this->velo + this->accel * time;
-	this->velo = this->velo * powf(this->damp, time);
+{	
+	acceleration = acceleration + (accumulatedForce * (1 / mass));
+
+	velocity = velocity + (acceleration * time);
+
+	velocity = velocity * powf(damping, time);
+
+	totalVelocity = totalVelocity + velocity;
 }
 
-void MyParticle::Update(float time)
+void MyParticle::addForce(MyVector f)
 {
-	if (this->mass == 0) return;
-
-	updatePosition(time);
-	updateVelocity(time);
-	//checkLifeSpan(time);
-	//ResetForce();
-	//exclusive for cable anchors
-	//if (stationary)
-	//	stationarySetting();
+	accumulatedForce = accumulatedForce + f;
 }
 
-void MyParticle::Destroy()
+void MyParticle::resetForce()
 {
-	this->isDestroyed = true;
+	accumulatedForce = MyVector(0, 0, 0);
+	//acceleration = MyVector(0, 0, 0);
 }
 
 void MyParticle::checkLifeSpan(float time)
 {
-	this->lifeSpan -= time;
-	if (this->lifeSpan <= 0.0f) {
-		Destroy();
-	}
+	lifeSpan -= time;
+
+	//cout << "lifespan = " << lifeSpan << endl;
+
+	if (lifeSpan <= 0) isDestroyed = true;
 }
 
-void MyParticle::AddForce(MyVector force)
-{
-	this->forceAccum = this->forceAccum + force;
-}
 
-void MyParticle::ResetForce()
-{
-	this->forceAccum = MyVector(0.0f, 0.0f, 0.0f);
-	this->accel = MyVector(0.0f, 0.0f, 0.0f);
-}
-
-void MyParticle::stationarySetting()
-{
-	this->pos.x = startPos.x;
-	this->pos.y = startPos.y;
-	this->velo.x = 0;
-	this->velo.y = 0;
-}

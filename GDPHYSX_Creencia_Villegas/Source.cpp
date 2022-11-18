@@ -1,204 +1,11 @@
 #pragma once
-#include "MyParticle.h"
-#include "ForceGenerator.h"
-#include "ForceRegistry.h"
-#include "GravityForceGenerator.h"
 
-#include "ParticleSpring.h"
-#include "AnchoredSpring.h"
-#include "BungeeSpring.h"
-#include "CableSpring.h"
-
+#include "PhysicsWorld.h"
 #include "main.h"
 
-// Determines Particle data for new Particles
-MyParticle particleType(int type)
-{
-	float randX = rand() % 60 + -30;
-	float randY = rand() % 30 + -5;
-	float randZ = rand() % 30 + -15;
-	float randAge = rand() % 3 + 1;
 
-	MyParticle newData;
-	switch (type) {
-	case 0:
-		newData.velo = MyVector();
-		newData.accel = MyVector();
-		newData.mass = 5.0f;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 0;
-		newData.count = 1;
-		newData.lifeSpan = 10000;
-		break;
-	case 1:
-		newData.velo = MyVector(35.0f, 0.0f, 0.0f);
-		newData.accel = MyVector(0.0f, -1.0f, 0.0f);
-		newData.mass = 2.0f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 1;
-		newData.count = 1;
-		newData.lifeSpan = 5;
-		break;
-	case 2:
-		newData.velo = MyVector(40.0f, 30.0f, 0.0f);
-		newData.accel = MyVector(0.0f, -20.0f, 0.0f);
-		newData.mass = 200.0f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 2;
-		newData.count = 1;
-		newData.lifeSpan = 5;
-		break;
-	case 3:
-		newData.velo = MyVector(10.0f, 0.0f, 0.0f);
-		newData.accel = MyVector(0.0f, 0.6f, 0.0f);
-		newData.mass = 1.0f;
-		newData.damp = 0.9f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 3;
-		newData.count = 1;
-		newData.lifeSpan = 5;
-		break;
-	case 4:
-		newData.velo = MyVector(100.0f, 0.0f, 0.0f);
-		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
-		newData.mass = 0.1f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 4;
-		newData.count = 1;
-		newData.lifeSpan = 5;
-		break;
-	case 5: // FIREWORKS TYPE A
-		newData.velo = MyVector(randX, 50.0f, 0.0f);
-		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 5;
-		newData.count = 5;
-		newData.lifeSpan = 3;
-		newData.material = 3;
-		break;
-	case 6: // FIREWORKS TYPE B
-		newData.velo = MyVector(randX, randY, randZ);
-		newData.accel = MyVector(0.0f, -5.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 6;
-		newData.count = 10;
-		newData.lifeSpan = randAge;
-		newData.material = 2;
-		break;
-	case 7: // FIREWORKS TYPE C
-		newData.velo = MyVector(randX, randY, randZ);
-		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 6;
-		newData.count = 0;
-		newData.lifeSpan = randAge;
-		newData.material = 1;
-		break;
-	case 8: // PARTICLE SPRING
-		newData.velo = MyVector(50, -10, 0);
-		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
-		newData.mass = 10.0;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 8;
-		newData.count = 0;
-		newData.lifeSpan = 10;
-		newData.material = 1;
-		break;
-	case 9: // ANCHORED SPRING
-		newData.velo = MyVector(50, 0, 0);
-		newData.accel = MyVector(0.0f, 0.0f, 0.0f);
-		newData.mass = 10.0;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 9;
-		newData.count = 0;
-		newData.lifeSpan = 10;
-		newData.material = 1;
-		break;
-	case 10: // CABLE SPRING
-		newData.velo = MyVector(50, -10, 0);
-		newData.accel = MyVector(0.0f, -10.0f, 0.0f);
-		newData.mass = 10.0;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.accel.y *= newData.damp;
-		newData.type = 10;
-		newData.count = 0;
-		newData.lifeSpan = 10;
-		newData.material = 1;
-		break;
-	}
-
-	return newData;
-}
-
-// Creates new Particles
-void createParticle(std::vector<MyParticle>* particleList, std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, GLuint modelTransLoc, GLuint normTransLoc, int bType, glm::vec3 currParticlePos, ForceRegistry* Registry, GravityForceGenerator Gravity)
-{
-	MyParticle newParticle = particleType(bType);;
-	particleList->push_back(newParticle);
-
-
-	glm::mat4 trans = glm::mat4(1.0f); // identity
-	if (bType == 6) trans = glm::translate(trans, currParticlePos);
-	else if (bType == 7) trans = glm::translate(trans, currParticlePos);
-	if (bType == 0) trans = glm::scale(trans, glm::vec3(0.0f, 0.0f, 0.0f));
-	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-	MyParticleTrans->push_back(trans);
-
-	glm::mat4 normalTrans;
-	normalTransArray->push_back(normalTrans);
-
-
-	// Assign GravityForceGenerator to newly created particles in the ForceRegistry
-	Registry->Add(&newParticle, &Gravity);
-	/*
-	std::cout << std::endl
-		<< "MyParticleTrans = " << MyParticleTrans->size() << std::endl
-		<< "normalTransArray = " << normalTransArray->size() << std::endl
-	*/
-}
-
-// Deletes an existing Particles
-void deleteParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<MyParticle>* MyParticleDatas, int index)
-{
-	MyParticleTrans->erase(MyParticleTrans->begin() + index);
-	normalTransArray->erase(normalTransArray->begin() + index);
-	MyParticleDatas->erase(MyParticleDatas->begin() + index);
-}
-
-// Delete all Particles
-void clearParticle(std::vector<glm::mat4>* MyParticleTrans, std::vector<glm::mat4>* normalTransArray, std::vector<MyParticle>* MyParticleDatas)
-{
-	MyParticleTrans->clear();
-	normalTransArray->clear();
-	MyParticleDatas->clear();
-}
-
-// Gets the distance between 2 objects for collision checking
+// Gets the distance between 2 objects for collision checking ||| RELOCATE TO PHYSICS WORLD
 float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
-	//std::cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << std::endl << xPos2 << ", " << yPos2 << ", " << zPos2 << std::endl << std::endl;
 	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
 }
 
@@ -298,15 +105,9 @@ int main() {
 
 #pragma region Particle Physics Declarations
 
-	std::vector<glm::mat4> particleTrans;
-	std::vector<glm::mat4> normalTransArray;
-	std::vector<MyParticle> particleList;
+	PhysicsWorld pWorld;
 
-	ForceRegistry registry;
-	GravityForceGenerator gravity = GravityForceGenerator(MyVector(0.0f, 0.0f, 0.0f));
-
-	AnchoredSpring aSpring = AnchoredSpring(MyVector(20,0,0), 5, 0.5);
-
+	glm::vec3 initialPos = glm::vec3(0, 0, 0);
 	int currType = 1;
 	bool isCollide = false;
 	float boxRadius = 5.5;
@@ -438,16 +239,16 @@ int main() {
 		// Keyboard camera controls
 		//source: https://www.youtube.com/watch?v=AWM4CUfffos
 		float cameraSpeed = deltaTime * 10;
-		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			cameraPos += cameraSpeed * cameraFront;
 		}
-		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 			cameraPos -= cameraSpeed * cameraFront;
 		}
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		}
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		}
 		if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
@@ -494,27 +295,12 @@ int main() {
 		glBindVertexArray(particle.vaoId);
 		glUseProgram(shaderProgram);
 
-
-		registry.UpdateForces(deltaTime);
-
-		for (std::vector<MyParticle>::iterator i = particleList.begin();
-			i != particleList.end(); i++)
-		{
-			//(*i)->acceleration = gravity;
-			(i)->Update(deltaTime);
-		}
-
 		// Change bullet type
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currType = 2;
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) currType = 3;
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currType = 4;
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currType = 5;
-		//if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) currType = 6;
-		//if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) currType = 7;
-		//if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) currType = 8;
-
-		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) particleTrans[0] = glm::rotate(particleTrans[0], glm::radians(rotFactor), glm::vec3(0.0f, 1.0f, 0.0f)); // matrix * rotation_matrix
 
 		// Fire particle key
 		int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
@@ -524,64 +310,75 @@ int main() {
 		if (cooldown >= 1.5)
 		{
 			if (state == GLFW_PRESS) {
-				createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f), &registry, gravity);
+				pWorld.addParticle(currType, initialPos);
 				cooldown = 1;
 			}
 		}
 
-		if (!particleList.empty())
+		if (!pWorld.particles.empty())
 		{
-			// Collision checking and resolution
-			for (int i = 0; i < particleList.size(); i++)
+			// Collision checking
+			for (int i = 0; i < pWorld.particles.size(); i++)
 			{
-				particleList[i].lifeSpan -= 1 * deltaTime;
-				if (getDistance(particleTrans[i][3].x, particleTrans[i][3].y, particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= particleList[i].radius + boxRadius) {
-					force = (particleList[i].mass * particleList[i].velo.x) / boxMass;
+				if (getDistance(pWorld.particleTrans[i][3].x, pWorld.particleTrans[i][3].y, pWorld.particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= pWorld.particles[i]->radius + boxRadius) {
+					force = (pWorld.particles[i]->mass * pWorld.particles[i]->velocity.x) / boxMass;
 					stopper = force;
-					if (particleList[i].type != 4)
-						deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
+
+					if (pWorld.particles[i]->type != 4)
+						pWorld.particles[i]->isDestroyed = false;
+					cout << endl << endl << "COLLIDED" << endl << endl;
+
+					cout << "BEFORE velocity = " << pWorld.particles[i]->velocity.x << ", " << pWorld.particles[i]->velocity.y << ", " << pWorld.particles[i]->velocity.z << endl;
+
+					pWorld.particles[i]->velocity.x *= -1;
+					pWorld.particles[i]->velocity.y *= -1;
+					pWorld.particles[i]->velocity.z *= -1;
+					cout << "AFTER velocity = " << pWorld.particles[i]->velocity.x << ", " << pWorld.particles[i]->velocity.y << ", " << pWorld.particles[i]->velocity.z << endl;
+
 				}
-				else if (particleList[i].lifeSpan <= 0)
+				else if (pWorld.particles[i]->isDestroyed)
 				{
-					if (particleList[i].type == 5)
+					if (pWorld.particles[i]->type == 5)
 					{
-						for (int j = 0; j < particleList[i].count; j++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3], &registry, gravity);
-						for (int l = 0; l < particleList[i].count * 3; l++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity);
+						for (int j = 0; j < pWorld.particles[i]->count; j++)
+							pWorld.addParticle(6, initialPos);
+						for (int l = 0; l < pWorld.particles[i]->count * 3; l++)
+							pWorld.addParticle(7, initialPos);
 					}
-					else if (particleList[i].type == 6)
+					else if (pWorld.particles[i]->type == 6)
 					{
-						for (int k = 0; k < particleList[i].count; k++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity);
+						for (int k = 0; k < pWorld.particles[i]->count; k++)
+							pWorld.addParticle(7, initialPos);
 					}
-					deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
 				}
 			}
 
-			// Move box
+			// Move box when hit
 			boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
 			if (force >= 0) force -= stopper * deltaTime;
 			else force = 0;
 
+			// Update physics world
+			pWorld.update(deltaTime);
 
-			// Updating and Drawing Particles
-			for (int i = 0; i < particleList.size(); i++) {
-				glm::vec3 temp = glm::vec3(particleList[i].velo.x, particleList[i].velo.y, particleList[i].velo.z);
 
-				particleList[i].velo += particleList[i].accel * deltaTime;
-				particleTrans[i] = glm::translate(particleTrans[i], temp * deltaTime);
+			// Drawing Particles
+			for (int i = 0; i < pWorld.particles.size(); i++) {
+				glm::vec3 temp = glm::vec3(pWorld.particles[i]->position.x, pWorld.particles[i]->position.y, pWorld.particles[i]->position.z);
+				pWorld.particleTrans[i] = glm::translate(pWorld.particleTrans[i], temp * deltaTime);
 
-				normalTransArray[i] = glm::transpose(glm::inverse(particleTrans[i]));
-				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
-				glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(particleTrans[i]));
+				pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
+				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
+				glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
 
 				glActiveTexture(GL_TEXTURE0);
-				GLuint particleTexture = particle.textures[particle.materials[particleList[i].material].diffuse_texname];
+				GLuint particleTexture = particle.textures[particle.materials[pWorld.particles[i]->material].diffuse_texname];
 				glBindTexture(GL_TEXTURE_2D, particleTexture);
 				glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
 			}
 		}
+		
+
 		
 #pragma endregion
 
@@ -590,10 +387,6 @@ int main() {
 
 		currentTime = glfwGetTime();
 		deltaTime = currentTime - prevTime;
-		rotFactor += deltaTime * 900;
-		if (rotFactor > 360.0f) {
-			rotFactor -= 360.0f;
-		}
 		prevTime = currentTime;
 
 		//--- stop drawing here ---

@@ -1,9 +1,7 @@
-#ifndef BUNGEESPRING
-#define BUNGEESPRING
+#pragma once
+#include "ForceGenerator.h"
 #include "MyVector.h"
 #include "MyParticle.h"
-#include "ForceGenerator.h"
-
 class BungeeSpring : public ForceGenerator
 {
 private:
@@ -15,7 +13,5 @@ public:
 	BungeeSpring(MyVector _pos, float _springConst, float _restLen) :
 		anchorPoint(_pos), springConstant(_springConst), bungeeLength(_restLen) {}
 
-	void UpdateForce(MyParticle* partice, float time) override;
+	void updateForce(MyParticle* particle, float time) override;
 };
-
-#endif // !BUNGEESPRING

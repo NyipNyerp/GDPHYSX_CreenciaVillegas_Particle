@@ -1,8 +1,12 @@
 #include "GravityForceGenerator.h"
 
-void GravityForceGenerator::UpdateForce(MyParticle* particle, float time)
+void GravityForceGenerator::updateForce(MyParticle* p, float time)
 {
-	if (particle->mass <= 0) return;
-	MyVector Force = Gravity * particle->mass;
-	particle->AddForce(Force);
+	if (p->mass <= 0)
+	{
+		return;
+	}
+
+	MyVector force = gravity * p->mass;
+	p->addForce(force);
 }

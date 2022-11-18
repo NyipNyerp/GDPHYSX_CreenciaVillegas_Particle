@@ -1,6 +1,6 @@
 #pragma once
-#ifndef PROJECTILE
-#define PROJECTILE
+#ifndef MYPARTICLE_H
+#define MYPARTICLE_H
 
 #include "MyVector.h"
 #include <stdio.h>
@@ -14,41 +14,38 @@
 
 class MyParticle
 {
-public: // CONSTRUCTOR
-   // MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, bool stationary = false);
-   // MyParticle();
+public:
+	float mass = 5;
+	float radius = 1;
+	float damping = 0.99f;
+	float restitution = 1;
+	MyVector position = MyVector(0, 0, 0);
+	MyVector velocity = MyVector(0, 0, 0);
+	MyVector acceleration = MyVector(0, 0, 0);
+	MyVector totalVelocity = MyVector(0, 0, 0);
+	MyVector initialPos = MyVector(0, 0, 0);
 
-    //public: // VARIABLES
-    MyVector pos;
-    MyVector velo;
-    MyVector accel;
-    MyVector forceAccum = MyVector();
-    float mass = 5.0f;
-    float damp = 0.99f;
-    float radius = 1.0f;
-    float lifeSpan = 5.0f;
-    int type = 1;
-    int count = 1;
-    int material = 0;
+	float lifeSpan = 5;
+	int type = 1;
+	int count = 1;
+	int material = 0;
+	bool isDestroyed = false;
 
-    bool isDestroyed = false;
-    bool IsDestroyed() {
-        return isDestroyed;
-    }
-    float restitution = 1;
-    bool stationary;
-    MyVector startPos;
-    void stationarySetting();
+public:
+	MyParticle(int newType);
+	void particleType();
 
-    //public: // METHODS
-    void updatePosition(float time);
-    void updateVelocity(float time);
+	void update(float time);
+	void addForce(MyVector f);
+	void resetForce();
+	void checkLifeSpan(float time);
 
-    void Update(float time);
-    void Destroy();
-    void checkLifeSpan(float time);
-    void AddForce(MyVector force);
-    void ResetForce();
+private:
+	void updatePos(float time);
+	void updateVelocity(float time);
+
+protected:
+	MyVector accumulatedForce = MyVector(0, 0, 0);
 };
 
-#endif // !1
+#endif

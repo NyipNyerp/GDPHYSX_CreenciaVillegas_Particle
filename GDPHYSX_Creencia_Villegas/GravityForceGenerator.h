@@ -1,17 +1,12 @@
-#ifndef GRAVITYFORCEGENERATOR
-#define GRAVITYFORCEGENERATOR
+#pragma once
 #include "ForceGenerator.h"
-
 class GravityForceGenerator : public ForceGenerator
 {
 private:
-	MyVector Gravity = MyVector(0, -9.8);
-
+	MyVector gravity = MyVector(0, 0, 0);
 public:
+	GravityForceGenerator(MyVector g) : gravity(g) {};
 	GravityForceGenerator() {}
-	GravityForceGenerator(const MyVector gravity) : Gravity(gravity) {}
 
-	void UpdateForce(MyParticle* particle, float time)override;
+	void updateForce(MyParticle* p, float time) override;
 };
-
-#endif //GRAVITYFORCEGENERATOR

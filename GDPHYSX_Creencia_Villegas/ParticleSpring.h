@@ -1,18 +1,13 @@
-#ifndef PARTICLESPRING
-#define PARTICLESPRING
+#pragma once
+#include "ParticleContact.h"
 #include "MyParticle.h"
-#include "ForceGenerator.h"
 
-class ParticleSpring : public ForceGenerator
+class ParticleSpring
 {
-private:
-	MyParticle* otherParticle;
-	float springConstant;
-	float restLength;
 public:
-	ParticleSpring(MyParticle* _otherParticle, float _springConst, float _restLen) :
-		otherParticle(_otherParticle), springConstant(_springConst), restLength(_restLen) {}
-	void UpdateForce(MyParticle* particle, float time)override;
-};
+	MyParticle* particles[2];
+	virtual ParticleContact* getContact() { return nullptr; }
 
-#endif // !PARTICLESPRING
+protected:
+	float getDistance();
+};

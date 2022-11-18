@@ -1,17 +1,14 @@
 #include "AnchoredSpring.h"
 
-void AnchoredSpring::UpdateForce(MyParticle* particle, float time)
+void AnchoredSpring::updateForce(MyParticle* particle, float time)
 {
-	MyVector pos = particle->pos;
-
+	MyVector pos = particle->position;
 	MyVector force = pos - anchorPoint;
-
-	float mag = force.getMagnitude();
-
+	float mag = force.magnitude();
 	float springForce = -springConstant * abs(mag - restLength);
 
-	force.Normalize();
-	force *= springForce;
+	force.normalize();
+	MyVector dir = force;
 
-	particle->AddForce(force);
+	particle->addForce(dir * springForce);
 }

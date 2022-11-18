@@ -18,6 +18,12 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MyVector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyParticle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ForceGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,16 +42,16 @@
     <ClCompile Include="BungeeSpring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CableSpring.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleSpring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyVector.cpp">
+    <ClCompile Include="ParticleContact.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyParticle.cpp">
+    <ClCompile Include="ContactResolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,6 +77,12 @@
     <ClInclude Include="main.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyVector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyParticle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ForceGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -89,16 +101,16 @@
     <ClInclude Include="BungeeSpring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CableSpring.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleSpring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyVector.h">
+    <ClInclude Include="ParticleContact.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyParticle.h">
+    <ClInclude Include="ContactResolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
