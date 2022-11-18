@@ -97,22 +97,6 @@ int main() {
 	}
 #pragma endregion
 
-
-#pragma region Particle Physics Declarations
-
-	PhysicsWorld pWorld;
-
-	glm::vec3 initialPos = glm::vec3(0, 0, 0);
-	int currType = 1;
-	bool isCollide = false;
-	float boxRadius = 5.5;
-	float boxMass = 25;
-	float cooldown = 1;
-	float force = 0;
-	float stopper = 0;
-
-#pragma endregion
-
 #pragma region Mesh Loading
 
 	ObjData particle;
@@ -184,13 +168,25 @@ int main() {
 	// set bg color to green
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	// var for rotations
-	float xFactor = 0.0f;
-	float xSpeed = 1.0f;
+	// var for rdeltaTime
 	float currentTime = glfwGetTime();
 	float prevTime = 0.0f;
 	float deltaTime = 0.0f;
-	float rotFactor = 0.0f;
+
+#pragma region Particle Physics Declarations
+
+	PhysicsWorld pWorld;
+
+	MyVector initialPos = MyVector(0, 0, 0);
+	int currType = 1;
+	bool isCollide = false;
+	float boxRadius = 4;
+	float boxMass = 25;
+	float cooldown = 1;
+	float force = 0;
+	float stopper = 0;
+
+#pragma endregion
 
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
@@ -312,7 +308,7 @@ int main() {
 
 		if (!pWorld.particles.empty())
 		{
-			// Collision checking
+			// Collision detection
 			for (int i = 0; i < pWorld.particles.size(); i++)
 			{
 				if (pWorld.getDistance(pWorld.particleTrans[i][3].x, pWorld.particleTrans[i][3].y, pWorld.particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= pWorld.particles[i]->radius + boxRadius) {
@@ -330,26 +326,26 @@ int main() {
 					if (pWorld.particles[i]->type == 5)
 					{
 						for (int j = 0; j < pWorld.particles[i]->count; j++)
-							pWorld.addParticle(6, initialPos);
+						{
+							pWorld.addParticle(6, pWorld.particles[i]->position);
+						}
 						for (int l = 0; l < pWorld.particles[i]->count * 3; l++)
-							pWorld.addParticle(7, initialPos);
+						{
+							pWorld.addParticle(7, pWorld.particles[i]->position);
+						}
 					}
 					else if (pWorld.particles[i]->type == 6)
 					{
 						for (int k = 0; k < pWorld.particles[i]->count; k++)
-							pWorld.addParticle(7, initialPos);
+						{
+							pWorld.addParticle(7, pWorld.particles[i]->position);
+						}
 					}
 				}
 			}
 
-			// Move box when hit
-			boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
-			if (force >= 0) force -= stopper * deltaTime;
-			else force = 0;
-
 			// Update physics world
 			pWorld.update(deltaTime);
-
 
 			// Drawing Particles
 			for (int i = 0; i < pWorld.particles.size(); i++) {
@@ -367,7 +363,10 @@ int main() {
 			}
 		}
 		
-
+		// Move box when hit
+		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
+		if (force >= 0) force -= stopper * deltaTime;
+		else force = 0;
 		
 #pragma endregion
 

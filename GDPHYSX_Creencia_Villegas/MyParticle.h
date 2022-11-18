@@ -16,7 +16,7 @@ class MyParticle
 {
 public:
 	float mass = 5;
-	float radius = 1;
+	float radius = 2.5;
 	float damping = 0.99f;
 	float restitution = 1;
 	MyVector position = MyVector(0, 0, 0);

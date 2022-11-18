@@ -1,24 +1,5 @@
 #include "PhysicsWorld.h"
 
-
-void PhysicsWorld::addParticle(int pType, glm::vec3 currParticlePos)
-{
-	MyParticle* newParticle = new MyParticle(pType);
-
-	particles.push_back(newParticle);
-	registry.add(newParticle, &Gravity);
-
-	glm::mat4 trans = glm::mat4(1.0f); // identity
-	trans = glm::translate(trans, currParticlePos);
-	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-	particleTrans.push_back(trans);
-
-	glm::mat4 normalTrans;
-	normalTransArray.push_back(normalTrans);
-
-	cout << endl << "particleTrans = " << particleTrans.size() << endl << "normalTransArray = " << normalTransArray.size() << endl;
-}
-
 void PhysicsWorld::update(float time)
 {
 	updateParticleList();
@@ -30,13 +11,36 @@ void PhysicsWorld::update(float time)
 		particles[i]->update(time);
 	}
 
-	generateContacts();
-
-	if (contacts.size() > 0)
+	if (!particles.empty())
 	{
-		contactResolver.max_iterations = contacts.size() * 2;
-		contactResolver.resolveContacts(contacts, time);
+		generateContacts();
+
+		if (contacts.size() > 0)
+		{
+			contactResolver.max_iterations = contacts.size() * 2;
+			contactResolver.resolveContacts(contacts, time);
+		}
 	}
+}
+
+void PhysicsWorld::addParticle(int pType, MyVector currParticlePos)
+{
+	MyParticle* newParticle = new MyParticle(pType);
+
+	Gravity = GravityForceGenerator(newParticle->acceleration);
+
+	particles.push_back(newParticle);
+	registry.add(newParticle, &Gravity);
+
+	glm::mat4 trans = glm::mat4(1.0f); // identity
+	trans = glm::translate(trans, glm::vec3(currParticlePos.x, currParticlePos.y, currParticlePos.z));
+	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	particleTrans.push_back(trans);
+
+	glm::mat4 normalTrans;
+	normalTransArray.push_back(normalTrans);
+
+	cout << endl << "particleTrans = " << particleTrans.size() << endl << "normalTransArray = " << normalTransArray.size() << endl;
 }
 
 void PhysicsWorld::addContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector collisionNormal)
@@ -81,7 +85,6 @@ void PhysicsWorld::generateContacts()
 {
 	contacts.clear();
 	getOverlaps();
-
 	for (list<ParticleSpring*>::iterator i = links.begin(); i != links.end(); i++)
 	{
 		ParticleContact* contact = (*i)->getContact();
@@ -96,6 +99,9 @@ void PhysicsWorld::getOverlaps()
 {
 	for (int i = 0; i < particles.size() - 1; i++)
 	{
+		cout << "particle size = " << particles.size() - 1 << endl;
+		cout << "index = " << i << endl;
+
 		for (int h = i + 1; h < particles.size(); h++)
 		{
 			generateParticleContacts(particles[i], particles[h]); //particle contact resolution

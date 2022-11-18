@@ -12,7 +12,6 @@
 #include "AnchoredSpring.h"
 #include "BungeeSpring.h"
 
-
 using namespace std;
 
 class PhysicsWorld
@@ -30,15 +29,15 @@ public:
 	vector<glm::mat4> normalTransArray;
 
 public:
-	void addParticle(int bType, glm::vec3 currParticlePos);
 	void update(float time);
+
+	void addParticle(int bType, MyVector currParticlePos);
 	void addContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector collisionNormal);
 
 	void deleteParticle(int index);
 	void clearParticles();
 
 	float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2);
-
 
 	// Put Mono's extra registry functions here
 

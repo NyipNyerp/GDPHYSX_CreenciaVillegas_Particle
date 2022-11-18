@@ -18,7 +18,6 @@ void MyParticle::particleType()
 		acceleration = MyVector(0.0f, -1.0f, 0.0f);
 		mass = 2.0f;
 		damping = 0.99f;
-		radius = 1.0f;
 		count = 1;
 		lifeSpan = 5;
 		break;
@@ -27,7 +26,6 @@ void MyParticle::particleType()
 		acceleration = MyVector(0.0f, -20.0f, 0.0f);
 		mass = 200.0f;
 		damping = 0.99f;
-		radius = 1.0f;
 		count = 1;
 		lifeSpan = 50;
 		break;
@@ -36,7 +34,6 @@ void MyParticle::particleType()
 		acceleration = MyVector(0.0f, 0.6f, 0.0f);
 		mass = 1.0f;
 		damping = 0.9f;
-		radius = 1.0f;
 		count = 1;
 		lifeSpan = 5;
 		break;
@@ -45,7 +42,6 @@ void MyParticle::particleType()
 		acceleration = MyVector(0.0f, 0.0f, 0.0f);
 		mass = 0.1f;
 		damping = 0.99f;
-		radius = 1.0f;
 		count = 1;
 		lifeSpan = 5;
 		break;
@@ -54,7 +50,6 @@ void MyParticle::particleType()
 		acceleration = MyVector(0.0f, 0.0f, 0.0f);
 		mass = 1.0;
 		damping = 0.99f;
-		radius = 1.0f;
 		count = 5;
 		lifeSpan = 3;
 		material = 3;
@@ -64,7 +59,6 @@ void MyParticle::particleType()
 		acceleration = MyVector(0.0f, -5.0f, 0.0f);
 		mass = 1.0;
 		damping = 0.99f;
-		radius = 1.0f;
 		count = 10;
 		lifeSpan = randAge;
 		material = 2;
@@ -74,7 +68,6 @@ void MyParticle::particleType()
 		acceleration = MyVector(0.0f, -10.0f, 0.0f);
 		mass = 1.0;
 		damping = 0.99f;
-		radius = 1.0f;
 		count = 0;
 		lifeSpan = randAge;
 		material = 1;
@@ -107,7 +100,7 @@ void MyParticle::updatePos(float time)
 void MyParticle::updateVelocity(float time)
 {	
 	MyVector tempAccel = acceleration;
-	tempAccel = acceleration + (accumulatedForce * (1 / mass));
+	tempAccel = tempAccel + (accumulatedForce * (1 / mass));
 
 	velocity = velocity + (tempAccel * time);
 
@@ -133,5 +126,3 @@ void MyParticle::checkLifeSpan(float time)
 
 	if (lifeSpan <= 0) isDestroyed = true;
 }
-
-
