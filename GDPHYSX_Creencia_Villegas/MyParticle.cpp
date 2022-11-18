@@ -93,7 +93,6 @@ void MyParticle::update(float time)
 	updateVelocity(time);
 	cout << "position = " << position.x << ", " << position.y << ", " << position.z << endl;
 	cout << "velocity = " << velocity.x << ", " << velocity.y << ", " << velocity.z << endl << endl;
-	//cout << "velocity = " << velocity.x * time << ", " << velocity.y * time << ", " << velocity.z * time << endl << endl;
 	//cout << "acceleration = " << acceleration.x << ", " << acceleration.y << ", " << acceleration.z << endl;
 	//cout << "accumulatedForce = " << accumulatedForce.x << ", " << accumulatedForce.y << ", " << accumulatedForce.z << endl;
 	//cout << "totalVelocity = " << totalVelocity.x << ", " << totalVelocity.y << ", " << totalVelocity.z << endl;
@@ -103,18 +102,16 @@ void MyParticle::update(float time)
 void MyParticle::updatePos(float time)
 {
 	position = position + (velocity * time);
-	//position = position + (velocity * time) + ((acceleration * powf(time, 2)) * (1 / 2));
 }
 
 void MyParticle::updateVelocity(float time)
 {	
-	acceleration = acceleration + (accumulatedForce * (1 / mass));
+	MyVector tempAccel = acceleration;
+	tempAccel = acceleration + (accumulatedForce * (1 / mass));
 
-	velocity = velocity + (acceleration * time);
+	velocity = velocity + (tempAccel * time);
 
 	velocity = velocity * powf(damping, time);
-
-	totalVelocity = totalVelocity + velocity;
 }
 
 void MyParticle::addForce(MyVector f)

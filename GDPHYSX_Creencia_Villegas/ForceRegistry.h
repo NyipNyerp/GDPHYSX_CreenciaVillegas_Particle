@@ -14,12 +14,11 @@ protected:
 		ForceGenerator* generator;
 	};
 
-	list <ParticleGeneratorPair> registry;
+	vector <ParticleGeneratorPair> registry;
 
 public:
 	void add(MyParticle* particle, ForceGenerator* generator);
 	void remove(MyParticle* particle, ForceGenerator* generator);
 	void clear();
 	void updateForce(float time);
-
 };

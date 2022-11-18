@@ -71,6 +71,7 @@ void PhysicsWorld::updateParticleList()
 	{
 		if (particles[i]->isDestroyed)
 		{
+			registry.remove(particles[i], &Gravity);
 			deleteParticle(i);
 		}
 	}
@@ -100,6 +101,11 @@ void PhysicsWorld::getOverlaps()
 			generateParticleContacts(particles[i], particles[h]); //particle contact resolution
 		}
 	}
+}
+
+float PhysicsWorld::getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2)
+{
+	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
 }
 
 void PhysicsWorld::generateParticleContacts(MyParticle* a, MyParticle* b)

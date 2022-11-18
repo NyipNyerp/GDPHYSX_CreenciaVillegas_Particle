@@ -22,7 +22,7 @@ public:
 	vector <MyParticle*> particles; // CHANGE FROM LIST TO VECTOR
 	list <ParticleSpring*> links; // CHANGE FROM LIST TO VECTOR
 
-	//MyVector gravity = MyVector(0, -19.6, 0);  // 20m/s2 down
+	MyVector gravity = MyVector(0, 0, 0);  // 20m/s2 down
 
 	vector<ParticleContact*> contacts;
 
@@ -37,19 +37,22 @@ public:
 	void deleteParticle(int index);
 	void clearParticles();
 
-	//CheckCollision();
+	float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2);
+
 
 	// Put Mono's extra registry functions here
 
 
 protected:
-	GravityForceGenerator Gravity = GravityForceGenerator();
+	GravityForceGenerator Gravity = GravityForceGenerator(gravity);
 	void updateParticleList();
 	ContactResolver contactResolver = ContactResolver(20);
 
 	void generateContacts();
 	void getOverlaps();
 
+
 	//generating contacts for both particles
 	void generateParticleContacts(MyParticle* a, MyParticle* b);
 };
+

@@ -22,7 +22,6 @@ public:
 	MyVector position = MyVector(0, 0, 0);
 	MyVector velocity = MyVector(0, 0, 0);
 	MyVector acceleration = MyVector(0, 0, 0);
-	MyVector totalVelocity = MyVector(0, 0, 0);
 	MyVector initialPos = MyVector(0, 0, 0);
 
 	float lifeSpan = 5;

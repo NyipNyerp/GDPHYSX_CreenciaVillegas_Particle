@@ -1,13 +1,8 @@
 #pragma once
-
 #include "PhysicsWorld.h"
 #include "main.h"
 
 
-// Gets the distance between 2 objects for collision checking ||| RELOCATE TO PHYSICS WORLD
-float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
-	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
-}
 
 #pragma region CAMERA 
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
@@ -16,7 +11,7 @@ glm::vec3 cameraPos = glm::vec3(10.0f, 10.0f, 30.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float yaw = -90.0f;
-float pitch = 0.0f;
+float pitch = 0.0f; 
 float fov = 45.0f;
 
 //mouse state
@@ -320,21 +315,15 @@ int main() {
 			// Collision checking
 			for (int i = 0; i < pWorld.particles.size(); i++)
 			{
-				if (getDistance(pWorld.particleTrans[i][3].x, pWorld.particleTrans[i][3].y, pWorld.particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= pWorld.particles[i]->radius + boxRadius) {
+				if (pWorld.getDistance(pWorld.particleTrans[i][3].x, pWorld.particleTrans[i][3].y, pWorld.particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= pWorld.particles[i]->radius + boxRadius) {
 					force = (pWorld.particles[i]->mass * pWorld.particles[i]->velocity.x) / boxMass;
 					stopper = force;
 
 					if (pWorld.particles[i]->type != 4)
-						pWorld.particles[i]->isDestroyed = false;
+					{
+						pWorld.particles[i]->isDestroyed = true;
+					}
 					cout << endl << endl << "COLLIDED" << endl << endl;
-
-					cout << "BEFORE velocity = " << pWorld.particles[i]->velocity.x << ", " << pWorld.particles[i]->velocity.y << ", " << pWorld.particles[i]->velocity.z << endl;
-
-					pWorld.particles[i]->velocity.x *= -1;
-					pWorld.particles[i]->velocity.y *= -1;
-					pWorld.particles[i]->velocity.z *= -1;
-					cout << "AFTER velocity = " << pWorld.particles[i]->velocity.x << ", " << pWorld.particles[i]->velocity.y << ", " << pWorld.particles[i]->velocity.z << endl;
-
 				}
 				else if (pWorld.particles[i]->isDestroyed)
 				{
