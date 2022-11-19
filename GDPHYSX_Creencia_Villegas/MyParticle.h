@@ -39,6 +39,8 @@ public:
 	void resetForce();
 	void checkLifeSpan(float time);
 
+	glm::vec3 getVec3Pos();
+
 private:
 	void updatePos(float time);
 	void updateVelocity(float time);

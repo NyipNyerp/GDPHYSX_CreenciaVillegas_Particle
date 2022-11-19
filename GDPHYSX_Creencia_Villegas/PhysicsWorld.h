@@ -8,7 +8,7 @@
 #include "DragForceGenerator.h"
 #include "ParticleContact.h"
 #include "ContactResolver.h"
-#include "ParticleSpring.h"
+#include "ParticleLink.h"
 #include "AnchoredSpring.h"
 #include "BungeeSpring.h"
 
@@ -19,7 +19,7 @@ class PhysicsWorld
 public:
 	ForceRegistry registry;
 	vector <MyParticle*> particles; // CHANGE FROM LIST TO VECTOR
-	list <ParticleSpring*> links; // CHANGE FROM LIST TO VECTOR
+	list <ParticleLink*> links; 
 
 	MyVector gravity = MyVector(0, 0, 0);  // 20m/s2 down
 

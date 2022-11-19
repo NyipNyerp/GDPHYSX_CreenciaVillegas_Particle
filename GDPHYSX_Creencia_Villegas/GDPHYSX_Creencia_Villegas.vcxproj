@@ -150,7 +150,7 @@
     <ClCompile Include="MyParticle.cpp" />
     <ClCompile Include="MyVector.cpp" />
     <ClCompile Include="ParticleContact.cpp" />
-    <ClCompile Include="ParticleSpring.cpp" />
+    <ClCompile Include="ParticleLink.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
@@ -170,7 +170,7 @@
     <ClInclude Include="MyVector.h" />
     <ClInclude Include="obj_mesh.h" />
     <ClInclude Include="ParticleContact.h" />
-    <ClInclude Include="ParticleSpring.h" />
+    <ClInclude Include="ParticleLink.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="skybox.h" />

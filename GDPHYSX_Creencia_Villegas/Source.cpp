@@ -1,8 +1,13 @@
 #pragma once
 #include "PhysicsWorld.h"
 #include "main.h"
+#include <algorithm>
 
+// CHANGE NORMALTRANSARRAY AND PARTICLETRANS IN PHYSICSWORLD TO MYPARTICLE
 
+// TRY CHANGING MYVECTOR USES TO GLM::VEC3
+
+// CHANGE PARTICLESPRING CLASS NAME TO PARTICLELINKS
 
 #pragma region CAMERA 
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
@@ -15,7 +20,7 @@ float pitch = 0.0f;
 float fov = 45.0f;
 
 //mouse state
-bool firstMouse = true;
+bool firstMouse = true; 
 float lastX = 1024 / 2.0;
 float lastY = 768 / 2.0;
 
@@ -170,8 +175,12 @@ int main() {
 
 	// var for rdeltaTime
 	float currentTime = glfwGetTime();
+	float currentTime2 = glfwGetTime();
 	float prevTime = 0.0f;
-	float deltaTime = 0.0f;
+	float deltaTime2 = 0.0f;
+	float dT = 1.0f / 60.0f;
+	float t = 0.0f;
+
 
 #pragma region Particle Physics Declarations
 
@@ -229,7 +238,7 @@ int main() {
 
 		// Keyboard camera controls
 		//source: https://www.youtube.com/watch?v=AWM4CUfffos
-		float cameraSpeed = deltaTime * 10;
+		float cameraSpeed = deltaTime2 * 10;
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			cameraPos += cameraSpeed * cameraFront;
 		}
@@ -293,11 +302,15 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currType = 4;
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currType = 5;
 
+		currentTime2 = glfwGetTime();
+		deltaTime2 = currentTime2 - prevTime;
+		prevTime = currentTime2;
+
 		// Fire particle key
 		int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 
 		// Firing cooldown
-		cooldown += cooldown * deltaTime;
+		cooldown += cooldown * deltaTime2;
 		if (cooldown >= 1.5)
 		{
 			if (state == GLFW_PRESS) {
@@ -345,12 +358,14 @@ int main() {
 			}
 
 			// Update physics world
-			pWorld.update(deltaTime);
+			pWorld.update(deltaTime2);
 
 			// Drawing Particles
 			for (int i = 0; i < pWorld.particles.size(); i++) {
-				glm::vec3 temp = glm::vec3(pWorld.particles[i]->position.x, pWorld.particles[i]->position.y, pWorld.particles[i]->position.z);
-				pWorld.particleTrans[i] = glm::translate(pWorld.particleTrans[i], temp * deltaTime);
+				glm::vec3 temp = glm::vec3(pWorld.particles[i]->getVec3Pos());
+				pWorld.particleTrans[i] = glm::mat4(1.0f);
+				pWorld.particleTrans[i] = glm::scale(pWorld.particleTrans[i], glm::vec3(0.5f, 0.5f, 0.5f));
+				pWorld.particleTrans[i] = glm::translate(pWorld.particleTrans[i], temp);
 
 				pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
 				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
@@ -361,11 +376,23 @@ int main() {
 				glBindTexture(GL_TEXTURE_2D, particleTexture);
 				glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
 			}
+
+			/*
+			float newTime = glfwGetTime();
+			float frameTime = newTime - currentTime;
+			currentTime = newTime;
+			while (frameTime > 0.0f)
+			{
+				float deltaTime = std::min(frameTime, dT);
+				frameTime -= deltaTime;
+				
+			}
+			*/
 		}
 		
 		// Move box when hit
-		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
-		if (force >= 0) force -= stopper * deltaTime;
+		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime2);
+		if (force >= 0) force -= stopper * deltaTime2;
 		else force = 0;
 		
 #pragma endregion
@@ -373,9 +400,7 @@ int main() {
 		//unbindtexture after rendering
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		currentTime = glfwGetTime();
-		deltaTime = currentTime - prevTime;
-		prevTime = currentTime;
+		
 
 		//--- stop drawing here ---
 #pragma endregion

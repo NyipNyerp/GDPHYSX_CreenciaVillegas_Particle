@@ -84,8 +84,8 @@ void MyParticle::update(float time)
 	checkLifeSpan(time);
 	updatePos(time);
 	updateVelocity(time);
-	cout << "position = " << position.x << ", " << position.y << ", " << position.z << endl;
-	cout << "velocity = " << velocity.x << ", " << velocity.y << ", " << velocity.z << endl << endl;
+	//cout << "particle position = " << position.x << ", " << position.y << ", " << position.z << endl;
+	//cout << "velocity = " << velocity.x << ", " << velocity.y << ", " << velocity.z << endl << endl;
 	//cout << "acceleration = " << acceleration.x << ", " << acceleration.y << ", " << acceleration.z << endl;
 	//cout << "accumulatedForce = " << accumulatedForce.x << ", " << accumulatedForce.y << ", " << accumulatedForce.z << endl;
 	//cout << "totalVelocity = " << totalVelocity.x << ", " << totalVelocity.y << ", " << totalVelocity.z << endl;
@@ -94,7 +94,7 @@ void MyParticle::update(float time)
 
 void MyParticle::updatePos(float time)
 {
-	position = position + (velocity * time);
+	position = position + (velocity * time) + ((acceleration * powf(time, 2)) * (1 / 2));
 }
 
 void MyParticle::updateVelocity(float time)
@@ -125,4 +125,9 @@ void MyParticle::checkLifeSpan(float time)
 	//cout << "lifespan = " << lifeSpan << endl;
 
 	if (lifeSpan <= 0) isDestroyed = true;
+}
+
+glm::vec3 MyParticle::getVec3Pos()
+{
+	return glm::vec3(position.x, position.y, position.z);
 }
