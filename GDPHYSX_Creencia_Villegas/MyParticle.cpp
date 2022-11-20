@@ -13,6 +13,13 @@ void MyParticle::particleType()
 	float randAge = rand() % 3 + 1;
 
 	switch (type) {
+	case 0: // BOX PARTICLES
+		velocity = MyVector(0.0f, 0.0f, 0.0f);
+		acceleration = MyVector(0.0f, 0.0f, 0.0f);
+		mass = 5.0f;
+		damping = 0.99f;
+		count = 1;
+		break;
 	case 1: // BULLET
 		velocity = MyVector(35.0f, 0.0f, 0.0f);
 		acceleration = MyVector(0.0f, -1.0f, 0.0f);
@@ -84,7 +91,7 @@ void MyParticle::update(float time)
 	checkLifeSpan(time);
 	updatePos(time);
 	updateVelocity(time);
-	//cout << "particle position = " << position.x << ", " << position.y << ", " << position.z << endl;
+	cout << "particle position = " << position.x << ", " << position.y << ", " << position.z << endl;
 	//cout << "velocity = " << velocity.x << ", " << velocity.y << ", " << velocity.z << endl << endl;
 	//cout << "acceleration = " << acceleration.x << ", " << acceleration.y << ", " << acceleration.z << endl;
 	//cout << "accumulatedForce = " << accumulatedForce.x << ", " << accumulatedForce.y << ", " << accumulatedForce.z << endl;

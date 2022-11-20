@@ -1,7 +1,12 @@
 #pragma once
 #include "PhysicsWorld.h"
-#include "main.h"
+
+#include "AnchoredSpring.h"
+#include "BungeeSpring.h"
+#include "Rod.h"
+
 #include <algorithm>
+#include "main.h"
 
 // CHANGE NORMALTRANSARRAY AND PARTICLETRANS IN PHYSICSWORLD TO MYPARTICLE
 
@@ -175,11 +180,8 @@ int main() {
 
 	// var for rdeltaTime
 	float currentTime = glfwGetTime();
-	float currentTime2 = glfwGetTime();
 	float prevTime = 0.0f;
-	float deltaTime2 = 0.0f;
-	float dT = 1.0f / 60.0f;
-	float t = 0.0f;
+	float deltaTime = 0.0f;
 
 
 #pragma region Particle Physics Declarations
@@ -194,6 +196,143 @@ int main() {
 	float cooldown = 1;
 	float force = 0;
 	float stopper = 0;
+
+#pragma endregion
+
+#pragma region MASS AGGREGATE BOX
+
+	/// MASS AGGREGATE BOX
+	for (int i = 0; i < 8; i++)
+	{
+		pWorld.addParticle(0, initialPos);
+	}
+	cout << "particles size = " << pWorld.particles.size() << endl;
+
+	pWorld.particles[0]->position = MyVector(25, 0, 0);
+	pWorld.particles[1]->position = MyVector(25, 5, 5);
+	pWorld.particles[2]->position = MyVector(25, -5, -5);
+	pWorld.particles[3]->position = MyVector(25, -5, 5);
+
+	pWorld.particles[4]->position = MyVector(35, 0, 0);
+	pWorld.particles[5]->position = MyVector(35, 5, 5);
+	pWorld.particles[6]->position = MyVector(35, -5, -5);
+	pWorld.particles[7]->position = MyVector(35, -5, 5);
+
+	for (int i = 0; i < pWorld.particles.size(); i++)
+	{
+		pWorld.particleTrans[i] = glm::mat4(1.0f);
+		pWorld.particleTrans[i] = glm::scale(pWorld.particleTrans[i], glm::vec3(0.5f, 0.5f, 0.5f));
+		pWorld.particleTrans[i] = glm::translate(pWorld.particleTrans[i], glm::vec3(pWorld.particles[i]->getVec3Pos()));
+	}
+
+	/// NOTES
+
+	//pWorld.particles[0] -- FRONT TOP LEFT
+	//pWorld.particles[1] -- FRONT TOP RIGHT
+	//pWorld.particles[2] -- FRONT BOT LEFT
+	//pWorld.particles[3] -- FRONT BOT RIGHT
+
+	//pWorld.particles[4] -- BACK TOP LEFT
+	//pWorld.particles[5] -- BACK TOP RIGHT
+	//pWorld.particles[6] -- BACK BOT LEFT
+	//pWorld.particles[7] -- BACK BOT RIGHT
+
+	//					  PAIRS
+	//------------------------------------------------
+	//		  FRONT		  BACK		 CONNECT
+	//		0 ----- 1	4 ----- 5	0 ----- 4
+	//		|       |	|       |	1 ----- 5
+	//		|       |	|       |	2 ----- 6
+	//		2 ----- 3	6 ----- 7	3 ----- 7
+	
+	// FRONT SQUARE
+	Rod* Pair1 = new Rod();
+	Pair1->particles[0] = pWorld.particles[0];
+	Pair1->particles[1] = pWorld.particles[1];
+	Pair1->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[1]->getVec3Pos());
+	pWorld.links.push_back(Pair1);
+	cout << "Pair1 length = " << Pair1->length << endl;
+
+	Rod* Pair2 = new Rod();
+	Pair2->particles[0] = pWorld.particles[2];
+	Pair2->particles[1] = pWorld.particles[3];
+	Pair2->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[3]->getVec3Pos());;
+	pWorld.links.push_back(Pair2);
+	cout << "Pair2 length = " << Pair2->length << endl;
+
+	Rod* Pair3 = new Rod();
+	Pair3->particles[0] = pWorld.particles[0];
+	Pair3->particles[1] = pWorld.particles[2];
+	Pair3->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[2]->getVec3Pos());;
+	pWorld.links.push_back(Pair3);
+	cout << "Pair3 length = " << Pair3->length << endl;
+
+	Rod* Pair4 = new Rod();
+	Pair4->particles[0] = pWorld.particles[1];
+	Pair4->particles[1] = pWorld.particles[3];
+	Pair4->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[3]->getVec3Pos());;
+	pWorld.links.push_back(Pair4);
+	cout << "Pair4 length = " << Pair4->length << endl;
+
+	// BACK SQUARE
+	Rod* Pair5 = new Rod();
+	Pair5->particles[0] = pWorld.particles[4];
+	Pair5->particles[1] = pWorld.particles[5];
+	Pair5->length = glm::distance(pWorld.particles[4]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
+	pWorld.links.push_back(Pair5);
+	cout << "Pair5 length = " << Pair5->length << endl;
+
+	Rod* Pair6 = new Rod();
+	Pair6->particles[0] = pWorld.particles[6];
+	Pair6->particles[1] = pWorld.particles[7];
+	Pair6->length = glm::distance(pWorld.particles[6]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair6);
+	cout << "Pair6 length = " << Pair6->length << endl;
+
+	Rod* Pair7 = new Rod();
+	Pair7->particles[0] = pWorld.particles[4];
+	Pair7->particles[1] = pWorld.particles[6];
+	Pair7->length = glm::distance(pWorld.particles[4]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
+	pWorld.links.push_back(Pair7);
+	cout << "Pair7 length = " << Pair7->length << endl;
+
+	Rod* Pair8 = new Rod();
+	Pair8->particles[0] = pWorld.particles[5];
+	Pair8->particles[1] = pWorld.particles[7];
+	Pair8->length = glm::distance(pWorld.particles[5]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair8);
+	cout << "Pair8 length = " << Pair8->length << endl;
+
+	// CONNECTING FRONT AND BACK SQUARES
+	Rod* Pair9 = new Rod();
+	Pair9->particles[0] = pWorld.particles[0];
+	Pair9->particles[1] = pWorld.particles[4];
+	Pair9->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[4]->getVec3Pos());;
+	pWorld.links.push_back(Pair9);
+	cout << "Pair9 length = " << Pair9->length << endl;
+
+	Rod* Pair10 = new Rod();
+	Pair10->particles[0] = pWorld.particles[1];
+	Pair10->particles[1] = pWorld.particles[5];
+	Pair10->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
+	pWorld.links.push_back(Pair10);
+	cout << "Pair10 length = " << Pair10->length << endl;
+
+	Rod* Pair11 = new Rod();
+	Pair11->particles[0] = pWorld.particles[2];
+	Pair11->particles[1] = pWorld.particles[6];
+	Pair11->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
+	pWorld.links.push_back(Pair11);
+	cout << "Pair11 length = " << Pair11->length << endl;
+
+	Rod* Pair12 = new Rod();
+	Pair12->particles[0] = pWorld.particles[3];
+	Pair12->particles[1] = pWorld.particles[7];
+	Pair12->length = glm::distance(pWorld.particles[3]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair12);
+	cout << "Pair12 length = " << Pair12->length << endl;
+
+	cout << "links size = " << pWorld.links.size() << endl;
 
 #pragma endregion
 
@@ -238,7 +377,7 @@ int main() {
 
 		// Keyboard camera controls
 		//source: https://www.youtube.com/watch?v=AWM4CUfffos
-		float cameraSpeed = deltaTime2 * 10;
+		float cameraSpeed = deltaTime * 10;
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			cameraPos += cameraSpeed * cameraFront;
 		}
@@ -302,15 +441,15 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currType = 4;
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currType = 5;
 
-		currentTime2 = glfwGetTime();
-		deltaTime2 = currentTime2 - prevTime;
-		prevTime = currentTime2;
+		currentTime = glfwGetTime();
+		deltaTime = currentTime - prevTime;
+		prevTime = currentTime;
 
 		// Fire particle key
 		int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 
 		// Firing cooldown
-		cooldown += cooldown * deltaTime2;
+		cooldown += cooldown * deltaTime;
 		if (cooldown >= 1.5)
 		{
 			if (state == GLFW_PRESS) {
@@ -322,7 +461,7 @@ int main() {
 		if (!pWorld.particles.empty())
 		{
 			// Collision detection
-			for (int i = 0; i < pWorld.particles.size(); i++)
+			for (int i = 8; i < pWorld.particles.size(); i++)
 			{
 				if (pWorld.getDistance(pWorld.particleTrans[i][3].x, pWorld.particleTrans[i][3].y, pWorld.particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= pWorld.particles[i]->radius + boxRadius) {
 					force = (pWorld.particles[i]->mass * pWorld.particles[i]->velocity.x) / boxMass;
@@ -332,7 +471,7 @@ int main() {
 					{
 						pWorld.particles[i]->isDestroyed = true;
 					}
-					cout << endl << endl << "COLLIDED" << endl << endl;
+					cout << endl << "COLLIDED" << endl;
 				}
 				else if (pWorld.particles[i]->isDestroyed)
 				{
@@ -358,15 +497,10 @@ int main() {
 			}
 
 			// Update physics world
-			pWorld.update(deltaTime2);
+			pWorld.update(deltaTime);
 
 			// Drawing Particles
 			for (int i = 0; i < pWorld.particles.size(); i++) {
-				glm::vec3 temp = glm::vec3(pWorld.particles[i]->getVec3Pos());
-				pWorld.particleTrans[i] = glm::mat4(1.0f);
-				pWorld.particleTrans[i] = glm::scale(pWorld.particleTrans[i], glm::vec3(0.5f, 0.5f, 0.5f));
-				pWorld.particleTrans[i] = glm::translate(pWorld.particleTrans[i], temp);
-
 				pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
 				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
 				glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
@@ -377,24 +511,16 @@ int main() {
 				glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
 			}
 
-			/*
-			float newTime = glfwGetTime();
-			float frameTime = newTime - currentTime;
-			currentTime = newTime;
-			while (frameTime > 0.0f)
-			{
-				float deltaTime = std::min(frameTime, dT);
-				frameTime -= deltaTime;
-				
-			}
-			*/
+
 		}
 		
 		// Move box when hit
-		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime2);
-		if (force >= 0) force -= stopper * deltaTime2;
+		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
+		if (force >= 0) force -= stopper * deltaTime;
 		else force = 0;
-		
+
+		//system("pause");
+
 #pragma endregion
 
 		//unbindtexture after rendering
