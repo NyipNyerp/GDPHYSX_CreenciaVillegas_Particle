@@ -208,21 +208,22 @@ int main() {
 	}
 	cout << "particles size = " << pWorld.particles.size() << endl;
 
-	pWorld.particles[0]->position = MyVector(25, 0, 0);
-	pWorld.particles[1]->position = MyVector(25, 5, 5);
-	pWorld.particles[2]->position = MyVector(25, -5, -5);
-	pWorld.particles[3]->position = MyVector(25, -5, 5);
+	pWorld.particles[0]->position = MyVector(25, 5, 0);
+	pWorld.particles[1]->position = MyVector(25, 5, 10);
+	pWorld.particles[2]->position = MyVector(25, -5, 0);
+	pWorld.particles[3]->position = MyVector(25, -5, 10);
 
-	pWorld.particles[4]->position = MyVector(35, 0, 0);
-	pWorld.particles[5]->position = MyVector(35, 5, 5);
-	pWorld.particles[6]->position = MyVector(35, -5, -5);
-	pWorld.particles[7]->position = MyVector(35, -5, 5);
+	pWorld.particles[4]->position = MyVector(35, 5, 0);
+	pWorld.particles[5]->position = MyVector(35, 5, 10);
+	pWorld.particles[6]->position = MyVector(35, -5, 0);
+	pWorld.particles[7]->position = MyVector(35, -5, 10);
 
 	for (int i = 0; i < pWorld.particles.size(); i++)
 	{
 		pWorld.particleTrans[i] = glm::mat4(1.0f);
 		pWorld.particleTrans[i] = glm::scale(pWorld.particleTrans[i], glm::vec3(0.5f, 0.5f, 0.5f));
 		pWorld.particleTrans[i] = glm::translate(pWorld.particleTrans[i], glm::vec3(pWorld.particles[i]->getVec3Pos()));
+		cout << "particle trans pos = " << pWorld.particleTrans[i][3].x << ", " << pWorld.particleTrans[i][3].y << ", " << pWorld.particleTrans[i][3].z << endl;
 	}
 
 	/// NOTES

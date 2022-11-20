@@ -101,7 +101,7 @@ void MyParticle::update(float time)
 
 void MyParticle::updatePos(float time)
 {
-	position = position + (velocity * time) + ((acceleration * powf(time, 2)) * (1 / 2));
+	position = position + (velocity * time);
 }
 
 void MyParticle::updateVelocity(float time)

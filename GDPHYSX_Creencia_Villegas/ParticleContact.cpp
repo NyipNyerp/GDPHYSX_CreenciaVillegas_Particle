@@ -75,11 +75,13 @@ void ParticleContact::resolveVelocity(float time)
 	MyVector impulse = collisonNormal * impulse_mag;
 
 	MyVector v_0 = impulse * (1.0f / particles[0]->mass);
-	particles[0]->velocity = (particles[0]->velocity + v_0);
+	if (!isnan(v_0.x) && !isnan(v_0.y) && !isnan(v_0.z))
+		particles[0]->velocity = (particles[0]->velocity + v_0);
 
 	if (particles[1])
 	{
 		MyVector v_1 = impulse * (-1.0f / particles[1]->mass);
-		particles[1]->velocity = (particles[1]->velocity + v_1);
+		if (!isnan(v_1.x) && !isnan(v_1.y) && !isnan(v_1.z))
+			particles[1]->velocity = (particles[1]->velocity + v_1);
 	}
 }

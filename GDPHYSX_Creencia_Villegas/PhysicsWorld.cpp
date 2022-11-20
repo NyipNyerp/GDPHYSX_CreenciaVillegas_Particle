@@ -6,10 +6,12 @@ void PhysicsWorld::update(float time)
 
 	if (!particles.empty())
 	{
+		cout << "TEST" << endl;
 		registry.updateForce(time);
 
 		for (int i = 0; i < particles.size(); i++)
 		{
+			//cout << "particle position = " << particles[i]->position.x << ", " << particles[i]->position.y << ", " << particles[i]->position.z << endl;
 			//particles[i]->acceleration = gravity;
 			particles[i]->update(time);
 		}
