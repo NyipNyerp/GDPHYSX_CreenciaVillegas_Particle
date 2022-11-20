@@ -34,7 +34,7 @@ void MyParticle::particleType()
 		mass = 200.0f;
 		damping = 0.99f;
 		count = 1;
-		lifeSpan = 50;
+		lifeSpan = 5;
 		break;
 	case 3: // FIREBALL
 		velocity = MyVector(10.0f, 0.0f, 0.0f);

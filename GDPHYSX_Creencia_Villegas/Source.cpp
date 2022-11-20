@@ -333,97 +333,34 @@ int main() {
 	pWorld.links.push_back(Pair12);
 	cout << "Pair12 length = " << Pair12->length << endl;
 
-	// FRONT FACE
+	// CONNECTING INNER CORNERS
 	Rod* Pair13 = new Rod();
 	Pair13->particles[0] = pWorld.particles[0];
-	Pair13->particles[1] = pWorld.particles[3];
-	Pair13->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[3]->getVec3Pos());;
+	Pair13->particles[1] = pWorld.particles[7];
+	Pair13->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
 	pWorld.links.push_back(Pair13);
 	cout << "Pair13 length = " << Pair13->length << endl;
 
 	Rod* Pair14 = new Rod();
 	Pair14->particles[0] = pWorld.particles[1];
-	Pair14->particles[1] = pWorld.particles[2];
-	Pair14->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[2]->getVec3Pos());;
+	Pair14->particles[1] = pWorld.particles[6];
+	Pair14->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
 	pWorld.links.push_back(Pair14);
 	cout << "Pair14 length = " << Pair14->length << endl;
 
-	// BACK FACE
 	Rod* Pair15 = new Rod();
-	Pair15->particles[0] = pWorld.particles[4];
-	Pair15->particles[1] = pWorld.particles[7];
-	Pair15->length = glm::distance(pWorld.particles[4]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	Pair15->particles[0] = pWorld.particles[2];
+	Pair15->particles[1] = pWorld.particles[5];
+	Pair15->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
 	pWorld.links.push_back(Pair15);
 	cout << "Pair15 length = " << Pair15->length << endl;
 
 	Rod* Pair16 = new Rod();
-	Pair16->particles[0] = pWorld.particles[5];
-	Pair16->particles[1] = pWorld.particles[6];
-	Pair16->length = glm::distance(pWorld.particles[5]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
+	Pair16->particles[0] = pWorld.particles[3];
+	Pair16->particles[1] = pWorld.particles[4];
+	Pair16->length = glm::distance(pWorld.particles[3]->getVec3Pos(), pWorld.particles[4]->getVec3Pos());;
 	pWorld.links.push_back(Pair16);
 	cout << "Pair16 length = " << Pair16->length << endl;
-
-	// TOP FACE
-	Rod* Pair17 = new Rod();
-	Pair17->particles[0] = pWorld.particles[0];
-	Pair17->particles[1] = pWorld.particles[5];
-	Pair17->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
-	pWorld.links.push_back(Pair17);
-	cout << "Pair17 length = " << Pair17->length << endl;
-
-	Rod* Pair18 = new Rod();
-	Pair18->particles[0] = pWorld.particles[1];
-	Pair18->particles[1] = pWorld.particles[4];
-	Pair18->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[4]->getVec3Pos());;
-	pWorld.links.push_back(Pair18);
-	cout << "Pair18 length = " << Pair18->length << endl;
-
-	// BOTTOM FACE
-	Rod* Pair19 = new Rod();
-	Pair19->particles[0] = pWorld.particles[2];
-	Pair19->particles[1] = pWorld.particles[7];
-	Pair19->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
-	pWorld.links.push_back(Pair19);
-	cout << "Pair19 length = " << Pair19->length << endl;
-
-	Rod* Pair20 = new Rod();
-	Pair20->particles[0] = pWorld.particles[3];
-	Pair20->particles[1] = pWorld.particles[6];
-	Pair20->length = glm::distance(pWorld.particles[3]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
-	pWorld.links.push_back(Pair20);
-	cout << "Pair20 length = " << Pair20->length << endl;
-
-	// LEFT FACE
-	Rod* Pair21 = new Rod();
-	Pair21->particles[0] = pWorld.particles[0];
-	Pair21->particles[1] = pWorld.particles[6];
-	Pair21->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
-	pWorld.links.push_back(Pair21);
-	cout << "Pair21 length = " << Pair21->length << endl;
-
-	Rod* Pair22 = new Rod();
-	Pair22->particles[0] = pWorld.particles[2];
-	Pair22->particles[1] = pWorld.particles[4];
-	Pair22->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[4]->getVec3Pos());;
-	pWorld.links.push_back(Pair22);
-	cout << "Pair22 length = " << Pair22->length << endl;
-
-	// RIGHT FACE
-	Rod* Pair23 = new Rod();
-	Pair23->particles[0] = pWorld.particles[1];
-	Pair23->particles[1] = pWorld.particles[7];
-	Pair23->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
-	pWorld.links.push_back(Pair23);
-	cout << "Pair23 length = " << Pair23->length << endl;
-
-	Rod* Pair24 = new Rod();
-	Pair24->particles[0] = pWorld.particles[3];
-	Pair24->particles[1] = pWorld.particles[5];
-	Pair24->length = glm::distance(pWorld.particles[3]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
-	pWorld.links.push_back(Pair24);
-	cout << "Pair24 length = " << Pair24->length << endl;
-
-
 
 	cout << "links size = " << pWorld.links.size() << endl;
 
@@ -506,6 +443,7 @@ int main() {
 		DrawSkybox(skybox, skyboxShaderProgram, view, projection);
 		glUseProgram(shaderProgram);
 
+		/*
 #pragma region Box Object
 
 		glBindVertexArray(box.vaoId);
@@ -521,6 +459,7 @@ int main() {
 		glDrawElements(GL_TRIANGLES, box.numFaces, GL_UNSIGNED_INT, (void*)0);
 
 #pragma endregion
+		*/
 
 #pragma region Particle Objects
 
