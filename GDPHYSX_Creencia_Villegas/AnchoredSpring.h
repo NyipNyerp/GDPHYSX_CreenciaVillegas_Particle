@@ -1,6 +1,7 @@
 #pragma once
 #include "ForceGenerator.h"
-
+#include "MyVector.h"
+#include "MyParticle.h"
 class AnchoredSpring : public ForceGenerator
 {
 private:
@@ -13,4 +14,3 @@ public:
 
 	void updateForce(MyParticle* particle, float time) override;
 };
-

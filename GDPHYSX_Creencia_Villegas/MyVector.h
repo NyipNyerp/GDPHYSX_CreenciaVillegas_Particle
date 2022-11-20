@@ -1,13 +1,11 @@
-#pragma once
+#ifndef MYVECTOR
+#define MYVECTOR
 #include <iostream>
 #include <math.h>
 using namespace std;
 
 class MyVector
 {
-public:
-	MyVector(float x, float y, float z);
-	~MyVector();
 public:
 	float x;
 	float y;
@@ -24,6 +22,12 @@ public:
 	float dotProduct(MyVector a, MyVector b);
 	float operator*=(const MyVector v); //dot prod alt
 	float magnitudeSquared();
+	float getDistanceBetweenPoints(MyVector a, MyVector b);
+	static float crossProductF(MyVector a, MyVector b);
 
 	void normalize();
+
+	MyVector(float newX, float newY, float newZ);
 };
+
+#endif

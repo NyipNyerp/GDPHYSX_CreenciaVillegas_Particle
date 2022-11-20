@@ -1,10 +1,8 @@
 #include "DragForceGenerator.h"
-#include "MyVector.h"
 
 void DragForceGenerator::updateForce(MyParticle* p, float time)
 {
-	
-	MyVector force = MyVector(0, 0,0);
+	MyVector force = MyVector(0, 0, 0);
 
 	MyVector currV = p->velocity;
 	float mag = currV.magnitude();

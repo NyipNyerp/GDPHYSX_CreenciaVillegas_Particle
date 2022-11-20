@@ -42,13 +42,3 @@ void ContactResolver::resolveContacts(vector<ParticleContact*> contacts, float t
 		}
 	}
 }
-
-void ContactResolver::sortSeparatingSpeeds(vector<ParticleContact*> contacts)
-{
-	unsigned int i, j;
-	float element;
-	for (i = 1; i < contacts.size(); i++)
-	{
-
-	}
-}

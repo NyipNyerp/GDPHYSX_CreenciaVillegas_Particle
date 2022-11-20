@@ -11,11 +11,13 @@ void ForceRegistry::add(MyParticle* particle, ForceGenerator* generator)
 
 void ForceRegistry::remove(MyParticle* particle, ForceGenerator* generator)
 {
-	registry.remove_if(
-		[particle, generator](ParticleGeneratorPair pair) {
-			return pair.particle == particle && pair.generator == generator;
+	for (int i = 0; i < registry.size(); i++)
+	{
+		if (registry[i].particle == particle && registry[i].generator == generator)
+		{
+			registry.erase(registry.begin() + i);
 		}
-	);
+	}
 }
 
 void ForceRegistry::clear()
@@ -25,9 +27,8 @@ void ForceRegistry::clear()
 
 void ForceRegistry::updateForce(float time)
 {
-
-	for (list<ParticleGeneratorPair>::iterator i = registry.begin(); i != registry.end(); i++)
+	for (int i = 0; i < registry.size(); i++)
 	{
-		i->generator->updateForce(i->particle, time);
+		registry[i].generator->updateForce(registry[i].particle, time);
 	}
 }

@@ -143,6 +143,7 @@
     <ClCompile Include="AnchoredSpring.cpp" />
     <ClCompile Include="BungeeSpring.cpp" />
     <ClCompile Include="Cable.cpp" />
+    <ClCompile Include="CableSpring.cpp" />
     <ClCompile Include="ContactResolver.cpp" />
     <ClCompile Include="DragForceGenerator.cpp" />
     <ClCompile Include="ForceGenerator.cpp" />
@@ -152,7 +153,9 @@
     <ClCompile Include="MyVector.cpp" />
     <ClCompile Include="ParticleContact.cpp" />
     <ClCompile Include="ParticleLink.cpp" />
+    <ClCompile Include="ParticleSpring.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
+    <ClCompile Include="Rod.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +165,7 @@
     <ClInclude Include="AnchoredSpring.h" />
     <ClInclude Include="BungeeSpring.h" />
     <ClInclude Include="Cable.h" />
+    <ClInclude Include="CableSpring.h" />
     <ClInclude Include="ContactResolver.h" />
     <ClInclude Include="DragForceGenerator.h" />
     <ClInclude Include="ForceGenerator.h" />
@@ -173,7 +177,9 @@
     <ClInclude Include="obj_mesh.h" />
     <ClInclude Include="ParticleContact.h" />
     <ClInclude Include="ParticleLink.h" />
+    <ClInclude Include="ParticleSpring.h" />
     <ClInclude Include="PhysicsWorld.h" />
+    <ClInclude Include="Rod.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="stb_image.h" />

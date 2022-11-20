@@ -1,8 +1,7 @@
 #pragma once
+#include "ForceGenerator.h"
 #include "MyVector.h"
 #include "MyParticle.h"
-#include "ForceGenerator.h"
-
 class BungeeSpring : public ForceGenerator
 {
 private:

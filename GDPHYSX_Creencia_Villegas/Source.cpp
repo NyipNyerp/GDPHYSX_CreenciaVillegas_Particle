@@ -1,182 +1,18 @@
 #pragma once
-#include "MyVector.h"
-#include "MyParticle.h"
 #include "PhysicsWorld.h"
-#include "ForceGenerator.h"
-#include "ForceRegistry.h"
-#include "DragForceGenerator.h"
-#include "GravityForceGenerator.h"
+
 #include "AnchoredSpring.h"
 #include "BungeeSpring.h"
-#include "Cable.h"
-#include "ParticleLink.h"
-#include "ParticleContact.h"
-//#include "Utils.h"
-//#include "Rod.h"
+#include "Rod.h"
 
+#include <algorithm>
 #include "main.h"
 
-using namespace std;
+// CHANGE NORMALTRANSARRAY AND PARTICLETRANS IN PHYSICSWORLD TO MYPARTICLE
 
-MyParticle particleType(int type)
-{
-	float randX = rand() % 60 + -30;
-	float randY = rand() % 30 + -5;
-	float randZ = rand() % 30 + -15;
-	float randAge = rand() % 3 + 1;
+// TRY CHANGING MYVECTOR USES TO GLM::VEC3
 
-	MyParticle newData = MyParticle(MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0));
-
-	switch (type) {
-	case 1: // BULLET
-		newData.mass = 2.0f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.type = 1;
-		newData.count = 1;
-		newData.lifeSpan = 5;
-		break;
-	case 2: // ARTILLERY
-		newData.mass = 200.0f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.type = 2;
-		newData.count = 1;
-		newData.lifeSpan = 5;
-		break;
-	case 3: // FIREBALL
-		newData.mass = 1.0f;
-		newData.damp = 0.9f;
-		newData.radius = 1.0f;
-		newData.type = 3;
-		newData.count = 1;
-		newData.lifeSpan = 5;
-		break;
-	case 4: // LASER
-		newData.mass = 0.1f;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.type = 4;
-		newData.count = 1;
-		newData.lifeSpan = 5;
-		break;
-	case 5: // FIREWORKS TYPE A
-		newData.velocity = MyVector(randX, 50.0f, 0.0f);
-		newData.acceleration = MyVector(0.0f, 0.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.type = 5;
-		newData.count = 5;
-		newData.lifeSpan = 3;
-		newData.material = 3;
-		break;
-	case 6: // PARTICLE SPRING
-		newData.mass = 10.0;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.type = 8;
-		newData.count = 0;
-		newData.lifeSpan = 10;
-		newData.material = 1;
-		break;
-	case 7: // ANCHORED SPRING
-		newData.mass = 10.0;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.type = 9;
-		newData.count = 0;
-		newData.lifeSpan = 10;
-		newData.material = 1;
-		break;
-	case 8: // ANCHORED SPRING
-		newData.mass = 10.0;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.type = 9;
-		newData.count = 0;
-		newData.lifeSpan = 10;
-		newData.material = 1;
-		break;
-	case 9: // CABLE SPRING
-		newData.mass = 10.0;
-		newData.damp = 1.0f;
-		newData.radius = 1.0f;
-		newData.type = 10;
-		newData.count = 0;
-		newData.lifeSpan = 10;
-		newData.material = 1;
-		break;
-	case 10: // FIREWORKS TYPE B
-		newData.velocity = MyVector(randX, randY, randZ);
-		newData.acceleration = MyVector(0.0f, -5.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.type = 6;
-		newData.count = 10;
-		newData.lifeSpan = randAge;
-		newData.material = 2;
-		break;
-	case 11: // FIREWORKS TYPE C
-		newData.velocity = MyVector(randX, randY, randZ);
-		newData.acceleration = MyVector(0.0f, -10.0f, 0.0f);
-		newData.mass = 1.0;
-		newData.damp = 0.99f;
-		newData.radius = 1.0f;
-		newData.type = 6;
-		newData.count = 0;
-		newData.lifeSpan = randAge;
-		newData.material = 1;
-		break;
-	}
-
-	return newData;
-}
-
-// Creates new Particles
-void createParticle(vector<MyParticle>* particleList, vector<glm::mat4>* MyParticleTrans, vector<glm::mat4>* normalTransArray, int bType, glm::vec3 initialPosition)
-{
-	MyParticle newParticle = particleType(bType);;
-	particleList->push_back(newParticle);
-
-	glm::mat4 trans = glm::mat4(1.0f); // identity
-	trans = glm::translate(trans, initialPosition);
-	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-	MyParticleTrans->push_back(trans);
-
-	glm::mat4 normalTrans;
-	normalTransArray->push_back(normalTrans);
-
-	/*
-	cout << endl
-		<< "MyParticleTrans = " << MyParticleTrans->size() << endl
-		<< "normalTransArray = " << normalTransArray->size() << endl
-	*/
-}
-
-// Deletes an existing Particles
-void deleteParticle(vector<glm::mat4>* MyParticleTrans, vector<glm::mat4>* normalTransArray, vector<MyParticle>* MyParticleDatas, int index)
-{
-	MyParticleTrans->erase(MyParticleTrans->begin() + index);
-	normalTransArray->erase(normalTransArray->begin() + index);
-	MyParticleDatas->erase(MyParticleDatas->begin() + index);
-}
-
-// Delete all Particles
-void clearParticle(vector<glm::mat4>* MyParticleTrans, vector<glm::mat4>* normalTransArray, vector<MyParticle>* MyParticleDatas)
-{
-	MyParticleTrans->clear();
-	normalTransArray->clear();
-	MyParticleDatas->clear();
-}
-
-
-// Gets the distance between 2 objects for collision checking
-float getDistance(float xPos1, float yPos1, float zPos1, float xPos2, float yPos2, float zPos2) {
-	//cout	<< xPos1 << ", " << yPos1 << ", " << zPos1 << endl << xPos2 << ", " << yPos2 << ", " << zPos2 << endl << endl;
-	return sqrt(pow(xPos2 - xPos1, 2) + pow(yPos2 - yPos1, 2) + pow(zPos2 - zPos1, 2));
-}
+// CHANGE PARTICLESPRING CLASS NAME TO PARTICLELINKS
 
 #pragma region CAMERA 
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
@@ -185,11 +21,11 @@ glm::vec3 cameraPos = glm::vec3(10.0f, 10.0f, 30.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float yaw = -90.0f;
-float pitch = 0.0f;
+float pitch = 0.0f; 
 float fov = 45.0f;
 
 //mouse state
-bool firstMouse = true;
+bool firstMouse = true; 
 float lastX = 1024 / 2.0;
 float lastY = 768 / 2.0;
 
@@ -271,62 +107,6 @@ int main() {
 	}
 #pragma endregion
 
-
-#pragma region Particle Physics Declarations
-
-	vector<glm::mat4> particleTrans;
-	vector<glm::mat4> normalTransArray;
-	vector<MyParticle> particleList;
-
-	PhysicsWorld pWorld = PhysicsWorld();
-
-
-	//MODIFY CABLE LENGTH HERE
-	float cableLength = 150;
-
-	//Bullet 1 particle
-	//MyParticle bullet = MyParticle(MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0), MyVector(0, 0, 0));
-	createParticle(&particleList, &particleTrans, &normalTransArray, 1, glm::vec3(0.0f, 0.0f, 0.0f));
-
-	for (int i = 0; i < particleList.size(); i++) 
-	{
-		particleList[i].name = "Bullet " + i;
-		cout << particleList[i].name << endl;
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////
-
-	//ADD CABLES
-	Cable* c1 = new Cable();
-	c1->particles[0] = &particleList[0];
-	c1->length = cableLength;
-	c1->anchorPoint = MyVector(particleList[0].position.x, cableLength, 0);
-
-	///////////////////////////////////////////////////////////////////////////////
-
-	MyVector anchor1 = MyVector(c1->anchorPoint.x, particleList[0].position.y - cableLength, 0);
-
-	//////////////////////////////////////////////////////////////////////////////
-
-	//ADDING PARTICLES TO PHYSICS WORLD
-	pWorld.addParticle(&particleList[0]);
-
-
-	//ADDING CABLES TO PHYSICS WORLD
-	pWorld.links.push_back(c1);
-
-
-
-	int currType = 1;
-	bool isCollide = false;
-	float boxRadius = 5.5;
-	float boxMass = 25;
-	float cooldown = 1;
-	float force = 0;
-	float stopper = 0;
-
-#pragma endregion
-
 #pragma region Mesh Loading
 
 	ObjData particle;
@@ -347,7 +127,7 @@ int main() {
 		boxOffsets
 	);
 
-	vector<string> faces
+	std::vector<std::string> faces
 	{
 		"right.png",
 		"left.png",
@@ -398,13 +178,256 @@ int main() {
 	// set bg color to green
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	// var for rotations
-	float xFactor = 0.0f;
-	float xSpeed = 1.0f;
+	// var for rdeltaTime
 	float currentTime = glfwGetTime();
 	float prevTime = 0.0f;
 	float deltaTime = 0.0f;
-	float rotFactor = 0.0f;
+
+
+#pragma region Particle Physics Declarations
+
+	PhysicsWorld pWorld;
+
+	MyVector initialPos = MyVector(0, 0, 0);
+	int currType = 1;
+	bool isCollide = false;
+	float boxRadius = 4;
+	float boxMass = 25;
+	float cooldown = 1;
+	float force = 0;
+	float stopper = 0;
+
+#pragma endregion
+
+#pragma region MASS AGGREGATE BOX
+
+	/// MASS AGGREGATE BOX
+	for (int i = 0; i < 8; i++)
+	{
+		pWorld.addParticle(0, initialPos);
+	}
+	cout << "particles size = " << pWorld.particles.size() << endl;
+
+	pWorld.particles[0]->position = MyVector(25, 5, 0);
+	pWorld.particles[1]->position = MyVector(25, 5, 10);
+	pWorld.particles[2]->position = MyVector(25, -5, 0);
+	pWorld.particles[3]->position = MyVector(25, -5, 10);
+
+	pWorld.particles[4]->position = MyVector(35, 5, 0);
+	pWorld.particles[5]->position = MyVector(35, 5, 10);
+	pWorld.particles[6]->position = MyVector(35, -5, 0);
+	pWorld.particles[7]->position = MyVector(35, -5, 10);
+
+	for (int i = 0; i < pWorld.particles.size(); i++)
+	{
+		pWorld.particleTrans[i] = glm::mat4(1.0f);
+		pWorld.particleTrans[i] = glm::scale(pWorld.particleTrans[i], glm::vec3(0.5f, 0.5f, 0.5f));
+		pWorld.particleTrans[i] = glm::translate(pWorld.particleTrans[i], glm::vec3(pWorld.particles[i]->getVec3Pos()));
+		cout << "particle trans pos = " << pWorld.particleTrans[i][3].x << ", " << pWorld.particleTrans[i][3].y << ", " << pWorld.particleTrans[i][3].z << endl;
+	}
+
+	/// NOTES
+
+	//pWorld.particles[0] -- FRONT TOP LEFT
+	//pWorld.particles[1] -- FRONT TOP RIGHT
+	//pWorld.particles[2] -- FRONT BOT LEFT
+	//pWorld.particles[3] -- FRONT BOT RIGHT
+
+	//pWorld.particles[4] -- BACK TOP LEFT
+	//pWorld.particles[5] -- BACK TOP RIGHT
+	//pWorld.particles[6] -- BACK BOT LEFT
+	//pWorld.particles[7] -- BACK BOT RIGHT
+
+	//					  PAIRS
+	//------------------------------------------------
+	//		  FRONT		  BACK		 CONNECT
+	//		0 ----- 1	4 ----- 5	0 ----- 4
+	//		|       |	|       |	1 ----- 5
+	//		|       |	|       |	2 ----- 6
+	//		2 ----- 3	6 ----- 7	3 ----- 7
+	
+	// FRONT SQUARE
+	Rod* Pair1 = new Rod();
+	Pair1->particles[0] = pWorld.particles[0];
+	Pair1->particles[1] = pWorld.particles[1];
+	Pair1->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[1]->getVec3Pos());
+	pWorld.links.push_back(Pair1);
+	cout << "Pair1 length = " << Pair1->length << endl;
+
+	Rod* Pair2 = new Rod();
+	Pair2->particles[0] = pWorld.particles[2];
+	Pair2->particles[1] = pWorld.particles[3];
+	Pair2->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[3]->getVec3Pos());;
+	pWorld.links.push_back(Pair2);
+	cout << "Pair2 length = " << Pair2->length << endl;
+
+	Rod* Pair3 = new Rod();
+	Pair3->particles[0] = pWorld.particles[0];
+	Pair3->particles[1] = pWorld.particles[2];
+	Pair3->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[2]->getVec3Pos());;
+	pWorld.links.push_back(Pair3);
+	cout << "Pair3 length = " << Pair3->length << endl;
+
+	Rod* Pair4 = new Rod();
+	Pair4->particles[0] = pWorld.particles[1];
+	Pair4->particles[1] = pWorld.particles[3];
+	Pair4->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[3]->getVec3Pos());;
+	pWorld.links.push_back(Pair4);
+	cout << "Pair4 length = " << Pair4->length << endl;
+
+	// BACK SQUARE
+	Rod* Pair5 = new Rod();
+	Pair5->particles[0] = pWorld.particles[4];
+	Pair5->particles[1] = pWorld.particles[5];
+	Pair5->length = glm::distance(pWorld.particles[4]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
+	pWorld.links.push_back(Pair5);
+	cout << "Pair5 length = " << Pair5->length << endl;
+
+	Rod* Pair6 = new Rod();
+	Pair6->particles[0] = pWorld.particles[6];
+	Pair6->particles[1] = pWorld.particles[7];
+	Pair6->length = glm::distance(pWorld.particles[6]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair6);
+	cout << "Pair6 length = " << Pair6->length << endl;
+
+	Rod* Pair7 = new Rod();
+	Pair7->particles[0] = pWorld.particles[4];
+	Pair7->particles[1] = pWorld.particles[6];
+	Pair7->length = glm::distance(pWorld.particles[4]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
+	pWorld.links.push_back(Pair7);
+	cout << "Pair7 length = " << Pair7->length << endl;
+
+	Rod* Pair8 = new Rod();
+	Pair8->particles[0] = pWorld.particles[5];
+	Pair8->particles[1] = pWorld.particles[7];
+	Pair8->length = glm::distance(pWorld.particles[5]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair8);
+	cout << "Pair8 length = " << Pair8->length << endl;
+
+	// CONNECTING FRONT AND BACK SQUARES
+	Rod* Pair9 = new Rod();
+	Pair9->particles[0] = pWorld.particles[0];
+	Pair9->particles[1] = pWorld.particles[4];
+	Pair9->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[4]->getVec3Pos());;
+	pWorld.links.push_back(Pair9);
+	cout << "Pair9 length = " << Pair9->length << endl;
+
+	Rod* Pair10 = new Rod();
+	Pair10->particles[0] = pWorld.particles[1];
+	Pair10->particles[1] = pWorld.particles[5];
+	Pair10->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
+	pWorld.links.push_back(Pair10);
+	cout << "Pair10 length = " << Pair10->length << endl;
+
+	Rod* Pair11 = new Rod();
+	Pair11->particles[0] = pWorld.particles[2];
+	Pair11->particles[1] = pWorld.particles[6];
+	Pair11->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
+	pWorld.links.push_back(Pair11);
+	cout << "Pair11 length = " << Pair11->length << endl;
+
+	Rod* Pair12 = new Rod();
+	Pair12->particles[0] = pWorld.particles[3];
+	Pair12->particles[1] = pWorld.particles[7];
+	Pair12->length = glm::distance(pWorld.particles[3]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair12);
+	cout << "Pair12 length = " << Pair12->length << endl;
+
+	// FRONT FACE
+	Rod* Pair13 = new Rod();
+	Pair13->particles[0] = pWorld.particles[0];
+	Pair13->particles[1] = pWorld.particles[3];
+	Pair13->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[3]->getVec3Pos());;
+	pWorld.links.push_back(Pair13);
+	cout << "Pair13 length = " << Pair13->length << endl;
+
+	Rod* Pair14 = new Rod();
+	Pair14->particles[0] = pWorld.particles[1];
+	Pair14->particles[1] = pWorld.particles[2];
+	Pair14->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[2]->getVec3Pos());;
+	pWorld.links.push_back(Pair14);
+	cout << "Pair14 length = " << Pair14->length << endl;
+
+	// BACK FACE
+	Rod* Pair15 = new Rod();
+	Pair15->particles[0] = pWorld.particles[4];
+	Pair15->particles[1] = pWorld.particles[7];
+	Pair15->length = glm::distance(pWorld.particles[4]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair15);
+	cout << "Pair15 length = " << Pair15->length << endl;
+
+	Rod* Pair16 = new Rod();
+	Pair16->particles[0] = pWorld.particles[5];
+	Pair16->particles[1] = pWorld.particles[6];
+	Pair16->length = glm::distance(pWorld.particles[5]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
+	pWorld.links.push_back(Pair16);
+	cout << "Pair16 length = " << Pair16->length << endl;
+
+	// TOP FACE
+	Rod* Pair17 = new Rod();
+	Pair17->particles[0] = pWorld.particles[0];
+	Pair17->particles[1] = pWorld.particles[5];
+	Pair17->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
+	pWorld.links.push_back(Pair17);
+	cout << "Pair17 length = " << Pair17->length << endl;
+
+	Rod* Pair18 = new Rod();
+	Pair18->particles[0] = pWorld.particles[1];
+	Pair18->particles[1] = pWorld.particles[4];
+	Pair18->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[4]->getVec3Pos());;
+	pWorld.links.push_back(Pair18);
+	cout << "Pair18 length = " << Pair18->length << endl;
+
+	// BOTTOM FACE
+	Rod* Pair19 = new Rod();
+	Pair19->particles[0] = pWorld.particles[2];
+	Pair19->particles[1] = pWorld.particles[7];
+	Pair19->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair19);
+	cout << "Pair19 length = " << Pair19->length << endl;
+
+	Rod* Pair20 = new Rod();
+	Pair20->particles[0] = pWorld.particles[3];
+	Pair20->particles[1] = pWorld.particles[6];
+	Pair20->length = glm::distance(pWorld.particles[3]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
+	pWorld.links.push_back(Pair20);
+	cout << "Pair20 length = " << Pair20->length << endl;
+
+	// LEFT FACE
+	Rod* Pair21 = new Rod();
+	Pair21->particles[0] = pWorld.particles[0];
+	Pair21->particles[1] = pWorld.particles[6];
+	Pair21->length = glm::distance(pWorld.particles[0]->getVec3Pos(), pWorld.particles[6]->getVec3Pos());;
+	pWorld.links.push_back(Pair21);
+	cout << "Pair21 length = " << Pair21->length << endl;
+
+	Rod* Pair22 = new Rod();
+	Pair22->particles[0] = pWorld.particles[2];
+	Pair22->particles[1] = pWorld.particles[4];
+	Pair22->length = glm::distance(pWorld.particles[2]->getVec3Pos(), pWorld.particles[4]->getVec3Pos());;
+	pWorld.links.push_back(Pair22);
+	cout << "Pair22 length = " << Pair22->length << endl;
+
+	// RIGHT FACE
+	Rod* Pair23 = new Rod();
+	Pair23->particles[0] = pWorld.particles[1];
+	Pair23->particles[1] = pWorld.particles[7];
+	Pair23->length = glm::distance(pWorld.particles[1]->getVec3Pos(), pWorld.particles[7]->getVec3Pos());;
+	pWorld.links.push_back(Pair23);
+	cout << "Pair23 length = " << Pair23->length << endl;
+
+	Rod* Pair24 = new Rod();
+	Pair24->particles[0] = pWorld.particles[3];
+	Pair24->particles[1] = pWorld.particles[5];
+	Pair24->length = glm::distance(pWorld.particles[3]->getVec3Pos(), pWorld.particles[5]->getVec3Pos());;
+	pWorld.links.push_back(Pair24);
+	cout << "Pair24 length = " << Pair24->length << endl;
+
+
+
+	cout << "links size = " << pWorld.links.size() << endl;
+
+#pragma endregion
 
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
@@ -448,16 +471,16 @@ int main() {
 		// Keyboard camera controls
 		//source: https://www.youtube.com/watch?v=AWM4CUfffos
 		float cameraSpeed = deltaTime * 10;
-		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			cameraPos += cameraSpeed * cameraFront;
 		}
-		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 			cameraPos -= cameraSpeed * cameraFront;
 		}
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		}
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		}
 		if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
@@ -504,25 +527,16 @@ int main() {
 		glBindVertexArray(particle.vaoId);
 		glUseProgram(shaderProgram);
 
-		pWorld.update(deltaTime);
-
-#pragma region Old System
-
-		// If left button pressed, createParticle()
-
-		
-
-		/*
 		// Change bullet type
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) currType = 1;
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) currType = 2;
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) currType = 3;
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) currType = 4;
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) currType = 5;
-		//if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) currType = 6;
-		//if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) currType = 7;
-		//if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) currType = 8;
-		if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) currType = 9;
+
+		currentTime = glfwGetTime();
+		deltaTime = currentTime - prevTime;
+		prevTime = currentTime;
 
 		// Fire particle key
 		int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
@@ -532,81 +546,80 @@ int main() {
 		if (cooldown >= 1.5)
 		{
 			if (state == GLFW_PRESS) {
-
-				createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, currType, glm::vec3(0.0f, 0.0f, 0.0f), &registry, gravity,&aSpring);
+				pWorld.addParticle(currType, initialPos);
 				cooldown = 1;
 			}
 		}
 
-		if (!particleList.empty())
+		if (!pWorld.particles.empty())
 		{
-			// Collision checking and resolution
-			for (int i = 0; i < particleList.size(); i++)
+			// Collision detection
+			for (int i = 8; i < pWorld.particles.size(); i++)
 			{
-				particleList[i].lifeSpan -= 1 * deltaTime;
-				if (getDistance(particleTrans[i][3].x, particleTrans[i][3].y, particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= particleList[i].radius + boxRadius) {
-					force = (particleList[i].mass * particleList[i].velocity.x) / boxMass;
+				if (pWorld.getDistance(pWorld.particleTrans[i][3].x, pWorld.particleTrans[i][3].y, pWorld.particleTrans[i][3].z, boxTrans[3].x, boxTrans[3].y, boxTrans[3].z) <= pWorld.particles[i]->radius + boxRadius) {
+					force = (pWorld.particles[i]->mass * pWorld.particles[i]->velocity.x) / boxMass;
 					stopper = force;
-					if (particleList[i].type != 4)
-						deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
+
+					if (pWorld.particles[i]->type != 4)
+					{
+						pWorld.particles[i]->isDestroyed = true;
+					}
+					cout << endl << "COLLIDED" << endl;
 				}
-				else if (particleList[i].lifeSpan <= 0)
+				else if (pWorld.particles[i]->isDestroyed)
 				{
-					if (particleList[i].type == 5)
+					if (pWorld.particles[i]->type == 5)
 					{
-						for (int j = 0; j < particleList[i].count; j++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 6, particleTrans[i][3], &registry, gravity, &aSpring);
-						for (int l = 0; l < particleList[i].count * 3; l++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity, &aSpring);
+						for (int j = 0; j < pWorld.particles[i]->count; j++)
+						{
+							pWorld.addParticle(6, pWorld.particles[i]->position);
+						}
+						for (int l = 0; l < pWorld.particles[i]->count * 3; l++)
+						{
+							pWorld.addParticle(7, pWorld.particles[i]->position);
+						}
 					}
-					else if (particleList[i].type == 6)
+					else if (pWorld.particles[i]->type == 6)
 					{
-						for (int k = 0; k < particleList[i].count; k++)
-							createParticle(&particleList, &particleTrans, &normalTransArray, modelTransformLoc, normalTransformLoc, 7, particleTrans[i][3], &registry, gravity, &aSpring);
+						for (int k = 0; k < pWorld.particles[i]->count; k++)
+						{
+							pWorld.addParticle(7, pWorld.particles[i]->position);
+						}
 					}
-					deleteParticle(&particleTrans, &normalTransArray, &particleList, i);
 				}
 			}
 
-			// Move box
-			boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
-			if (force >= 0) force -= stopper * deltaTime;
-			else force = 0;
+			// Update physics world
+			pWorld.update(deltaTime);
 
-
-			// Updating and Drawing Particles
-			for (int i = 0; i < particleList.size(); i++) {
-				glm::vec3 temp = glm::vec3(particleList[i].velocity.x, particleList[i].velocity.y, particleList[i].velocity.z);
-
-				particleList[i].velocity += particleList[i].acceleration * deltaTime;
-				particleTrans[i] = glm::translate(particleTrans[i], temp * deltaTime);
-
-				normalTransArray[i] = glm::transpose(glm::inverse(particleTrans[i]));
-				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(normalTransArray[i]));
-				glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(particleTrans[i]));
+			// Drawing Particles
+			for (int i = 0; i < pWorld.particles.size(); i++) {
+				pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
+				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
+				glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
 
 				glActiveTexture(GL_TEXTURE0);
-				GLuint particleTexture = particle.textures[particle.materials[particleList[i].material].diffuse_texname];
+				GLuint particleTexture = particle.textures[particle.materials[pWorld.particles[i]->material].diffuse_texname];
 				glBindTexture(GL_TEXTURE_2D, particleTexture);
 				glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
 			}
-		}
-		*/
 
-#pragma endregion
+
+		}
 		
+		// Move box when hit
+		boxTrans = glm::translate(boxTrans, glm::vec3(force, 0.0f, 0.0f) * deltaTime);
+		if (force >= 0) force -= stopper * deltaTime;
+		else force = 0;
+
+		//system("pause");
+
 #pragma endregion
 
 		//unbindtexture after rendering
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		currentTime = glfwGetTime();
-		deltaTime = currentTime - prevTime;
-		rotFactor += deltaTime * 900;
-		if (rotFactor > 360.0f) {
-			rotFactor -= 360.0f;
-		}
-		prevTime = currentTime;
+		
 
 		//--- stop drawing here ---
 #pragma endregion

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef MYPARTICLE_H
+#define MYPARTICLE_H
 
 #include "MyVector.h"
 #include <stdio.h>
@@ -13,40 +15,38 @@
 class MyParticle
 {
 public:
-	MyParticle(MyVector newPos, MyVector newVelo, MyVector newAccel, MyVector newTotalVelo, MyVector newInitPos);
-	~MyParticle();
-public:
-	string name;
-	float mass;
-	float radius;
+	float mass = 5;
+	float radius = 2.5;
+	float damping = 0.99f;
 	float restitution = 1;
-	MyVector position;
-	MyVector velocity;
-	MyVector acceleration;
-	MyVector totalVelocity;
-	MyVector initialPos;
+	MyVector position = MyVector(0, 0, 0);
+	MyVector velocity = MyVector(0, 0, 0);
+	MyVector acceleration = MyVector(0, 0, 0);
+	MyVector initialPos = MyVector(0, 0, 0);
 
-	float lifeSpan = 5.0f;
+	float lifeSpan = 5;
 	int type = 1;
 	int count = 1;
 	int material = 0;
-
-	bool isFinished = false;
-	//EDIT DAMPING VALUE HERE
-	float damp = 1.0f;
+	bool isDestroyed = false;
 
 public:
+	MyParticle(int newType);
+	void particleType();
+
 	void update(float time);
-	bool getIsDestroyed();
-	void setIsDestroyed();
 	void addForce(MyVector f);
 	void resetForce();
+	void checkLifeSpan(float time);
+
+	glm::vec3 getVec3Pos();
 
 private:
 	void updatePos(float time);
 	void updateVelocity(float time);
 
-private:
-	bool isDestroyed = false;
+protected:
 	MyVector accumulatedForce = MyVector(0, 0, 0);
 };
+
+#endif
