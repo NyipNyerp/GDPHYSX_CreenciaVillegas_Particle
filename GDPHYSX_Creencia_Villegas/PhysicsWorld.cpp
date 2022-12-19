@@ -14,6 +14,12 @@ void PhysicsWorld::update(float time)
 			//cout << "particle position = " << particles[i]->position.x << ", " << particles[i]->position.y << ", " << particles[i]->position.z << endl;
 			//particles[i]->acceleration = gravity;
 			particles[i]->update(time);
+
+			if (particles[i]->type = 0) 
+			{
+				BoxRB* cube = dynamic_cast<BoxRB*>(particles[i]);
+				cube->updateBoxPos();
+			}
 		}
 
 		generateContacts();
@@ -37,7 +43,7 @@ void PhysicsWorld::update(float time)
 
 void PhysicsWorld::addParticle(int pType, MyVector currParticlePos)
 {
-	MyParticle* newParticle = new MyParticle(pType);
+	SphereRB* newParticle = new SphereRB(pType);
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
 	//if (pType == 0) trans = glm::scale(trans, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -55,6 +61,19 @@ void PhysicsWorld::addParticle(int pType, MyVector currParticlePos)
 	registry.add(newParticle, &Gravity);
 
 	//cout << endl << "particleTrans = " << particleTrans.size() << endl << "normalTransArray = " << normalTransArray.size() << endl;
+}
+
+void PhysicsWorld::addExistingParticle(MyParticle* particle)
+{
+	glm::mat4 trans = glm::mat4(1.0f); // identity
+	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	trans = glm::translate(trans, glm::vec3(particle->position.x, particle->position.y, particle->position.z));
+	particleTrans.push_back(trans);
+
+	glm::mat4 normalTrans;
+	normalTransArray.push_back(normalTrans);
+
+	particles.push_back(particle);
 }
 
 void PhysicsWorld::addContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector collisionNormal)
@@ -108,8 +127,10 @@ void PhysicsWorld::getOverlaps()
 	{
 		for (int h = i + 1; h < particles.size(); h++)
 		{
-			generateParticleContacts(particles[i], particles[h]); //particle contact resolution
-			//generateRigidbodyContacts(particles[i], particles[h]); //rigidbodies contact resolution
+			if (particles[i]->type == 0 || particles[h]->type == 0) // if either particle is of type BOX
+				generateRigidbodyContacts(particles[i], particles[h]); //rigidbodies contact resolution
+			else 
+				generateParticleContacts(particles[i], particles[h]); //particle contact resolution
 		}
 	}
 }
@@ -149,7 +170,6 @@ void PhysicsWorld::generateParticleContacts(MyParticle* a, MyParticle* b)
 		}
 	}
 }
-/*
 void PhysicsWorld::generateRigidbodyContacts(MyParticle* a, MyParticle* b)
 {
 	//if particles are both spheres
@@ -223,4 +243,3 @@ void PhysicsWorld::processRigidBodyContact(BoxRB* a, MyParticle* b)
 		addContact(a, b, restitution, dir);
 	}
 }
-*/

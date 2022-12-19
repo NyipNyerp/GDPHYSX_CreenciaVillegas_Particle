@@ -18,45 +18,46 @@ void MyParticle::particleType()
 
 	switch (type) {
 	case 0: // BOX PARTICLES
+		name = "BOX";
 		velocity = MyVector(0.0f, 0.0f, 0.0f);
 		acceleration = MyVector(0.0f, 0.0f, 0.0f);
 		mass = 5.0f;
 		damping = 0.99f;
-		count = 1;
 		break;
 	case 1: // BULLET
+		name = "BULLET";
 		velocity = MyVector(35.0f, 0.0f, 0.0f);
 		acceleration = MyVector(0.0f, -1.0f, 0.0f);
 		mass = 2.0f;
 		damping = 0.99f;
-		count = 1;
 		lifeSpan = 5;
 		break;
 	case 2: // ARTILLERY
+		name = "ARTILLERY";
 		velocity = MyVector(40.0f, 30.0f, 0.0f);
 		acceleration = MyVector(0.0f, -20.0f, 0.0f);
 		mass = 200.0f;
 		damping = 0.99f;
-		count = 1;
 		lifeSpan = 5;
 		break;
 	case 3: // FIREBALL
+		name = "FIREBALL";
 		velocity = MyVector(10.0f, 0.0f, 0.0f);
 		acceleration = MyVector(0.0f, 0.6f, 0.0f);
 		mass = 1.0f;
 		damping = 0.9f;
-		count = 1;
 		lifeSpan = 5;
 		break;
 	case 4: // LASER
+		name = "LASER";
 		velocity = MyVector(100.0f, 0.0f, 0.0f);
 		acceleration = MyVector(0.0f, 0.0f, 0.0f);
 		mass = 0.1f;
 		damping = 0.99f;
-		count = 1;
 		lifeSpan = 5;
 		break;
 	case 5: // FIREWORKS TYPE A
+		name = "FIREWORKS TYPE A";
 		velocity = MyVector(randX, 50.0f, 0.0f);
 		acceleration = MyVector(0.0f, 0.0f, 0.0f);
 		mass = 1.0;
@@ -66,6 +67,7 @@ void MyParticle::particleType()
 		material = 3;
 		break;
 	case 6: // FIREWORKS TYPE B
+		name = "FIREWORKS TYPE B";
 		velocity = MyVector(randX, randY, randZ);
 		acceleration = MyVector(0.0f, -5.0f, 0.0f);
 		mass = 1.0;
@@ -75,6 +77,7 @@ void MyParticle::particleType()
 		material = 2;
 		break;
 	case 7: // FIREWORKS TYPE C
+		name = "FIREWORKS TYPE C";
 		velocity = MyVector(randX, randY, randZ);
 		acceleration = MyVector(0.0f, -10.0f, 0.0f);
 		mass = 1.0;
@@ -88,6 +91,7 @@ void MyParticle::particleType()
 
 void MyParticle::update(float time)
 {
+	cout << "particle name: " << name << endl;
 	if (mass == 0)
 	{
 		return;
@@ -95,7 +99,7 @@ void MyParticle::update(float time)
 	checkLifeSpan(time);
 	updatePos(time);
 	updateVelocity(time);
-	cout << "particle position = " << position.x << ", " << position.y << ", " << position.z << endl;
+	cout << "particle position = " << position.x << ", " << position.y << ", " << position.z << endl << endl;
 	//cout << "velocity = " << velocity.x << ", " << velocity.y << ", " << velocity.z << endl << endl;
 	//cout << "acceleration = " << acceleration.x << ", " << acceleration.y << ", " << acceleration.z << endl;
 	//cout << "accumulatedForce = " << accumulatedForce.x << ", " << accumulatedForce.y << ", " << accumulatedForce.z << endl;

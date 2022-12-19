@@ -3,6 +3,12 @@
 
 BoxRB::BoxRB()
 {
+	this->type = 0;
+	this->name = "BOX";
+	this->velocity = MyVector(0.0f, 0.0f, 0.0f);
+	this->acceleration = MyVector(0.0f, 0.0f, 0.0f);
+	this->mass = 5.0f;
+	this->damping = 0.99f;
 }
 
 void BoxRB::addForceAtPoint(MyVector point, MyVector f)

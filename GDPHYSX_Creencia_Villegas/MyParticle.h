@@ -16,6 +16,7 @@
 class MyParticle
 {
 public:
+	string name = "particle";
 	float mass = 5;
 	float radius = 2.5;
 	float damping = 0.99f;
@@ -47,7 +48,7 @@ public:
 
 	glm::vec3 getVec3Pos();
 
-	//virtual void addForceAtPoint(MyVector point, MyVector f) = 0;
+	virtual void addForceAtPoint(MyVector point, MyVector f) = 0;
 	float momentOfInertia();
 
 private:

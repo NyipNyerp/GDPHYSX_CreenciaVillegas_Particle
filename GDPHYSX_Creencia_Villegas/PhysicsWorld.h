@@ -35,6 +35,7 @@ public:
 	void update(float time);
 
 	void addParticle(int bType, MyVector currParticlePos);
+	void addExistingParticle(MyParticle* particle);
 	void addContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector collisionNormal);
 
 	void deleteParticle(int index);
@@ -54,9 +55,9 @@ protected:
 	void generateParticleContacts(MyParticle* a, MyParticle* b);
 
 	//generating contacts for RBs
-	//void generateRigidbodyContacts(MyParticle* a, MyParticle* b);
+	void generateRigidbodyContacts(MyParticle* a, MyParticle* b);
 
 	//processing contacts
-	//void processRigidBodyContact(BoxRB* a, MyParticle* b);
+	void processRigidBodyContact(BoxRB* a, MyParticle* b);
 };
 

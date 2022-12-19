@@ -195,12 +195,12 @@ int main() {
 
 #pragma region MASS AGGREGATE BOX
 
+	/*
 	pWorld.addParticle(0, initialPos);
 	pWorld.particles[0]->position = MyVector(30, 0, 0);
 	pWorld.particleTrans[0] = glm::mat4(1.0f);
 	pWorld.particleTrans[0] = glm::scale(pWorld.particleTrans[0], glm::vec3(0.5f, 0.5f, 0.5f));
 	pWorld.particleTrans[0] = glm::translate(pWorld.particleTrans[0], glm::vec3(pWorld.particles[0]->getVec3Pos()));
-	/*
 	/// MASS AGGREGATE BOX
 	for (int i = 0; i < 8; i++)
 	{
@@ -370,10 +370,12 @@ int main() {
 
 #pragma region RigidBodies
 
-	/*
 	BoxRB* cubeRB = new BoxRB();
-	cubeRB->rotation = -(45 * (180 / 3.14159));
 
+	cubeRB->rotation = -(45 * (180 / 3.14159));
+	cubeRB->position = MyVector(30, 0, 0);
+
+	// Setting cubeRB corner positions
 	cubeRB->upperLeft1 = MyVector(-cubeRB->length / 2, cubeRB->length / 2, cubeRB->length / 2);
 	cubeRB->lowerLeft1 = MyVector(-cubeRB->length / 2, -cubeRB->length / 2, cubeRB->length / 2);
 	cubeRB->upperRight1 = MyVector(cubeRB->length / 2, cubeRB->length / 2, cubeRB->length / 2);
@@ -383,7 +385,19 @@ int main() {
 	cubeRB->lowerLeft2 = MyVector(-cubeRB->length / 2, -cubeRB->length / 2, -cubeRB->length / 2);
 	cubeRB->upperRight2 = MyVector(cubeRB->length / 2, cubeRB->length / 2, -cubeRB->length / 2);
 	cubeRB->lowerRight2 = MyVector(cubeRB->length / 2, -cubeRB->length / 2, -cubeRB->length / 2);
-	*/
+
+	// Adding corners for collision
+	cubeRB->points.push_back(Utils::rotatePoint(cubeRB->upperLeft1, cubeRB->rotation) + cubeRB->position);
+	cubeRB->points.push_back(Utils::rotatePoint(cubeRB->lowerLeft1, cubeRB->rotation) + cubeRB->position);
+	cubeRB->points.push_back(Utils::rotatePoint(cubeRB->upperRight1, cubeRB->rotation) + cubeRB->position);
+	cubeRB->points.push_back(Utils::rotatePoint(cubeRB->lowerRight1, cubeRB->rotation) + cubeRB->position);
+
+	cubeRB->points.push_back(Utils::rotatePoint(cubeRB->upperLeft2, cubeRB->rotation) + cubeRB->position);
+	cubeRB->points.push_back(Utils::rotatePoint(cubeRB->lowerLeft2, cubeRB->rotation) + cubeRB->position);
+	cubeRB->points.push_back(Utils::rotatePoint(cubeRB->upperRight2, cubeRB->rotation) + cubeRB->position);
+	cubeRB->points.push_back(Utils::rotatePoint(cubeRB->lowerRight2, cubeRB->rotation) + cubeRB->position);
+
+	pWorld.addExistingParticle(cubeRB);
 
 #pragma endregion
 
@@ -465,9 +479,8 @@ int main() {
 		DrawSkybox(skybox, skyboxShaderProgram, view, projection);
 		glUseProgram(shaderProgram);
 
-		/*
 #pragma region Box Object
-
+		/*
 		glBindVertexArray(box.vaoId);
 		glUseProgram(shaderProgram);
 
@@ -479,9 +492,21 @@ int main() {
 		GLuint boxTexture = box.textures[box.materials[0].diffuse_texname];
 		glBindTexture(GL_TEXTURE_2D, boxTexture);
 		glDrawElements(GL_TRIANGLES, box.numFaces, GL_UNSIGNED_INT, (void*)0);
+		*/
+
+		glBindVertexArray(box.vaoId);
+		glUseProgram(shaderProgram);
+
+		pWorld.normalTransArray[0] = glm::transpose(glm::inverse(pWorld.particleTrans[0]));
+		glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[0]));
+		glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[0]));
+
+		glActiveTexture(GL_TEXTURE0);
+		GLuint boxTexture = box.textures[box.materials[pWorld.particles[0]->material].diffuse_texname];
+		glBindTexture(GL_TEXTURE_2D, boxTexture);
+		glDrawElements(GL_TRIANGLES, box.numFaces, GL_UNSIGNED_INT, (void*)0);
 
 #pragma endregion
-		*/
 
 #pragma region Particle Objects
 
@@ -554,35 +579,19 @@ int main() {
 			pWorld.update(deltaTime);
 
 			// Drawing Particles
-			for (int i = 0; i < pWorld.particles.size(); i++) {
-				if (i == 0)
-				{
-					glBindVertexArray(box.vaoId);
-					glUseProgram(shaderProgram);
+			for (int i = 1; i < pWorld.particles.size(); i++)
+			{
+				glBindVertexArray(particle.vaoId);
+				glUseProgram(shaderProgram);
 
-					pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
-					glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
-					glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
+				pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
+				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
+				glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
 
-					glActiveTexture(GL_TEXTURE0);
-					GLuint boxTexture = box.textures[box.materials[pWorld.particles[i]->material].diffuse_texname];
-					glBindTexture(GL_TEXTURE_2D, boxTexture);
-					glDrawElements(GL_TRIANGLES, box.numFaces, GL_UNSIGNED_INT, (void*)0);
-				}
-				else
-				{
-					glBindVertexArray(particle.vaoId);
-					glUseProgram(shaderProgram);
-
-					pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
-					glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
-					glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
-
-					glActiveTexture(GL_TEXTURE0);
-					GLuint particleTexture = particle.textures[particle.materials[pWorld.particles[i]->material].diffuse_texname];
-					glBindTexture(GL_TEXTURE_2D, particleTexture);
-					glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
-				}
+				glActiveTexture(GL_TEXTURE0);
+				GLuint particleTexture = particle.textures[particle.materials[pWorld.particles[i]->material].diffuse_texname];
+				glBindTexture(GL_TEXTURE_2D, particleTexture);
+				glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
 			}
 		}
 		
