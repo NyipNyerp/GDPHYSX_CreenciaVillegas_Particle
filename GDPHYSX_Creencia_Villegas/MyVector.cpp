@@ -86,7 +86,7 @@ float MyVector::magnitudeSquared()
 
 float MyVector::getDistanceBetweenPoints(MyVector a, MyVector b)
 {
-	return sqrt(((b.x - a.x) * (b.x - a.x)) + ((b.y - a.y) * (b.y - a.y)));
+	return sqrt(((b.x - a.x) * (b.x - a.x)) + ((b.y - a.y) * (b.y - a.y)) + ((b.z - a.z) * (b.z - a.z)));
 }
 
 float MyVector::crossProductF(MyVector a, MyVector b)

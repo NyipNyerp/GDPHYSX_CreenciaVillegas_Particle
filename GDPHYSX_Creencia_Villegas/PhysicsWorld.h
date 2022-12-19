@@ -1,6 +1,7 @@
 #pragma once
 #include <list>
 #include <vector>
+#include "Utils.h"
 #include "MyParticle.h"
 #include "ForceRegistry.h"
 #include "ForceGenerator.h"
@@ -9,6 +10,8 @@
 #include "ParticleContact.h"
 #include "ContactResolver.h"
 #include "ParticleLink.h"
+#include "BoxRB.h"
+#include "SphereRB.h"
 
 using namespace std;
 
@@ -49,5 +52,11 @@ protected:
 
 	//generating contacts for both particles
 	void generateParticleContacts(MyParticle* a, MyParticle* b);
+
+	//generating contacts for RBs
+	//void generateRigidbodyContacts(MyParticle* a, MyParticle* b);
+
+	//processing contacts
+	//void processRigidBodyContact(BoxRB* a, MyParticle* b);
 };
 

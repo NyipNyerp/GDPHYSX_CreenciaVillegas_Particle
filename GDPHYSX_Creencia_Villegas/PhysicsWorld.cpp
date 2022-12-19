@@ -6,7 +6,7 @@ void PhysicsWorld::update(float time)
 
 	if (!particles.empty())
 	{
-		cout << "TEST" << endl;
+		//cout << "TEST" << endl;
 		registry.updateForce(time);
 
 		for (int i = 0; i < particles.size(); i++)
@@ -29,6 +29,7 @@ void PhysicsWorld::update(float time)
 	for (int i = 0; i < particles.size(); i++) 
 	{
 		particleTrans[i] = glm::mat4(1.0f);
+		//if (particles[i]->type == 0) particleTrans[i] = glm::scale(particleTrans[i], glm::vec3(1.0f, 1.0f, 1.0f));
 		particleTrans[i] = glm::scale(particleTrans[i], glm::vec3(0.5f, 0.5f, 0.5f));
 		particleTrans[i] = glm::translate(particleTrans[i], glm::vec3(particles[i]->getVec3Pos()));
 	}
@@ -39,8 +40,8 @@ void PhysicsWorld::addParticle(int pType, MyVector currParticlePos)
 	MyParticle* newParticle = new MyParticle(pType);
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
-	if (pType == 0) trans = glm::scale(trans, glm::vec3(0.1f, 0.1f, 0.1f));
-	else trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	//if (pType == 0) trans = glm::scale(trans, glm::vec3(1.0f, 1.0f, 1.0f));
+	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 	trans = glm::translate(trans, glm::vec3(currParticlePos.x, currParticlePos.y, currParticlePos.z));
 	particleTrans.push_back(trans);
 
@@ -108,6 +109,7 @@ void PhysicsWorld::getOverlaps()
 		for (int h = i + 1; h < particles.size(); h++)
 		{
 			generateParticleContacts(particles[i], particles[h]); //particle contact resolution
+			//generateRigidbodyContacts(particles[i], particles[h]); //rigidbodies contact resolution
 		}
 	}
 }
@@ -134,5 +136,91 @@ void PhysicsWorld::generateParticleContacts(MyParticle* a, MyParticle* b)
 			restitution = b->restitution;
 
 		addContact(a, b, restitution, dir);
+
+		if (a->type != 0 && b->type == 0) // if particleA is a sphere and particleB is a box
+		{
+			a->isDestroyed = true;
+			b->isDestroyed = true;
+		}
+		else if (a->type == 0 && b->type != 0) // if particleA is a box and particleB is a sphere
+		{
+			a->isDestroyed = true;
+			b->isDestroyed = true;
+		}
 	}
 }
+/*
+void PhysicsWorld::generateRigidbodyContacts(MyParticle* a, MyParticle* b)
+{
+	//if particles are both spheres
+	if (a->type != 0 && b->type != 0)
+	{
+		generateParticleContacts(a, b);
+	}
+	//if mixed
+	else
+	{
+		BoxRB* rect = dynamic_cast<BoxRB*>(a);
+		if (rect == nullptr)
+		{
+			rect = dynamic_cast<BoxRB*>(b);
+			processRigidBodyContact(rect, a); //a is a sphere
+		}
+		else
+		{
+			processRigidBodyContact(rect, b); //b is a sphere
+		}
+	}
+}
+
+void PhysicsWorld::processRigidBodyContact(BoxRB* a, MyParticle* b)
+{
+	MyVector relVector = b->position - a->position;
+	float invAngle = -a->rotation;
+	MyVector locVector = Utils::rotatePoint(relVector, invAngle);
+
+	float minX = locVector.x;
+	if ((a->length / 2) < minX)
+	{
+		minX = a->length / 2;
+	}
+
+	float maxX = minX;
+	if (maxX < -a->length / 2)
+	{
+		maxX = -a->length / 2;
+	}
+
+	float minY = locVector.y;
+	if ((a->length / 2) < minY)
+	{
+		minY = a->length / 2;
+	}
+
+	float maxY = minY;
+	if (maxY < -a->length / 2)
+	{
+		maxY = -a->length / 2;
+	}
+
+	float D_X = locVector.x - maxX;
+	float D_Y = locVector.y - maxY;
+
+	bool col = (D_X * D_X + D_Y * D_Y) <= (b->radius * b->radius);
+
+	//collision is detected
+	if (col)
+	{
+		MyVector dir = a->position - b->position;
+		dir.normalize();
+
+		float restitution = a->restitution;
+		if (b->restitution < a->restitution)
+		{
+			restitution = b->restitution;
+		}
+
+		addContact(a, b, restitution, dir);
+	}
+}
+*/

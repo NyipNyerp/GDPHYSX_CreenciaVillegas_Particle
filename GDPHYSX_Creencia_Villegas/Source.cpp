@@ -8,12 +8,6 @@
 #include <algorithm>
 #include "main.h"
 
-// CHANGE NORMALTRANSARRAY AND PARTICLETRANS IN PHYSICSWORLD TO MYPARTICLE
-
-// TRY CHANGING MYVECTOR USES TO GLM::VEC3
-
-// CHANGE PARTICLESPRING CLASS NAME TO PARTICLELINKS
-
 #pragma region CAMERA 
 //YouTube. (2019). OpenGL - camera movement. YouTube. https://www.youtube.com/watch?v=AWM4CUfffos.
 //camera
@@ -201,6 +195,12 @@ int main() {
 
 #pragma region MASS AGGREGATE BOX
 
+	pWorld.addParticle(0, initialPos);
+	pWorld.particles[0]->position = MyVector(30, 0, 0);
+	pWorld.particleTrans[0] = glm::mat4(1.0f);
+	pWorld.particleTrans[0] = glm::scale(pWorld.particleTrans[0], glm::vec3(0.5f, 0.5f, 0.5f));
+	pWorld.particleTrans[0] = glm::translate(pWorld.particleTrans[0], glm::vec3(pWorld.particles[0]->getVec3Pos()));
+	/*
 	/// MASS AGGREGATE BOX
 	for (int i = 0; i < 8; i++)
 	{
@@ -363,8 +363,30 @@ int main() {
 	cout << "Pair16 length = " << Pair16->length << endl;
 
 	cout << "links size = " << pWorld.links.size() << endl;
+	*/
+
 
 #pragma endregion
+
+#pragma region RigidBodies
+
+	/*
+	BoxRB* cubeRB = new BoxRB();
+	cubeRB->rotation = -(45 * (180 / 3.14159));
+
+	cubeRB->upperLeft1 = MyVector(-cubeRB->length / 2, cubeRB->length / 2, cubeRB->length / 2);
+	cubeRB->lowerLeft1 = MyVector(-cubeRB->length / 2, -cubeRB->length / 2, cubeRB->length / 2);
+	cubeRB->upperRight1 = MyVector(cubeRB->length / 2, cubeRB->length / 2, cubeRB->length / 2);
+	cubeRB->lowerRight1 = MyVector(cubeRB->length / 2, -cubeRB->length / 2, cubeRB->length / 2);
+
+	cubeRB->upperLeft2 = MyVector(-cubeRB->length / 2, cubeRB->length / 2, -cubeRB->length / 2);
+	cubeRB->lowerLeft2 = MyVector(-cubeRB->length / 2, -cubeRB->length / 2, -cubeRB->length / 2);
+	cubeRB->upperRight2 = MyVector(cubeRB->length / 2, cubeRB->length / 2, -cubeRB->length / 2);
+	cubeRB->lowerRight2 = MyVector(cubeRB->length / 2, -cubeRB->length / 2, -cubeRB->length / 2);
+	*/
+
+#pragma endregion
+
 
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
@@ -533,17 +555,35 @@ int main() {
 
 			// Drawing Particles
 			for (int i = 0; i < pWorld.particles.size(); i++) {
-				pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
-				glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
-				glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
+				if (i == 0)
+				{
+					glBindVertexArray(box.vaoId);
+					glUseProgram(shaderProgram);
 
-				glActiveTexture(GL_TEXTURE0);
-				GLuint particleTexture = particle.textures[particle.materials[pWorld.particles[i]->material].diffuse_texname];
-				glBindTexture(GL_TEXTURE_2D, particleTexture);
-				glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
+					pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
+					glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
+					glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
+
+					glActiveTexture(GL_TEXTURE0);
+					GLuint boxTexture = box.textures[box.materials[pWorld.particles[i]->material].diffuse_texname];
+					glBindTexture(GL_TEXTURE_2D, boxTexture);
+					glDrawElements(GL_TRIANGLES, box.numFaces, GL_UNSIGNED_INT, (void*)0);
+				}
+				else
+				{
+					glBindVertexArray(particle.vaoId);
+					glUseProgram(shaderProgram);
+
+					pWorld.normalTransArray[i] = glm::transpose(glm::inverse(pWorld.particleTrans[i]));
+					glUniformMatrix4fv(normalTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.normalTransArray[i]));
+					glUniformMatrix4fv(modelTransformLoc, 1, GL_FALSE, glm::value_ptr(pWorld.particleTrans[i]));
+
+					glActiveTexture(GL_TEXTURE0);
+					GLuint particleTexture = particle.textures[particle.materials[pWorld.particles[i]->material].diffuse_texname];
+					glBindTexture(GL_TEXTURE_2D, particleTexture);
+					glDrawElements(GL_TRIANGLES, particle.numFaces, GL_UNSIGNED_INT, (void*)0);
+				}
 			}
-
-
 		}
 		
 		// Move box when hit

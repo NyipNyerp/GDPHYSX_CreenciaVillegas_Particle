@@ -5,6 +5,10 @@ MyParticle::MyParticle(int newType) : type(newType)
 	particleType();
 }
 
+MyParticle::MyParticle()
+{
+}
+
 void MyParticle::particleType()
 {
 	float randX = rand() % 60 + -30;
@@ -137,4 +141,9 @@ void MyParticle::checkLifeSpan(float time)
 glm::vec3 MyParticle::getVec3Pos()
 {
 	return glm::vec3(position.x, position.y, position.z);
+}
+
+float MyParticle::momentOfInertia()
+{
+	return ((float)2 / 5)* mass* (radius * radius);
 }
