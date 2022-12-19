@@ -373,7 +373,7 @@ int main() {
 	BoxRB* cubeRB = new BoxRB(0);
 
 	cubeRB->position = MyVector(30, 0, 0);
-	cubeRB->length = 8;
+	cubeRB->length = 6;
 
 	// Setting cubeRB corner positions
 	cubeRB->upperLeft1 = MyVector(-cubeRB->length / 2, cubeRB->length / 2, cubeRB->length / 2);
