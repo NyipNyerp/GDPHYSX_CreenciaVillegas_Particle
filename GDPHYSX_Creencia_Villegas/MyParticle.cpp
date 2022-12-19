@@ -1,9 +1,11 @@
 #include "MyParticle.h"
 
-MyParticle::MyParticle(int newType) : type(newType)
+/*
+MyParticle::MyParticle(int newType : type(newType))
 {
 	particleType();
 }
+*/
 
 MyParticle::MyParticle()
 {
@@ -92,7 +94,7 @@ void MyParticle::particleType()
 
 void MyParticle::update(float time)
 {
-	cout << "particle name: " << name << endl;
+	//cout << "particle name: " << name << endl;
 	if (mass == 0)
 	{
 		return;
@@ -100,7 +102,9 @@ void MyParticle::update(float time)
 	checkLifeSpan(time);
 	updatePos(time);
 	updateVelocity(time);
-	cout << "particle position = " << position.x << ", " << position.y << ", " << position.z << endl << endl;
+	//cout << "particle position = " << position.x << ", " << position.y << ", " << position.z << endl;
+	//cout << "particle isDestroyed = " << isDestroyed << endl;
+	//cout << "particle type = " << type << endl << endl;
 	//cout << "velocity = " << velocity.x << ", " << velocity.y << ", " << velocity.z << endl << endl;
 	//cout << "acceleration = " << acceleration.x << ", " << acceleration.y << ", " << acceleration.z << endl;
 	//cout << "accumulatedForce = " << accumulatedForce.x << ", " << accumulatedForce.y << ", " << accumulatedForce.z << endl;

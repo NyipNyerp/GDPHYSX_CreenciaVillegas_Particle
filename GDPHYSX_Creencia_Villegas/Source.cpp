@@ -370,7 +370,7 @@ int main() {
 
 #pragma region RigidBodies
 
-	BoxRB* cubeRB = new BoxRB();
+	BoxRB* cubeRB = new BoxRB(0);
 
 	cubeRB->position = MyVector(30, 0, 0);
 	cubeRB->length = 8;

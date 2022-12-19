@@ -31,13 +31,13 @@ public:
 	float rotation = 0;
 
 	float lifeSpan = 5;
-	int type = 1;
+	int type;
 	int count = 1;
 	int material = 0;
 	bool isDestroyed = false;
 
 public:
-	MyParticle(int newType);
+	//MyParticle(int newType);
 	MyParticle();
 	void particleType();
 

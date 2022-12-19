@@ -1,15 +1,10 @@
 #include "BoxRB.h"
 
 
-BoxRB::BoxRB()
+BoxRB::BoxRB(int newType)
 {
-	this->type = 0;
-	this->name = "BOX";
-	this->velocity = MyVector(0.0f, 0.0f, 0.0f);
-	this->acceleration = MyVector(0.0f, 0.0f, 0.0f);
-	this->mass = 5.0f;
-	this->damping = 0.99f;
-	this->radius = 0;
+	this->type = newType;
+	particleType();
 }
 
 void BoxRB::addForceAtPoint(MyVector point, MyVector f)

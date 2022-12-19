@@ -15,7 +15,7 @@ void PhysicsWorld::update(float time)
 			//particles[i]->acceleration = gravity;
 			particles[i]->update(time);
 
-			if (particles[i]->type = 0) 
+			if (particles[i]->type == 0) 
 			{
 				BoxRB* cube = dynamic_cast<BoxRB*>(particles[i]);
 				cube->updateBoxPos();
@@ -43,7 +43,7 @@ void PhysicsWorld::update(float time)
 
 void PhysicsWorld::addParticle(int pType, MyVector currParticlePos)
 {
-	SphereRB* newParticle = new SphereRB();
+	SphereRB* newParticle = new SphereRB(pType);
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
 	//if (pType == 0) trans = glm::scale(trans, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -241,5 +241,16 @@ void PhysicsWorld::processRigidBodyContact(BoxRB* a, MyParticle* b)
 		}
 
 		addContact(a, b, restitution, dir);
+
+		if (a->type != 0 && b->type == 0) // if particleA is a sphere and particleB is a box
+		{
+			a->isDestroyed = true;
+			b->isDestroyed = true;
+		}
+		else if (a->type == 0 && b->type != 0) // if particleA is a box and particleB is a sphere
+		{
+			a->isDestroyed = true;
+			b->isDestroyed = true;
+		}
 	}
 }

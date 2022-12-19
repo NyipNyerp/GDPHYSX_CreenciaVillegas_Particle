@@ -6,7 +6,7 @@
 class BoxRB : public MyParticle
 {
 public:
-	BoxRB();
+	BoxRB(int newType);
 	void addForceAtPoint(MyVector point, MyVector f);
 	float length = 5;
 	std::vector<MyVector> points;
