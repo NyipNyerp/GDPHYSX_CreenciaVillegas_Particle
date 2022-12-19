@@ -9,12 +9,13 @@ BoxRB::BoxRB()
 	this->acceleration = MyVector(0.0f, 0.0f, 0.0f);
 	this->mass = 5.0f;
 	this->damping = 0.99f;
+	this->radius = 0;
 }
 
 void BoxRB::addForceAtPoint(MyVector point, MyVector f)
 {
-	accumulatedForce = accumulatedForce + f;
-	accumulatedTorque = accumulatedTorque + MyVector::crossProductF(point, f);
+	//accumulatedForce = accumulatedForce + f;
+	//accumulatedTorque = accumulatedTorque + MyVector::crossProductF(point, f);
 }
 
 void BoxRB::updateBoxPos()

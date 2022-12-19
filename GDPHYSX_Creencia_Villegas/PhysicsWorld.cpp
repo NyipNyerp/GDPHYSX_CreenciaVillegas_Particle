@@ -43,7 +43,7 @@ void PhysicsWorld::update(float time)
 
 void PhysicsWorld::addParticle(int pType, MyVector currParticlePos)
 {
-	SphereRB* newParticle = new SphereRB(pType);
+	SphereRB* newParticle = new SphereRB();
 
 	glm::mat4 trans = glm::mat4(1.0f); // identity
 	//if (pType == 0) trans = glm::scale(trans, glm::vec3(1.0f, 1.0f, 1.0f));

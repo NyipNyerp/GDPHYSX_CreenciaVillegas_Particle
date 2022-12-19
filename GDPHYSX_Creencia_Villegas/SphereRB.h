@@ -6,7 +6,7 @@
 class SphereRB : public MyParticle
 {
 public:
-	SphereRB(int newType);
+	SphereRB();
 	void addForceAtPoint(MyVector point, MyVector f);
 };
 

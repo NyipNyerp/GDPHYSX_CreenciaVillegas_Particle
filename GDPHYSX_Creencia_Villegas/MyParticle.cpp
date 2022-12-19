@@ -23,6 +23,7 @@ void MyParticle::particleType()
 		acceleration = MyVector(0.0f, 0.0f, 0.0f);
 		mass = 5.0f;
 		damping = 0.99f;
+		radius = 0;
 		break;
 	case 1: // BULLET
 		name = "BULLET";

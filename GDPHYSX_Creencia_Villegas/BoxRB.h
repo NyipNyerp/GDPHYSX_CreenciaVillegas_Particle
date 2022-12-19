@@ -8,7 +8,7 @@ class BoxRB : public MyParticle
 public:
 	BoxRB();
 	void addForceAtPoint(MyVector point, MyVector f);
-	float length;
+	float length = 5;
 	std::vector<MyVector> points;
 
 	MyVector upperLeft1 = MyVector(0, 0, 0);
